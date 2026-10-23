@@ -7653,7 +7653,7 @@ IT([
 ]);
 // ---- construções de madeira, rurais e acampamento ----
 IT([
-  ['lareira', 'lareira', 1.4, 0.5, 1.2, { janela: false }], ['fogao_lenha', 'fogao_lenha', 0.6, 0.5, 0.95, { janela: false }], ['escada_porao', 'escada_porao', 0.9, 2.4, 1.0, { janela: false }],
+  ['lareira', 'lareira', 1.4, 1.0, 1.2, { janela: false }], ['fogao_lenha', 'fogao_lenha', 0.6, 0.5, 0.95, { janela: false }], ['escada_porao', 'escada_porao', 0.9, 2.4, 1.0, { janela: false }],
   ['beliche', 'beliche', 1.0, 2.05, 1.75, { janela: false }], ['cama_improvisada', 'cama', 0.9, 1.9, 0.45, { so: true }], ['pia_rustica', 'pia', 1.0, 0.5, 0.9, { so: true }], ['balde', 'balde', 0.35, 0.35, 0.35],
   ['banco_tronco', 'banco', 1.2, 0.35, 0.45, { so: true }], ['mesa_tronco', 'mesa_jantar', 1.2, 0.8, 0.78, { so: true }], ['prateleira_tabua', 'estante', 1.2, 0.3, 1.6, { so: true }], ['cadeira_balanco', 'cadeira_varanda', 0.7, 0.8, 1.0],
   ['lenha', 'lenha', 1.5, 0.5, 1.2], ['privada', 'privada', 1.0, 1.1, 2.2, { janela: false }], ['poco', 'poco', 1.0, 1.0, 1.0, { janela: false }], ['tambor_agua', 'tambor_agua', 0.6, 0.6, 0.9],
@@ -8003,7 +8003,7 @@ Biblioteca.escada = r => [P('escada', 'fundo', 0, [1.0, 3.2], { escada: 1 }, { o
 Biblioteca.quintal_sobrado = r => Biblioteca.quintal_medio(r).map(x => (x.id === 'piscina' ? Object.assign({}, x, { prob: 0.5 }) : x));
 // ---------- bibliotecas das construções de madeira ----------
 Object.assign(Biblioteca, {
-  sala_am: r => Biblioteca.sala(r).concat([P('lareira', 'dir', 0, [1.5, 0.55], { lareira: 1 }, { prob: 0, folga: 0.7 })]),
+  sala_am: r => Biblioteca.sala(r).concat([P('lareira', 'dir', 0, [1.5, 1.05], { lareira: 1 }, { prob: 0, folga: 0.7 })]),
   garagem_am: r => [
     Z('carro1', 0.5, 0.5, [1.95, 4.35], { carro: 1 }, { obrigatorio: true, frente: 'v-', folga: 0 }),
     P('estante', 'qualquer', 0.5, [1.2, 0.5], { estante_ferr: 1 }, { prob: 0.4, folga: 0.4 }),
@@ -9063,10 +9063,10 @@ function cbCfg(op) {
   const energia = op.energia === 'rede' ? 'rede' : op.energia === 'offgrid' ? 'offgrid' : (cbR(op, 'ene') < 0.6 ? 'offgrid' : 'rede');
   const solar = energia === 'offgrid' && (op.solar != null ? !!op.solar : cbR(op, 'sol') < 0.5);
   const banheiro = op.banheiro === 'interno' ? 'interno' : op.banheiro === 'privada' ? 'privada' : (comodos === 2 && cbR(op, 'ban') < 0.4 ? 'interno' : 'privada');
-  const agua = op.agua === 'poco' ? 'poco' : op.agua === 'tanque' ? 'tanque' : (cbR(op, 'agua') < 0.4 ? 'poco' : 'tanque');
+  const agua = op.agua === 'poco' ? 'poco' : op.agua === 'tanque' ? 'tanque' : (cbR(op, 'agua') < CB.pPoco ? 'poco' : 'tanque');
   return { comodos, energia, solar, banheiro: comodos === 1 ? 'privada' : banheiro, agua };
 }
-const CB = { pd: 1.6, ban: 1.9 };
+const CB = { pd: 1.6, ban: 1.9, pPoco: 0.25 }; // pPoco: chance do poço quando a opção agua não é dada (20-30% das sementes); agua:'poco' sempre põe o poço
 const cbV1 = (w, d, c) => (c.comodos === 2 ? CB.pd + Math.min(3.6, (d - CB.pd) * 0.55) : d);
 // posição do tanque em cavalete (lateral direita do lote, atrás da metade da casa): calculada igual na reserva e na caixa
 const cbTanque = plano => { const c = cbCfg(plano.op), u = r2(plano.w + 1.3), v = r2(plano.d * 0.55), h = 1.0, s = 0.9; return { u, v, aabb: [u - s / 2, v - s / 2, u + s / 2, v + s / 2].map(r2), h, s }; };
@@ -9144,7 +9144,7 @@ registrarTemplate({
     const c = cbCfg(plano.op), out = {}, fg = mov.find(m => m.tipo === 'fogao_lenha'), po = mov.find(m => m.tipo === 'poco');
     if (fg) out.chamine = { tipo: 'tubo', tubo: true, material: 'steel', comodo: fg.comodo, fogao: fg.id, aabb: [r2(fg.x - 0.1), r2(fg.z - 0.1), r2(fg.x + 0.1), r2(fg.z + 0.1)] };
     if (po) out.poco = { aabb: po.aabb, altura: 0.9, item: po.id };
-    out.agua = { fonte: c.agua, tanque: 'caixa_dagua', poco: po ? po.id : null };
+    out.agua = { fonte: c.agua, tanque: 'caixa_dagua', poco: po ? po.id : null, ordem: po ? ['caixa_dagua', po.id] : ['caixa_dagua'] }; // a caixa vem antes do poço: as torneiras puxam da caixa e o poço enche a caixa
     out.energia = { modo: c.energia === 'rede' ? 'rede' : 'offgrid', solar: c.solar, iluminacao: c.energia === 'rede' ? 'eletrica' : 'lampiao' };
     out.banheiro = { tipo: c.banheiro };
     return out; },
@@ -11309,6 +11309,9 @@ function montarHidraulica(plano, mov, sem, cd) {
     pontos.push({ id: 'pt' + (++nP), tipo: tp, item: m.id, comodo: m.comodo, andar: m.externo ? -1 : m.andar, u: m.x, v: m.z, y: tp === 'chuveiro' ? 2.1 : tp === 'descarga' ? 0.9 : tp === 'maquina' ? 0.8 : 0.9, vazao_lpm: VAZAO[tp], trecho: null });
   }
   if (!cd) return H;
+  H.fonte = 'caixa_dagua'; // as torneiras (pontos) puxam da caixa; o poço, quando existe, só enche a caixa
+  const poco = mov.find(m => m.tipo === 'poco');
+  if (poco) H.alimentacao = [{ id: 'al_poco', de: poco.id, tipo: 'poco', para: 'caixa_dagua', ordem: ['caixa_dagua', poco.id], pontos: [[poco.x, poco.z, 0.9], [cd.u, cd.v, r2(cd.y)]], diametro: 0.032 }];
   const yTopoLaje = abs(ai, plano.andares[ai].pe);
   // 1) saída da caixa: do fundo do tanque até o telhado/forro
   const yTankAbs = cd.local === 'laje_caixa' ? cd.plataforma.yTopo : cd.local === 'sotao' ? yTopoLaje + 0.5 : cd.y;
@@ -28106,6 +28109,31 @@ var GameInteractablesHousehold = (() => {
     },
     dog_house: { body: { material: "plywood", joint: "nail" }, parts: [] },
     bbq: { body: { material: "brick", joint: "mortar" }, parts: [["counter_door", door("steel")]] },
+    bunk_bed: { body: { material: "wood_soft", joint: "screw" }, parts: [] },
+    wood_stove: {
+      body: { material: "cast_iron", joint: "bolt" },
+      parts: [["firebox_door", { material: "cast_iron", joint: "hinge", piece: "door" }]]
+    },
+    fireplace: { body: { material: "brick", joint: "mortar" }, parts: [] },
+    outhouse: {
+      body: { material: "wood_soft", joint: "nail" },
+      parts: [["door", door("wood_soft", "hinge", "door")], ["seat_lid", door("wood_soft", "hinge", "lid")]]
+    },
+    well: {
+      body: { material: "stone", joint: "mortar" },
+      parts: [
+        ["crank", { material: "wood_hard", joint: "bolt", piece: "handle" }],
+        ["bucket", { material: "wood_soft", joint: "tie", piece: "bucket" }],
+        ["rope", { material: "fabric", joint: "tie", piece: "cord" }]
+      ]
+    },
+    cooler: { body: { material: "plastic", joint: "fused" }, parts: [["lid", door("plastic", "hinge", "lid")]] },
+    campfire: { body: { material: "stone", joint: "mortar" }, parts: [] },
+    camp_stove: { body: { material: "steel", joint: "weld" }, parts: [["knob", knob]] },
+    gas_canister: { body: { material: "steel", joint: "weld" }, parts: [["valve", { material: "copper", joint: "screw", piece: "valve" }]] },
+    lantern_lamp: { body: { material: "copper", joint: "screw" }, parts: [["wick", knob]] },
+    camp_chair: { body: { material: "aluminium", joint: "clip" }, parts: [] },
+    camp_table: { body: { material: "aluminium", joint: "clip" }, parts: [] },
     clothesline: { body: { material: "steel", joint: "weld" }, parts: [[/^cloth_/, { material: "fabric", joint: "tie", piece: "cloth" }]] }
   };
   function partDestruction(type, partId) {
@@ -29602,6 +29630,32 @@ var GameInteractablesHousehold = (() => {
       stack: 1,
       shape: "roll",
       color: 13152384
+    },
+    ice_pack: {
+      id: "ice_pack",
+      category: "drink",
+      size: [
+        0.16,
+        0.03,
+        0.12
+      ],
+      weight: 0.4,
+      stack: 3,
+      shape: "box",
+      color: 9356776
+    },
+    sandwich: {
+      id: "sandwich",
+      category: "food",
+      size: [
+        0.12,
+        0.05,
+        0.12
+      ],
+      weight: 0.2,
+      stack: 2,
+      shape: "box",
+      color: 14268282
     }
   };
 
@@ -30336,6 +30390,67 @@ var GameInteractablesHousehold = (() => {
           weight: 2
         }
       ]
+    },
+    cooler: {
+      fill: 0.8,
+      entries: [
+        {
+          type: "soda_can",
+          weight: 6,
+          qty: [
+            1,
+            4
+          ]
+        },
+        {
+          type: "water_bottle",
+          weight: 5,
+          qty: [
+            1,
+            2
+          ]
+        },
+        {
+          type: "juice_box",
+          weight: 4
+        },
+        {
+          type: "ice_pack",
+          weight: 6,
+          qty: [
+            1,
+            2
+          ]
+        },
+        {
+          type: "sandwich",
+          weight: 5,
+          qty: [
+            1,
+            2
+          ]
+        },
+        {
+          type: "apple",
+          weight: 3,
+          qty: [
+            1,
+            3
+          ]
+        },
+        {
+          type: "cheese",
+          weight: 2
+        },
+        {
+          type: "ham",
+          weight: 2
+        },
+        {
+          type: "yogurt",
+          weight: 2
+        }
+      ]
     }
   };
 
@@ -30605,7 +30720,74 @@ var GameInteractablesHousehold = (() => {
     "prompt.breaker.on.object": "{circuit}",
     "prompt.breaker.off": "Switch on {circuit}",
     "prompt.breaker.off.verb": "Switch on",
-    "prompt.breaker.off.object": "{circuit}"
+    "prompt.breaker.off.object": "{circuit}",
+    "type.bunk_bed": "Bunk bed",
+    "type.wood_stove": "Wood stove",
+    "type.fireplace": "Fireplace",
+    "type.outhouse": "Outhouse",
+    "type.well": "Well",
+    "type.cooler": "Cooler",
+    "type.campfire": "Campfire",
+    "type.camp_stove": "Camp stove",
+    "type.gas_canister": "Gas canister",
+    "type.lantern_lamp": "Lantern",
+    "type.camp_chair": "Camp chair",
+    "type.camp_table": "Camp table",
+    "item.ice_pack": "Ice pack",
+    "item.sandwich": "Sandwich",
+    "prompt.firebox_door": "Stove door",
+    "prompt.firebox_door.open": "Close the stove door",
+    "prompt.firebox_door.closed": "Open the stove door",
+    "prompt.outhouse_door": "Outhouse door",
+    "prompt.outhouse_door.open": "Close the door",
+    "prompt.outhouse_door.closed": "Open the door",
+    "prompt.outhouse_lid": "Seat lid",
+    "prompt.outhouse_lid.open": "Close the lid",
+    "prompt.outhouse_lid.closed": "Lift the lid",
+    "prompt.cooler_lid": "Cooler",
+    "prompt.cooler_lid.open": "Close the cooler",
+    "prompt.cooler_lid.closed": "Open the cooler",
+    "prompt.well_crank": "Well crank",
+    "prompt.well": "Well",
+    "prompt.well.on": "Let the bucket down",
+    "prompt.well.on.verb": "Let down",
+    "prompt.well.on.object": "the bucket",
+    "prompt.well.off": "Draw water",
+    "prompt.well.off.verb": "Draw",
+    "prompt.well.off.object": "the bucket",
+    "prompt.wood_stove": "Wood stove",
+    "prompt.wood_stove.on": "Put out the fire",
+    "prompt.wood_stove.on.verb": "Put out",
+    "prompt.wood_stove.on.object": "the fire",
+    "prompt.wood_stove.off": "Relight",
+    "prompt.wood_stove_ignite": "Light the stove",
+    "prompt.fireplace": "Fireplace",
+    "prompt.fireplace.on": "Put out the fire",
+    "prompt.fireplace.on.verb": "Put out",
+    "prompt.fireplace.on.object": "the fire",
+    "prompt.fireplace.off": "Relight",
+    "prompt.fireplace_ignite": "Light the fireplace",
+    "prompt.campfire": "Campfire",
+    "prompt.campfire.on": "Put out the fire",
+    "prompt.campfire.on.verb": "Put out",
+    "prompt.campfire.on.object": "the fire",
+    "prompt.campfire.off": "Relight",
+    "prompt.campfire_ignite": "Light the campfire",
+    "prompt.camp_stove": "Camp stove",
+    "prompt.camp_stove.on": "Turn the stove off",
+    "prompt.camp_stove.on.verb": "Turn off",
+    "prompt.camp_stove.on.object": "the stove",
+    "prompt.camp_stove.off": "Light the stove",
+    "prompt.camp_stove_knob": "Stove knob",
+    "prompt.canister_valve": "Gas valve",
+    "prompt.canister_valve.on": "Close the gas valve",
+    "prompt.canister_valve.off": "Open the gas valve",
+    "prompt.lantern": "Lantern",
+    "prompt.lantern.on": "Turn the lantern off",
+    "prompt.lantern.on.verb": "Turn off",
+    "prompt.lantern.on.object": "the lantern",
+    "prompt.lantern.off": "Light the lantern",
+    "prompt.lantern_knob": "Lantern wick"
   };
 
   // src/data/locales/pt-BR.json
@@ -30874,7 +31056,74 @@ var GameInteractablesHousehold = (() => {
     "prompt.breaker.on.object": "{circuit}",
     "prompt.breaker.off": "Ligar {circuit}",
     "prompt.breaker.off.verb": "Ligar",
-    "prompt.breaker.off.object": "{circuit}"
+    "prompt.breaker.off.object": "{circuit}",
+    "type.bunk_bed": "Beliche",
+    "type.wood_stove": "Fog\xE3o a lenha",
+    "type.fireplace": "Lareira",
+    "type.outhouse": "Privada de fora",
+    "type.well": "Po\xE7o",
+    "type.cooler": "Caixa t\xE9rmica",
+    "type.campfire": "Fogueira",
+    "type.camp_stove": "Fogareiro",
+    "type.gas_canister": "Botij\xE3o pequeno",
+    "type.lantern_lamp": "Lampi\xE3o",
+    "type.camp_chair": "Cadeira de camping",
+    "type.camp_table": "Mesa de camping",
+    "item.ice_pack": "Gelo reutiliz\xE1vel",
+    "item.sandwich": "Sandu\xEDche",
+    "prompt.firebox_door": "Porta do fog\xE3o",
+    "prompt.firebox_door.open": "Fechar a porta do fog\xE3o",
+    "prompt.firebox_door.closed": "Abrir a porta do fog\xE3o",
+    "prompt.outhouse_door": "Porta da privada",
+    "prompt.outhouse_door.open": "Fechar a porta",
+    "prompt.outhouse_door.closed": "Abrir a porta",
+    "prompt.outhouse_lid": "Tampa do assento",
+    "prompt.outhouse_lid.open": "Fechar a tampa",
+    "prompt.outhouse_lid.closed": "Levantar a tampa",
+    "prompt.cooler_lid": "Caixa t\xE9rmica",
+    "prompt.cooler_lid.open": "Fechar a caixa t\xE9rmica",
+    "prompt.cooler_lid.closed": "Abrir a caixa t\xE9rmica",
+    "prompt.well_crank": "Manivela do po\xE7o",
+    "prompt.well": "Po\xE7o",
+    "prompt.well.on": "Descer o balde",
+    "prompt.well.on.verb": "Descer",
+    "prompt.well.on.object": "o balde",
+    "prompt.well.off": "Tirar \xE1gua",
+    "prompt.well.off.verb": "Tirar",
+    "prompt.well.off.object": "o balde",
+    "prompt.wood_stove": "Fog\xE3o a lenha",
+    "prompt.wood_stove.on": "Apagar o fogo",
+    "prompt.wood_stove.on.verb": "Apagar",
+    "prompt.wood_stove.on.object": "o fogo",
+    "prompt.wood_stove.off": "Reacender",
+    "prompt.wood_stove_ignite": "Acender o fog\xE3o",
+    "prompt.fireplace": "Lareira",
+    "prompt.fireplace.on": "Apagar o fogo",
+    "prompt.fireplace.on.verb": "Apagar",
+    "prompt.fireplace.on.object": "o fogo",
+    "prompt.fireplace.off": "Reacender",
+    "prompt.fireplace_ignite": "Acender a lareira",
+    "prompt.campfire": "Fogueira",
+    "prompt.campfire.on": "Apagar o fogo",
+    "prompt.campfire.on.verb": "Apagar",
+    "prompt.campfire.on.object": "o fogo",
+    "prompt.campfire.off": "Reacender",
+    "prompt.campfire_ignite": "Acender a fogueira",
+    "prompt.camp_stove": "Fogareiro",
+    "prompt.camp_stove.on": "Desligar o fogareiro",
+    "prompt.camp_stove.on.verb": "Desligar",
+    "prompt.camp_stove.on.object": "o fogareiro",
+    "prompt.camp_stove.off": "Acender o fogareiro",
+    "prompt.camp_stove_knob": "Bot\xE3o do fogareiro",
+    "prompt.canister_valve": "Registro do botij\xE3o",
+    "prompt.canister_valve.on": "Fechar o registro do botij\xE3o",
+    "prompt.canister_valve.off": "Abrir o registro do botij\xE3o",
+    "prompt.lantern": "Lampi\xE3o",
+    "prompt.lantern.on": "Apagar o lampi\xE3o",
+    "prompt.lantern.on.verb": "Apagar",
+    "prompt.lantern.on.object": "o lampi\xE3o",
+    "prompt.lantern.off": "Acender o lampi\xE3o",
+    "prompt.lantern_knob": "Pavio do lampi\xE3o"
   };
 
   // src/data/regions/br.json
@@ -30904,6 +31153,13 @@ var GameInteractablesHousehold = (() => {
     clothesline: {
       style: "t_post",
       wires: 3
+    },
+    canister: {
+      kind: "butane_230",
+      capacityKg: 0.23,
+      diameter: 0.11,
+      height: 0.19,
+      color: "#4f8f5a"
     }
   };
 
@@ -30933,6 +31189,13 @@ var GameInteractablesHousehold = (() => {
     clothesline: {
       style: "t_post",
       wires: 3
+    },
+    canister: {
+      kind: "8oz",
+      capacityKg: 0.227,
+      diameter: 0.11,
+      height: 0.19,
+      color: "#d6d2c4"
     }
   };
 
@@ -31288,6 +31551,114 @@ var GameInteractablesHousehold = (() => {
       h: 2,
       y: 0,
       solid: false
+    },
+    {
+      id: "bunk_bed",
+      group: "seating",
+      w: 0.95,
+      d: 2.05,
+      h: 1.75,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "wood_stove",
+      group: "rural",
+      w: 0.5,
+      d: 0.55,
+      h: 2.3,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "fireplace",
+      group: "rural",
+      w: 1.6,
+      d: 1,
+      h: 2.6,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "outhouse",
+      group: "rural",
+      w: 1.1,
+      d: 1.2,
+      h: 2.3,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "well",
+      group: "rural",
+      w: 1.5,
+      d: 1.6,
+      h: 2.3,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "cooler",
+      group: "camp",
+      w: 0.62,
+      d: 0.4,
+      h: 0.42,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "campfire",
+      group: "camp",
+      w: 1.1,
+      d: 1.1,
+      h: 0.75,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "camp_stove",
+      group: "camp",
+      w: 0.36,
+      d: 0.3,
+      h: 0.17,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "gas_canister",
+      group: "camp",
+      w: 0.12,
+      d: 0.12,
+      h: 0.2,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "lantern_lamp",
+      group: "camp",
+      w: 0.22,
+      d: 0.22,
+      h: 0.4,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "camp_chair",
+      group: "camp",
+      w: 0.52,
+      d: 0.5,
+      h: 0.82,
+      y: 0,
+      solid: true
+    },
+    {
+      id: "camp_table",
+      group: "camp",
+      w: 1.2,
+      d: 0.6,
+      h: 0.72,
+      y: 0,
+      solid: true
     }
   ];
 
@@ -31529,6 +31900,21 @@ var GameInteractablesHousehold = (() => {
       c.cyl("plain", x, ay + 0.09, 0, 0.022, 0.05, 6982298, "cyl");
       c.cyl("plain", x, ay + 0.14, 0, 0.03, 0.03, 8034986, "cyl");
       ins.push([x, round3(ay + 0.17), 0]);
+    }
+    if (c.M.variant === "gato") {
+      const gh = c.M.house ?? [0, 3.2, 8];
+      const g0 = ins[1];
+      const gp = [];
+      for (let i = 0; i <= 14; i++) {
+        const t = i / 14;
+        gp.push([round3(g0[0] + (gh[0] - g0[0]) * t), round3(g0[1] + (gh[1] - g0[1]) * t - (c.M.sag ?? 0.5) * 4 * t * (1 - t)), round3(g0[2] + (gh[2] - g0[2]) * t)]);
+      }
+      c.add("wires", { id: "drop", kind: "drop", radius: 6e-3, points: gp });
+      c.add("wires", { id: "hook", kind: "cable", radius: 4e-3, points: [[0.22, round3(ay + 0.17), 0], [0.12, round3(ay + 0.06), 0.05], [round3(g0[0]), round3(g0[1]), 0]] });
+      c.spec.colliders = [];
+      c.collider("pole", -0.15, 0, -0.15, 0.15, h, 0.15);
+      c.add("damage", { target: "self", kind: "masonry", hp: 600 });
+      return;
     }
     const mx = 0.19;
     const my = 1.45;
@@ -32294,6 +32680,40 @@ var GameInteractablesHousehold = (() => {
       const x = round3(-hw + 0.1 + (i + 0.5) * step);
       c.add("seats", { id: `seat_${i + 1}`, pose: "sit", pos: [x, round3(seatY + 0.03), 0.02], ry: FACE, exit: [x, 0, round3(hd + 0.5)] });
       c.interact(`sit_${i + 1}`, [x, seatY + 0.3, 0.1], { do: "sit", seat: `seat_${i + 1}` }, "prompt.sit", 1.5);
+    }
+  }
+  function bunkBed(c) {
+    const { hw, hd, h } = c;
+    const wood = c.wood(9069636);
+    const sheet = c.fabric(4881050);
+    const post = 0.06;
+    const zEnd = hd - 0.06;
+    const lowDeck = 0.3;
+    const highDeck = 1.08;
+    const lowTop = lowDeck + 0.18;
+    const highTop = highDeck + 0.18;
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) c.b("wood", sx * (hw - post / 2) - post / 2, 0, sz < 0 ? -hd : zEnd - post, sx * (hw - post / 2) + post / 2, sz < 0 ? h : h - 0.05, sz < 0 ? -hd + post : zEnd, shade(wood, 0.85));
+    for (const deck of [lowDeck, highDeck]) {
+      c.b("wood", -hw + post, deck - 0.06, -hd + post, -hw + post + 0.03, deck + 0.14, zEnd - post, wood);
+      c.b("wood", hw - post - 0.03, deck - 0.06, -hd + post, hw - post, deck + 0.14, zEnd - post, wood);
+      c.b("wood", -hw + post, deck - 0.06, -hd + 0, hw - post, deck + 0.16, -hd + 0.03, shade(wood, 0.92));
+      c.b("wood", -hw + post, deck - 0.06, zEnd - 0.03, hw - post, deck + 0.1, zEnd, shade(wood, 1.05));
+      c.b("wood", -hw + post + 0.03, deck - 0.02, -hd + 0.03, hw - post - 0.03, deck + 4e-3, zEnd - 0.03, shade(wood, 0.7));
+    }
+    for (const [deck, top, id] of [[lowDeck, lowTop, "lower"], [highDeck, highTop, "upper"]]) {
+      c.b("fabric", -hw + post + 0.035, deck + 4e-3, -hd + 0.035, hw - post - 0.035, top, zEnd - 0.035, 15657696);
+      c.b("fabric", -hw + post + 0.04, top - 0.12, -hd + 0.65, hw - post - 0.04, top + 0.035, zEnd - 0.04, id === "upper" ? mix(sheet, 16777215, 0.15) : sheet);
+      c.b("fabric", -hw + post + 0.1, top, -hd + 0.07, hw - post - 0.1, top + 0.1, -hd + 0.45, 16184558, 0, 0.08);
+    }
+    c.b("wood", -hw + post, highTop + 0.04, -hd + post, -hw + post + 0.03, highTop + 0.3, zEnd - post - 0.45, wood);
+    c.b("wood", hw - post - 0.03, highTop + 0.04, -hd + post, hw - post, highTop + 0.3, zEnd - post - 0.45, wood);
+    c.b("wood", -hw + post, highTop + 0.04, zEnd - post - 0.45, -hw + post + 0.03, highTop + 0.07, zEnd - post, wood);
+    c.b("wood", hw - post - 0.03, highTop + 0.04, zEnd - post - 0.45, hw - post, highTop + 0.07, zEnd - post, wood);
+    for (const x of [-0.2, 0.2]) c.b("wood", x - 0.02, 0.06, zEnd, x + 0.02, highTop + 0.3, hd, shade(wood, 1.1));
+    for (let i = 0; i < 5; i++) c.b("wood", -0.2, 0.3 + i * 0.22, zEnd, 0.2, 0.34 + i * 0.22, hd - 0.01, wood);
+    for (const [id, top, ex] of [["lie_lower", lowTop, 1], ["lie_upper", highTop, -1]]) {
+      c.add("seats", { id, pose: "lie", pos: [0, round3(top + 0.06), round3(-hd + 0.95)], ry: FACE, eye: 0.2, exit: [round3(ex * (hw + 0.5)), 0, round3(-hd + 1.1)] });
+      c.interact(`lie_${id}`, [0, round3(top + 0.3), round3(-hd + 0.95)], { do: "sit", seat: id }, "prompt.lie", 1.8);
     }
   }
 
@@ -33160,6 +33580,694 @@ var GameInteractablesHousehold = (() => {
     xs.forEach((x, i) => c.collider(`pole_${i + 1}`, x - 0.04, 0, -0.04, x + 0.04, top, 0.04));
   }
 
+  // src/builders/camp.ts
+  var ALU = 11843772;
+  var DARK = 3026996;
+  function cooler(c) {
+    const { hw, hd, h } = c;
+    const body = c.main(3043255);
+    const white = 15922421;
+    const t = 0.035;
+    const lidT = 0.06;
+    const top = h - lidT;
+    const liner = 15331056;
+    c.b("plain", -hw, 0.015, -hd, hw, 0.015 + t, hd, shade(body, 0.8));
+    c.b("plain", -hw, 0.015 + t, -hd, hw, top, -hd + t, shade(body, 0.92));
+    c.b("plain", -hw, 0.015 + t, hd - t, hw, top, hd, body);
+    c.b("plain", -hw, 0.015 + t, -hd + t, -hw + t, top, hd - t, shade(body, 0.96));
+    c.b("plain", hw - t, 0.015 + t, -hd + t, hw, top, hd - t, shade(body, 0.96));
+    const l = 4e-3;
+    const ix0 = -hw + t;
+    const ix1 = hw - t;
+    const iz0 = -hd + t;
+    const iz1 = hd - t;
+    const iy0 = 0.015 + t;
+    c.b("plain", ix0, iy0, iz0, ix1, iy0 + l, iz1, shade(liner, 0.9));
+    c.b("plain", ix0, iy0 + l, iz0, ix1, top - 2e-3, iz0 + l, liner);
+    c.b("plain", ix0, iy0 + l, iz1 - l, ix1, top - 2e-3, iz1, liner);
+    c.b("plain", ix0, iy0 + l, iz0 + l, ix0 + l, top - 2e-3, iz1 - l, mix(liner, body, 0.06));
+    c.b("plain", ix1 - l, iy0 + l, iz0 + l, ix1, top - 2e-3, iz1 - l, mix(liner, body, 0.06));
+    c.b("plain", -hw + 0.02, 0, -hd + 0.02, -hw + 0.07, 0.015, -hd + 0.07, DARK);
+    c.b("plain", hw - 0.07, 0, -hd + 0.02, hw - 0.02, 0.015, -hd + 0.07, DARK);
+    c.b("plain", -hw + 0.02, 0, hd - 0.07, -hw + 0.07, 0.015, hd - 0.02, DARK);
+    c.b("plain", hw - 0.07, 0, hd - 0.07, hw - 0.02, 0.015, hd - 0.02, DARK);
+    for (const s of [-1, 1]) c.b("plain", s * hw, top - 0.1, -0.1, s * hw + s * 0.015, top - 0.07, 0.1, DARK);
+    c.b("plain", hw - 3e-3, 0.05, hd - 0.14, hw, 0.09, hd - 0.1, DARK);
+    c.part(
+      "lid",
+      [0, h, -hd],
+      { kind: "hinge", axis: [1, 0, 0], angle: -1.5 },
+      () => {
+        c.b("plain", -hw, top, -hd, hw, h, hd, white);
+        c.b("plain", -hw + 0.02, top - 0.012, -hd + 0.02, hw - 0.02, top, hd - 0.02, shade(white, 0.92));
+        c.b("plain", -0.09, h - 0.012, hd - 0.05, 0.09, h, hd, shade(body, 0.8));
+        c.b("plain", -hw + 0.04, h - 6e-3, -hd + 0.04, -hw + 0.07, h, hd - 0.04, shade(white, 0.9));
+        c.b("plain", hw - 0.07, h - 6e-3, -hd + 0.04, hw - 0.04, h, hd - 0.04, shade(white, 0.9));
+      },
+      { label: "prompt.cooler_lid", at: [0, h, hd - 0.03], radius: 1.6 }
+    );
+    const iy1 = top - 4e-3;
+    const cols = 3;
+    const slots = [
+      ...c.row(ix0 + 0.01, ix1 - 0.01, iy0 + l, (iz0 + iz1) / 2 - (iz1 - iz0) / 4, cols, [1, iy1 - iy0 - l, (iz1 - iz0) / 2 - 0.01]),
+      ...c.row(ix0 + 0.01, ix1 - 0.01, iy0 + l, (iz0 + iz1) / 2 + (iz1 - iz0) / 4, cols, [1, iy1 - iy0 - l, (iz1 - iz0) / 2 - 0.01])
+    ];
+    c.container({ id: "cooler", access: "lid", from: [ix0, iy0, iz0], to: [ix1, iy1, iz1], slots, loot: "cooler" });
+  }
+  function campfire(c) {
+    const { hw, hd } = c;
+    const bark = 5914154;
+    const ringR = Math.min(0.4, hw - 0.2, hd - 0.2);
+    const n = 10;
+    for (let i = 0; i < n; i++) {
+      const a = i / n * Math.PI * 2 + c.rnd() * 0.1;
+      const r = ringR + (c.rnd() - 0.5) * 0.04;
+      const px = Math.sin(a) * r;
+      const pz = Math.cos(a) * r;
+      const s = 0.17 + c.rnd() * 0.06;
+      c.box("plain", px, 0, pz, s, 0.13 + c.rnd() * 0.05, s * 0.9, shade(9275778, 0.7 + c.rnd() * 0.5), a + c.rnd() * 0.5);
+      if (i % 3 === 0) c.box("plain", px * 0.96, 0.13, pz * 0.96, s * 0.8, 0.08, s * 0.7, shade(9275778, 0.8 + c.rnd() * 0.4), a);
+    }
+    c.cyl("plain", 0, 1e-3, 0, ringR - 0.1, 0.03, 3815478, "cyl");
+    c.cyl("plain", 0, 0.031, 0, ringR - 0.2, 0.012, 5656650, "cyl");
+    c.rod("wood", "x", 0, 0.08, 0.05, 0.05, 0.62, bark);
+    c.rod("wood", "z", 0.04, 0.14, 0, 0.05, 0.6, shade(bark, 0.85));
+    const tilt = 0.42;
+    c.cyl("wood", 0.15, 0.3, 0, 0.045, 0.62, shade(bark, 1.05), "cyl", 0, tilt);
+    c.cyl("wood", -0.15, 0.3, 0, 0.045, 0.62, shade(bark, 0.95), "cyl", 0, -tilt);
+    c.cyl("wood", 0, 0.3, 0.15, 0.045, 0.62, shade(bark, 1.1), "cyl", -tilt, 0);
+    c.cyl("wood", 0, 0.3, -0.15, 0.045, 0.62, shade(bark, 0.9), "cyl", tilt, 0);
+    const seatR = Math.min(hw, hd) - 0.2;
+    const seats = seatR >= 0.8;
+    if (seats) {
+      for (const s of [-1, 1]) {
+        c.rod("wood", "x", 0, 0.17, s * seatR, 0.17, 0.9, shade(bark, 1.2));
+      }
+    }
+    c.add("fuels", { id: "wood", kind: "wood", capacity: 6, level: 6 });
+    const bed = [0, 0.2, 0];
+    c.add("burners", { id: "fire", pos: bed, fuel: "wood", rate: 8e-4, needsIgnition: true });
+    c.add("emitters", { id: "fire_flame", kind: "fire", pos: bed, dir: [0, 1, 0], source: "fire", size: 0.5 });
+    c.add("emitters", { id: "fire_smoke", kind: "smoke", pos: [0, round3(Math.min(c.h - 0.02, 0.62)), 0], dir: [0, 1, 0], source: "fire", size: 0.45 });
+    c.interact("ignite_fire", [0, 0.5, 0], { do: "ignite", burner: "fire" }, "prompt.campfire_ignite", 1.8);
+    c.interact("toggle_fire", [ringR * 0.7, 0.25, ringR * 0.7], { do: "toggle_burner", burner: "fire" }, "prompt.campfire", 1.8);
+    if (seats) {
+      for (const [i, s] of [-1, 1].entries()) {
+        c.add("seats", { id: `seat_${i + 1}`, pose: "sit", pos: [0, 0.36, round3(s * seatR)], ry: s < 0 ? 0 : Math.PI, exit: [0, 0, round3(s * (seatR + 0.6))] });
+        c.interact(`sit_seat_${i + 1}`, [0, 0.6, round3(s * seatR)], { do: "sit", seat: `seat_${i + 1}` }, "prompt.sit", 1.5);
+      }
+    }
+    c.spec.colliders = [];
+    c.collider("ring", -ringR - 0.1, 0, -ringR - 0.1, ringR + 0.1, 0.2, ringR + 0.1);
+    if (seats) for (const [i, s] of [-1, 1].entries()) c.collider(`log_${i + 1}`, -0.45, 0, s * seatR - 0.17, 0.45, 0.34, s * seatR + 0.17);
+  }
+  function campStove(c) {
+    const { hw, hd, h } = c;
+    const Y = c.y0;
+    const steel = c.metal(ALU);
+    const enamel = c.main(12597547);
+    const zf = hd - HANDLE;
+    c.b("metal", -hw, Y + 0.02, -hd, hw, Y + 0.09, zf, enamel);
+    c.b("metal", -hw + 0.01, Y + 0.09, -hd + 0.01, hw - 0.01, Y + 0.095, zf - 0.01, shade(enamel, 0.8));
+    c.b("metal", -hw + 0.02, Y + 1e-3, -hd + 0.02, -hw + 0.06, Y + 0.02, -hd + 0.06, DARK);
+    c.b("metal", hw - 0.06, Y + 1e-3, -hd + 0.02, hw - 0.02, Y + 0.02, -hd + 0.06, DARK);
+    c.b("metal", -hw + 0.02, Y + 1e-3, zf - 0.06, -hw + 0.06, Y + 0.02, zf - 0.02, DARK);
+    c.b("metal", hw - 0.06, Y + 1e-3, zf - 0.06, hw - 0.02, Y + 0.02, zf - 0.02, DARK);
+    const burnerY = Y + 0.095;
+    c.cyl("metal", 0, burnerY, 0, 0.022, 0.03, DARK, "cyl");
+    c.cyl("metal", 0, burnerY + 0.03, 0, 0.055, 0.018, shade(steel, 0.7), "cyl");
+    c.cyl("metal", 0, burnerY + 0.048, 0, 0.042, 6e-3, 1842206, "cyl");
+    for (const a of [0, 2.094, 4.189]) {
+      const px = Math.sin(a) * 0.085;
+      const pz = Math.cos(a) * 0.085;
+      c.b("metal", px - 8e-3, burnerY + 0.02, pz - 8e-3, px + 8e-3, Y + h - 5e-3, pz + 8e-3, DARK);
+    }
+    c.cyl("metal", 0, Y + h - 0.012, 0, 0.1, 8e-3, DARK, "cyl6");
+    c.b("metal", -hw + 5e-3, burnerY, -hd + 5e-3, -hw + 0.012, Y + h - 0.01, zf - 0.04, shade(steel, 0.9));
+    c.b("metal", hw - 0.012, burnerY, -hd + 5e-3, hw - 5e-3, Y + h - 0.01, zf - 0.04, shade(steel, 0.9));
+    c.b("metal", -hw + 0.012, burnerY, -hd + 5e-3, hw - 0.012, Y + h - 0.01, -hd + 0.012, shade(steel, 0.8));
+    const kx = hw * 0.55;
+    const ky = Y + 0.055;
+    c.part(
+      "knob",
+      [kx, ky, zf],
+      { kind: "knob", axis: [0, 0, 1], angle: -2 },
+      () => {
+        c.rod("plain", "z", kx, ky, zf + 6e-3, 8e-3, 0.012, 2763308, "cyl6");
+        c.rod("plain", "z", kx, ky, zf + 0.0165, 0.017, 0.011, 1973792);
+        c.b("plain", kx - 25e-4, ky + 1e-3, zf + 0.021, kx + 25e-4, ky + 0.016, zf + 0.0225, 15263976);
+      },
+      { label: "prompt.camp_stove_knob", at: false, noSweep: true, radius: 0.9 }
+    );
+    c.add("burners", { id: "burner", pos: [0, round3(burnerY + 0.056), 0], part: "knob", fuel: "auto", rate: 4e-5 });
+    c.add("emitters", { id: "burner_flame", kind: "flame", pos: [0, round3(burnerY + 0.056), 0], dir: [0, 1, 0], source: "burner", size: 0.05 });
+    c.add("wires", {
+      id: "gas_hose",
+      kind: "cable",
+      radius: 5e-3,
+      points: [[round3(-hw * 0.6), Y + 0.05, -hd], [round3(-hw * 0.6), Y + 0.03, round3(-hd - 0.08)], [round3(-hw * 0.6 - 0.04), Y + 0.02, round3(-hd - 0.22)]]
+    });
+    c.interact("use_burner", [kx, ky, round3(zf + HANDLE)], { do: "toggle_burner", burner: "burner" }, "prompt.camp_stove", 0.9);
+  }
+  function gasCanister(c) {
+    const g = c.region.canister;
+    const Y = c.y0;
+    const R = Math.min(g.diameter, c.w, c.d) / 2;
+    const H = Math.min(g.height, c.h);
+    const col = Number.parseInt(g.color.replace("#", ""), 16);
+    c.cyl("metal", 0, Y + 1e-3, 0, R * 0.96, 0.011, 6975090, "cyl");
+    c.cyl("metal", 0, Y + 0.012, 0, R, H - 0.012 - 0.045, col, "cyl");
+    c.cyl("metal", 0, Y + 0.012 + (H - 0.057) * 0.35, 0, R + 1e-3, (H - 0.057) * 0.3, 15789280, "cyl");
+    c.cyl("metal", 0, Y + H - 0.075, 0, R * 0.96, 0.04, col, "sphere");
+    c.cyl("metal", 0, Y + H - 0.05, 0, R * 0.45, 0.012, 10133154, "cyl");
+    c.cyl("metal", 0, Y + H - 0.04, 0, R * 0.3, 0.02, 11569716, "cyl6");
+    c.part(
+      "valve",
+      [0, Y + H - 0.02, 0],
+      { kind: "knob", axis: [0, 1, 0], angle: 1.6 },
+      () => {
+        c.cyl("metal", 0, Y + H - 0.02, 0, 0.012, 0.02, 9071146, "cyl6");
+        c.b("metal", -0.022, Y + H - 4e-3, -4e-3, 0.022, Y + H, 4e-3, 14211292);
+      },
+      { label: "prompt.canister_valve", at: false, noSweep: true, radius: 0.9 }
+    );
+    c.add("fuels", { id: "gas", kind: "gas", capacity: g.capacityKg, level: g.capacityKg, valve: "valve" });
+    c.add("damage", { target: "gas", kind: "gas", hp: 12 });
+    c.spec.destruction = {
+      material: "steel",
+      joint: "weld",
+      explodes: { energy: Math.round(g.capacityKg * 46e3), radius: 3, atC: 180 },
+      contains: { fluid: "gas", liters: Math.max(0.1, round3(g.capacityKg / 0.54)), pressurized: true }
+    };
+    c.interact("use_gas", [0, Y + H, 0], { do: "toggle_fuel", fuel: "gas" }, "prompt.canister_valve", 0.9, c.M.requires);
+    c.spec.colliders = [];
+    c.collider("body", -R, Y, -R, R, Y + H, R);
+  }
+  function lanternLamp(c) {
+    const { h } = c;
+    const Y = c.y0;
+    const hanging = c.M.variant === "hanging";
+    const brass = c.metal(11569716);
+    const chain = hanging ? 0.1 : 0;
+    const bodyTop = h - chain;
+    const baseR = 0.085;
+    const globeR = 0.062;
+    c.cyl("metal", 0, Y + 1e-3, 0, baseR, 0.029, shade(brass, 0.8), "cyl");
+    c.cyl("metal", 0, Y + 0.03, 0, baseR * 0.9, 0.05, brass, "sphere");
+    c.cyl("metal", 0, Y + 0.075, 0, baseR * 0.75, 0.025, shade(brass, 1.1), "cyl");
+    const gy = Y + 0.1;
+    const gh = bodyTop - 0.2;
+    c.cyl("glass", 0, gy, 0, globeR, gh * 0.75, 15266034, "cyl");
+    c.cyl("glass", 0, gy + gh * 0.55, 0, globeR * 0.98, gh * 0.45, 15266034, "sphere");
+    for (const [sx, sz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) c.b("metal", sx * (globeR + 0.012) - 3e-3, gy, sz * (globeR + 0.012) - 3e-3, sx * (globeR + 0.012) + 3e-3, gy + gh, sz * (globeR + 0.012) + 3e-3, shade(brass, 0.9));
+    c.cyl("metal", 0, gy + gh, 0, baseR * 0.85, 0.03, brass, "cone");
+    c.cyl("metal", 0, gy + gh + 0.03, 0, 0.02, 0.04, shade(brass, 0.8), "cyl");
+    c.cyl("metal", 0, gy + gh + 0.07, 0, 0.045, 0.01, brass, "cyl");
+    c.cyl("plain", 0, gy, 0, 0.012, 0.03, 15788240, "cyl6");
+    const by = gy + gh + 0.08;
+    for (const s of [-1, 1]) c.b("metal", s * baseR - 3e-3, Y + 0.08, -3e-3, s * baseR + 3e-3, by + 0.02, 3e-3, DARK);
+    c.b("metal", -baseR + 7e-3, by + 0.014, -3e-3, baseR - 7e-3, by + 0.02, 3e-3, DARK);
+    if (hanging) {
+      for (let y = by + 0.02; y < Y + h - 0.012; y += 0.022) c.b("metal", -4e-3, y, -4e-3, 4e-3, y + 0.016, 4e-3, DARK);
+      c.b("metal", -0.012, Y + h - 0.012, -0.012, 0.012, Y + h, 0.012, DARK);
+    }
+    const kx = baseR * 0.85;
+    const ky = Y + 0.055;
+    c.part(
+      "wick",
+      [kx, ky, 0],
+      { kind: "knob", axis: [1, 0, 0], angle: 1.4 },
+      () => {
+        c.rod("metal", "x", kx + 0.01, ky, 0, 0.018, 0.012, DARK);
+        c.rod("metal", "x", kx + 0.016, ky, 0, 8e-3, 0.01, brass);
+      },
+      { label: "prompt.lantern_knob", at: false, noSweep: true, radius: 0.9 }
+    );
+    c.add("devices", { id: "lamp", kind: "lamp", watts: 0, electric: false, part: "wick", ...c.M.on ? { on: true } : {} });
+    c.add("emitters", { id: "lamp_flame", kind: "flame", pos: [0, round3(gy + 0.04), 0], dir: [0, 1, 0], source: "lamp", size: 0.04 });
+    c.interact("toggle_lamp", [kx + 0.02, ky, 0], { do: "toggle_device", device: "lamp" }, "prompt.lantern", 1.2);
+    c.spec.colliders = [];
+    if (!hanging) c.collider("body", -baseR, Y, -baseR, baseR, Y + bodyTop, baseR);
+  }
+  function campChair(c) {
+    const { hw, hd, h } = c;
+    const tube = c.metal(4869714);
+    const fab = c.fabric(3104138);
+    const seatY = 0.44;
+    const tilt = 0.5;
+    for (const s of [-1, 1]) {
+      const x = s * (hw - 0.03);
+      c.cyl("metal", x, 0.22, 0, 0.011, 0.5, tube, "cyl6", tilt, 0);
+      c.cyl("metal", x, 0.22, 0, 0.011, 0.5, tube, "cyl6", -tilt, 0);
+      c.rod("metal", "z", x, seatY - 5e-3, 0, 0.012, 2 * hd - 0.1, tube);
+      c.cyl("metal", x, seatY, hd - 0.05, 0.012, 0.64 - seatY, tube, "cyl6");
+      c.rod("metal", "z", x, 0.64, 0, 0.012, 2 * hd - 0.12, shade(tube, 1.1));
+      c.cyl("metal", x, seatY, -hd + 0.05, 0.012, h - seatY - 0.02, tube, "cyl6");
+      c.cyl("plain", x, 1e-3, 0.12, 0.016, 8e-3, DARK, "cyl6");
+      c.cyl("plain", x, 1e-3, -0.12, 0.016, 8e-3, DARK, "cyl6");
+    }
+    c.b("fabric", -hw + 0.04, seatY - 4e-3, -hd + 0.06, hw - 0.04, seatY + 6e-3, hd - 0.06, fab);
+    c.b("fabric", -hw + 0.045, seatY + 6e-3, -hd + 0.065, hw - 0.045, seatY + 9e-3, hd - 0.065, shade(fab, 1.1));
+    c.b("fabric", -hw + 0.04, seatY + 0.02, -hd + 0.035, hw - 0.04, h - 0.04, -hd + 0.045, fab, 0, -0.1);
+    c.b("fabric", -hw + 0.04, h - 0.06, -hd + 0.03, hw - 0.04, h - 0.03, -hd + 0.05, shade(fab, 0.8), 0, -0.1);
+    c.cyl("metal", hw - 0.03, 0.56, 0.02, 0.04, 0.012, shade(tube, 1.3), "cyl");
+    c.add("seats", { id: "seat", pose: "sit", pos: [0, round3(seatY + 0.05), 0.02], ry: 0, exit: [0, 0, round3(hd + 0.45)] });
+    c.interact("sit", [0, seatY + 0.3, 0.1], { do: "sit", seat: "seat" }, "prompt.sit", 1.5);
+  }
+  function campTable(c) {
+    const { hw, hd, h } = c;
+    const alu = c.metal(ALU);
+    const top = c.main(14275782);
+    const t = 0.025;
+    c.b("plain", -hw, h - t, -hd, hw, h, hd, top);
+    c.b("metal", -hw, h - t - 0.02, -hd, hw, h - t, -hd + 0.025, shade(alu, 0.85));
+    c.b("metal", -hw, h - t - 0.02, hd - 0.025, hw, h - t, hd, shade(alu, 0.85));
+    c.b("metal", -hw, h - t - 0.02, -hd + 0.025, -hw + 0.025, h - t, hd - 0.025, shade(alu, 0.85));
+    c.b("metal", hw - 0.025, h - t - 0.02, -hd + 0.025, hw, h - t, hd - 0.025, shade(alu, 0.85));
+    const tilt = 0.46;
+    const L = (h - t - 0.02) / Math.cos(tilt);
+    for (const s of [-1, 1]) {
+      const x = s * (hw - 0.14);
+      c.cyl("metal", x, (h - t - 0.02) / 2, 0, 0.014, L, alu, "cyl6", tilt, 0);
+      c.cyl("metal", x, (h - t - 0.02) / 2, 0, 0.014, L, alu, "cyl6", -tilt, 0);
+      c.b("metal", x - 0.02, h - t - 0.035, -hd + 0.06, x + 0.02, h - t - 0.02, hd - 0.06, shade(alu, 0.7));
+    }
+    c.rod("metal", "x", 0, 0.2, 0, 0.01, 2 * hw - 0.28, shade(alu, 0.8));
+  }
+
+  // src/builders/rural.ts
+  function stones(c, x0, y0, z0, x1, y1, z1, color, mortar = 10262154) {
+    c.b("plain", x0 + 0.01, y0, z0 + 0.01, x1 - 0.01, y1, z1 - 0.01, mortar);
+    const ch = 0.11;
+    const n = Math.max(1, Math.round((y1 - y0) / ch));
+    const h = (y1 - y0) / n;
+    for (let i = 0; i < n; i++) {
+      const ya = y0 + i * h + 4e-3;
+      const yb = y0 + (i + 1) * h - 4e-3;
+      for (const [za, zb] of [
+        [z1 - 0.012, z1],
+        [z0, z0 + 0.012]
+      ]) {
+        let x = x0;
+        while (x < x1 - 0.02) {
+          const w = Math.min(x1 - x, 0.12 + c.rnd() * 0.16);
+          c.b("plain", x + 4e-3, ya, za, x + w - 4e-3, yb - c.rnd() * 0.01, zb, shade(color, 0.82 + c.rnd() * 0.32));
+          x += w;
+        }
+      }
+      for (const [xa, xb] of [
+        [x0, x0 + 0.012],
+        [x1 - 0.012, x1]
+      ]) {
+        let z = z0 + 0.012;
+        while (z < z1 - 0.03) {
+          const d = Math.min(z1 - 0.012 - z, 0.12 + c.rnd() * 0.16);
+          c.b("plain", xa, ya, z + 4e-3, xb, yb - c.rnd() * 0.01, z + d - 4e-3, shade(color, 0.82 + c.rnd() * 0.32));
+          z += d;
+        }
+      }
+    }
+  }
+  var IRON = 2829102;
+  function woodStove(c) {
+    const { hw, hd } = c;
+    const iron = c.metal(IRON);
+    const x0 = -hw + 0.03;
+    const x1 = hw - 0.03;
+    const zb = -hd + 0.03;
+    const zf = hd - 0.05;
+    const t = 0.02;
+    const flueTop = Math.min(c.M.flueHeight ?? c.h, c.y0 + c.h);
+    const fx = 0;
+    const fz = zb + 0.15;
+    const top = 0.72;
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) c.cyl("metal", sx * (hw - 0.07), 0, sz * (hd - 0.09), 0.022, 0.2, shade(iron, 0.9), "cyl6");
+    c.b("metal", x0, 0.2, zb, x1, 0.25, zf, shade(iron, 1.15));
+    const by0 = 0.25;
+    c.b("metal", x0, by0, zb, x1, top, zb + t, shade(iron, 0.85));
+    c.b("metal", x0, by0, zb + t, x0 + t, top, zf, iron);
+    c.b("metal", x1 - t, by0, zb + t, x1, top, zf, iron);
+    c.b("metal", x0 - 5e-3, top, zb, x1 + 5e-3, top + 0.03, zf + 5e-3, shade(iron, 1.2));
+    const ox0 = x0 + 0.1;
+    const ox1 = x1 - 0.1;
+    const oy0 = by0 + 0.08;
+    const oy1 = top - 0.1;
+    c.b("metal", x0 + t, by0, zf - 0.03, ox0, top, zf, iron);
+    c.b("metal", ox1, by0, zf - 0.03, x1 - t, top, zf, iron);
+    c.b("metal", ox0, by0, zf - 0.03, ox1, oy0, zf, iron);
+    c.b("metal", ox0, oy1, zf - 0.03, ox1, top, zf, iron);
+    const brick = 9071190;
+    c.b("plain", x0 + t, by0 + 5e-3, zb + t, x1 - t, by0 + 0.03, zf - 0.03, mix(brick, 0, 0.25));
+    c.b("plain", x0 + t, by0 + 0.03, zb + t, x1 - t, top - 5e-3, zb + t + 0.015, brick);
+    c.b("plain", x0 + t, by0 + 0.03, zb + t + 0.015, x0 + t + 0.015, top - 5e-3, zf - 0.03, mix(brick, 16777215, 0.08));
+    c.b("plain", x1 - t - 0.015, by0 + 0.03, zb + t + 0.015, x1 - t, top - 5e-3, zf - 0.03, mix(brick, 16777215, 0.08));
+    c.b("plain", x0 + t, top - 0.02, zb + t + 0.015, x1 - t, top - 5e-3, zf - 0.03, mix(brick, 0, 0.2));
+    c.b("plain", x0 + t + 0.03, by0 + 0.03, zb + t + 0.03, x1 - t - 0.03, by0 + 0.06, zf - 0.08, 5917250);
+    for (let i = 0; i < 5; i++) c.b("metal", x0 + t + 0.03, by0 + 0.06, zb + t + 0.04 + i * 0.06, x1 - t - 0.03, by0 + 0.07, zb + t + 0.05 + i * 0.06, shade(iron, 1.4));
+    const potX = 0;
+    const potZ = zf - 0.12;
+    c.cyl("metal", potX, top + 0.03, potZ, 0.12, 6e-3, shade(iron, 1.5), "cyl");
+    c.cyl("metal", potX, top + 0.036, potZ, 0.085, 4e-3, shade(iron, 1.15), "cyl");
+    c.cyl("metal", fx, top + 0.03, fz, 0.085, 0.07, iron, "cyl");
+    const pipeBase = top + 0.1;
+    c.cyl("metal", fx, pipeBase, fz, 0.07, flueTop - pipeBase, shade(iron, 1.1), "cyl");
+    for (let y = pipeBase + 0.25; y < flueTop - 0.12; y += 0.45) c.cyl("metal", fx, y, fz, 0.076, 0.03, shade(iron, 1.5), "cyl");
+    c.cyl("metal", fx, flueTop - 0.05, fz, 0.1, 0.03, shade(iron, 0.9), "cyl");
+    c.cyl("metal", fx, flueTop - 2e-3, fz, 0.052, 2e-3, 4866106, "cyl");
+    c.b("metal", fx + 0.07, pipeBase + 0.2, fz - 8e-3, fx + 0.17, pipeBase + 0.212, fz + 8e-3, shade(iron, 1.6));
+    const side = c.M.hinge ?? "left";
+    const dx0 = ox0 + 6e-3;
+    const dx1 = ox1 - 6e-3;
+    const dy0 = oy0 + 6e-3;
+    const dy1 = oy1 - 6e-3;
+    const dt = 0.03;
+    const px = side === "left" ? dx0 : dx1;
+    const sign = side === "left" ? -1 : 1;
+    const hx = side === "left" ? dx1 - 0.03 : dx0 + 0.03;
+    c.part(
+      "firebox_door",
+      [px, (dy0 + dy1) / 2, zf],
+      { kind: "hinge", axis: [0, 1, 0], angle: sign * 1.7 },
+      () => {
+        c.b("metal", dx0, dy0, zf, dx1, dy1, zf + dt, iron);
+        c.b("metal", dx0 + 0.025, dy0 + 0.025, zf + dt, dx1 - 0.025, dy1 - 0.025, zf + dt + 4e-3, shade(iron, 1.5));
+        c.plane("glass", (dx0 + dx1) / 2, (dy0 + dy1) / 2, zf + dt + 65e-4, dx1 - dx0 - 0.07, dy1 - dy0 - 0.07, 5913130);
+        c.b("metal", hx - 8e-3, (dy0 + dy1) / 2 - 0.05, zf + dt, hx + 8e-3, (dy0 + dy1) / 2 + 0.05, zf + dt + 0.03, 11843772);
+      },
+      { label: "prompt.firebox_door", at: [(dx0 + dx1) / 2, (dy0 + dy1) / 2, zf + dt + HANDLE] }
+    );
+    const pot = 0.24;
+    c.container({
+      id: "pot_spot",
+      from: [potX - pot / 2, top + 0.03, potZ - pot / 2],
+      to: [potX + pot / 2, top + 0.4, potZ + pot / 2],
+      slots: [{ pos: [round3(potX), round3(top + 0.03), round3(potZ)], max: [pot, 0.3, pot] }]
+    });
+    c.add("fuels", { id: "wood", kind: "wood", capacity: 8, level: 8 });
+    const bed = [0, round3(by0 + 0.12), round3((zb + zf) / 2)];
+    c.add("burners", { id: "fire", pos: bed, fuel: "wood", rate: 5e-4, needsIgnition: true });
+    c.add("emitters", { id: "fire_flame", kind: "fire", pos: bed, dir: [0, 1, 0], source: "fire", size: 0.22 });
+    c.add("emitters", { id: "fire_smoke", kind: "smoke", pos: [fx, round3(flueTop + 0.02), round3(fz)], dir: [0, 1, 0], source: "fire", size: 0.3 });
+    c.interact("ignite_fire", [0, round3((oy0 + oy1) / 2), round3(zf + dt + 0.05)], { do: "ignite", burner: "fire" }, "prompt.wood_stove_ignite", 1.4);
+    c.interact("toggle_fire", [round3(hx), round3(oy1 + 0.04), round3(zf + dt + 0.05)], { do: "toggle_burner", burner: "fire" }, "prompt.wood_stove", 1.4);
+    c.spec.colliders = [];
+    c.collider("body", x0, 0, zb, x1, top + 0.03, zf + 0);
+    c.collider("flue", fx - 0.07, top + 0.03, fz - 0.07, fx + 0.07, flueTop, fz + 0.07);
+  }
+  function fireplace(c) {
+    const { hw, hd } = c;
+    const stone = c.M.variant === "stone";
+    const mat = stone ? 9275778 : 10637114;
+    const masonry = (x0, y0, z0, x1, y1, z1) => stone ? stones(c, x0, y0, z0, x1, y1, z1, mat) : bricks(c, x0, y0, z0, x1, y1, z1, mat);
+    const chimneyTop = Math.min(c.M.chimneyHeight ?? c.h, c.y0 + c.h);
+    const sd = Math.min(0.55, c.d - 0.3);
+    const zw = -hd;
+    const zs = zw + sd;
+    const hearthY = 0.1;
+    const ow = Math.min(0.42, hw - 0.3);
+    const openTop = 0.92;
+    const lintel = 0.12;
+    const mantelY = openTop + lintel;
+    c.b("plain", -hw, 0, zw + 0.1, hw, hearthY, hd, 12170150);
+    c.b("plain", -hw + 0.02, hearthY, zs + 0.02, hw - 0.02, hearthY + 4e-3, hd - 0.02, 11051670);
+    masonry(-hw, hearthY, zw, -ow, mantelY, zs);
+    masonry(ow, hearthY, zw, hw, mantelY, zs);
+    const lin = 7294012;
+    c.b("plain", -ow, hearthY, zw, ow, openTop, zw + 0.1, shade(lin, 0.9));
+    c.b("plain", -ow, hearthY, zw + 0.1, -ow + 0.04, openTop, zs, lin);
+    c.b("plain", ow - 0.04, hearthY, zw + 0.1, ow, openTop, zs, lin);
+    c.b("plain", -ow + 0.04, hearthY, zw + 0.1, ow - 0.04, hearthY + 0.03, zs, shade(lin, 0.75));
+    c.b("plain", -ow, openTop - 0.02, zw + 0.1, ow, openTop, zs, shade(lin, 0.8));
+    c.b("metal", -ow - 0.02, openTop, zs - 0.03, ow + 0.02, openTop + 0.04, zs + 5e-3, 3816512);
+    masonry(-ow, openTop, zw, ow, mantelY, zs - 0.03);
+    c.b("wood", -hw, mantelY, zw, hw, mantelY + 0.07, zs + 0.07, c.wood(6965808));
+    c.b("wood", -hw + 0.02, mantelY + 0.07, zs + 0, hw - 0.02, mantelY + 0.075, zs + 0.07, shade(c.wood(6965808), 1.15));
+    const bw = hw - 0.18;
+    const stackHalf = Math.min(0.3, hw - 0.4);
+    const breastTop = mantelY + 0.7;
+    masonry(-bw, mantelY + 0.07, zw, bw, breastTop, zw + 0.45);
+    masonry(-stackHalf, breastTop, zw, stackHalf, chimneyTop - 0.08, zw + 0.4);
+    c.b("plain", -stackHalf - 0.04, chimneyTop - 0.08, zw, stackHalf + 0.04, chimneyTop - 0.04, zw + 0.44, 13617596);
+    c.b("plain", -0.13, chimneyTop - 0.04, zw + 0.07, 0.13, chimneyTop, zw + 0.33, 10130570);
+    c.b("plain", -0.1, chimneyTop - 2e-3, zw + 0.1, 0.1, chimneyTop, zw + 0.3, 4866106);
+    const fz = zw + 0.1 + (sd - 0.1) * 0.5;
+    const gy = hearthY + 0.03;
+    for (const s of [-1, 1]) {
+      c.b("metal", s * 0.27 - 0.02, gy, fz - 0.17, s * 0.27 + 0.02, gy + 0.2, fz - 0.15, IRON);
+      c.b("metal", s * 0.27 - 0.02, gy, fz + 0.15, s * 0.27 + 0.02, gy + 0.2, fz + 0.17, IRON);
+      c.b("metal", s * 0.27 - 0.02, gy + 0.08, fz - 0.17, s * 0.27 + 0.02, gy + 0.1, fz + 0.17, IRON);
+    }
+    for (let i = 0; i < 5; i++) c.b("metal", -0.28, gy + 0.08, fz - 0.14 + i * 0.07, 0.28, gy + 0.095, fz - 0.128 + i * 0.07, shade(IRON, 1.3));
+    const log = 5914154;
+    c.rod("wood", "x", 0, gy + 0.17, fz - 0.09, 0.06, 0.56, log);
+    c.rod("wood", "x", 0.02, gy + 0.17, fz + 0.09, 0.055, 0.5, shade(log, 1.1));
+    c.rod("wood", "x", -0.02, gy + 0.29, fz, 0.05, 0.5, shade(log, 0.9));
+    c.add("fuels", { id: "wood", kind: "wood", capacity: 12, level: 12 });
+    const bed = [0, round3(gy + 0.2), round3(fz)];
+    c.add("burners", { id: "fire", pos: bed, fuel: "wood", rate: 7e-4, needsIgnition: true });
+    c.add("emitters", { id: "fire_flame", kind: "fire", pos: bed, dir: [0, 1, 0], source: "fire", size: 0.4 });
+    c.add("emitters", { id: "fire_smoke", kind: "smoke", pos: [0, round3(chimneyTop + 0.02), round3(zw + 0.2)], dir: [0, 1, 0], source: "fire", size: 0.35 });
+    c.interact("ignite_fire", [0, round3(gy + 0.2), round3(zs + 0.1)], { do: "ignite", burner: "fire" }, "prompt.fireplace_ignite", 1.8);
+    c.interact("toggle_fire", [0.3, round3(gy + 0.35), round3(zs + 0.1)], { do: "toggle_burner", burner: "fire" }, "prompt.fireplace", 1.8);
+    if (stone) c.spec.destruction = { material: "stone", joint: "mortar" };
+    c.spec.colliders = [];
+    c.collider("surround", -hw, 0, zw, hw, chimneyTop, zs + 0.07);
+  }
+  function boards(c, x0, x1, y0, y1, z, t, color, front = 1) {
+    const n = Math.max(1, Math.round((x1 - x0) / 0.1));
+    const bw = (x1 - x0) / n;
+    for (let i = 0; i < n; i++) {
+      const col = shade(color, 0.88 + c.rnd() * 0.2);
+      c.b("wood", x0 + i * bw + 2e-3, y0, z, x0 + (i + 1) * bw - 2e-3, y1, z + t, col);
+      c.b("wood", x0 + i * bw + bw / 2 - 4e-3, y0, front === 1 ? z + t : z - 3e-3, x0 + i * bw + bw / 2 + 4e-3, y1, front === 1 ? z + t + 3e-3 : z, shade(col, 0.82));
+    }
+  }
+  function outhouse(c) {
+    const { hw, hd, h } = c;
+    const wood = c.wood(9071176);
+    const t = 0.03;
+    const bx = hw - 0.05;
+    const bz0 = -hd + 0.05;
+    const bz1 = hd - 0.05;
+    const wallTop = Math.min(2.04, h - 0.25);
+    const doorW = Math.min(0.7, 2 * bx - 0.3);
+    const dx0 = -doorW / 2;
+    const dx1 = doorW / 2;
+    const doorTop = 1.76;
+    c.b("wood", -bx, 0, bz0, bx, 0.05, bz1, shade(wood, 0.7));
+    boards(c, -bx, bx, 0.05, wallTop, bz0, t, wood, -1);
+    for (const s of [-1, 1]) {
+      const n = Math.max(1, Math.round((bz1 - bz0 - t) / 0.1));
+      const bd = (bz1 - bz0 - t) / n;
+      for (let i = 0; i < n; i++) {
+        const col = shade(wood, 0.88 + c.rnd() * 0.2);
+        const xa = s < 0 ? -bx : bx - t;
+        c.b("wood", xa, 0.05, bz0 + t + i * bd + 2e-3, xa + t, wallTop, bz0 + t + (i + 1) * bd - 2e-3, col);
+      }
+    }
+    boards(c, -bx, dx0, 0.05, wallTop, bz1 - t, t, wood);
+    boards(c, dx1, bx, 0.05, wallTop, bz1 - t, t, wood);
+    boards(c, dx0, dx1, doorTop, wallTop, bz1 - t, t, wood);
+    const roofY = wallTop + 0.07;
+    c.b("wood", -hw, roofY, -hd, hw, roofY + 0.04, hd, shade(wood, 0.8), 0, -0.08);
+    c.b("plain", -hw + 0.01, roofY + 0.04, -hd + 0.02, hw - 0.01, roofY + 0.05, hd - 0.02, 4013891, 0, -0.08);
+    const seatY = 0.46;
+    const sz0 = bz0 + t;
+    const sz1 = sz0 + 0.46;
+    const sx = bx - t;
+    c.b("wood", -sx, 0.05, sz1 - 0.025, sx, seatY - 0.03, sz1, shade(wood, 1.05));
+    c.b("wood", -sx, 0.05, sz0, -sx + 0.025, seatY - 0.03, sz1, shade(wood, 0.95));
+    c.b("wood", sx - 0.025, 0.05, sz0, sx, seatY - 0.03, sz1, shade(wood, 0.95));
+    c.b("plain", -sx + 0.025, 0.05, sz0, sx - 0.025, 0.07, sz1 - 0.025, 3878695);
+    const hc = (sz0 + sz1) / 2;
+    const hr = 0.14;
+    c.b("wood", -sx, seatY - 0.03, sz0, sx, seatY, hc - hr, shade(wood, 1.12));
+    c.b("wood", -sx, seatY - 0.03, hc + hr, sx, seatY, sz1, shade(wood, 1.12));
+    c.b("wood", -sx, seatY - 0.03, hc - hr, -hr, seatY, hc + hr, shade(wood, 1.12));
+    c.b("wood", hr, seatY - 0.03, hc - hr, sx, seatY, hc + hr, shade(wood, 1.12));
+    c.rod("plain", "x", sx - 0.03, 0.85, bz0 + 0.3, 0.012, 0.03, 15921126);
+    c.b("metal", sx - 0.01, 0.82, bz0 + 0.3 - 0, sx, 0.88, bz0 + 0.31, 9080466);
+    const lz = hc + hr;
+    c.part(
+      "seat_lid",
+      [0, seatY, hc - hr - 0.01],
+      { kind: "hinge", axis: [1, 0, 0], angle: -1.65 },
+      () => {
+        c.b("wood", -hr - 0.03, seatY, hc - hr - 0.01, hr + 0.03, seatY + 0.025, lz + 0.03, shade(wood, 0.78));
+        c.b("wood", -0.03, seatY + 0.025, lz - 0.05, 0.03, seatY + 0.045, lz + 0.01, shade(wood, 0.6));
+      },
+      { label: "prompt.outhouse_lid", at: [0, seatY + 0.05, hc] }
+    );
+    const side = c.M.hinge ?? "left";
+    const zf = bz1;
+    const pz = zf - 4e-3;
+    const dt = 0.03;
+    const dy0 = 0.06;
+    const cy = 1.5;
+    const R = 0.1;
+    const r2 = 0.085;
+    const ox = 0.045;
+    const oy = 0.02;
+    const solidRanges = (x) => {
+      const gaps = [];
+      if (Math.abs(x) < R) {
+        const a = Math.sqrt(R * R - x * x);
+        const lo = cy - a;
+        const hi = cy + a;
+        const ix = x - ox;
+        if (Math.abs(ix) < r2) {
+          const b = Math.sqrt(r2 * r2 - ix * ix);
+          const il = cy + oy - b;
+          const ih = cy + oy + b;
+          gaps.push([lo, Math.min(hi, Math.max(lo, il))]);
+          gaps.push([Math.max(lo, Math.min(hi, ih)), hi]);
+        } else gaps.push([lo, hi]);
+      }
+      const out = [];
+      let cur = dy0;
+      for (const [g0, g1] of gaps.filter((g) => g[1] - g[0] > 1e-3).sort((a, b) => a[0] - b[0])) {
+        if (g0 > cur) out.push([cur, g0]);
+        cur = Math.max(cur, g1);
+      }
+      if (cur < doorTop - 0.01) out.push([cur, doorTop - 0.01]);
+      return out;
+    };
+    c.part(
+      "door",
+      [side === "left" ? dx0 : dx1, 0.9, pz],
+      { kind: "hinge", axis: [0, 1, 0], angle: (side === "left" ? -1 : 1) * 1.7 },
+      () => {
+        const planks = 6;
+        const pw = (dx1 - dx0 - 4e-3) / planks;
+        for (let p = 0; p < planks; p++) {
+          const a = dx0 + 2e-3 + p * pw;
+          const b = a + pw - 3e-3;
+          const col = shade(wood, 0.85 + c.rnd() * 0.25);
+          const crescent = b > -R - 0.01 && a < R + 0.01;
+          if (!crescent) {
+            c.b("wood", a, dy0, pz - dt, b, doorTop - 0.01, pz, col);
+            continue;
+          }
+          const cols = Math.max(1, Math.round((b - a) / 0.02));
+          const cw = (b - a) / cols;
+          for (let k = 0; k < cols; k++) {
+            const xa = a + k * cw;
+            for (const [ya, yb] of solidRanges(xa + cw / 2)) c.b("wood", xa, ya, pz - dt, xa + cw, yb, pz, col);
+          }
+        }
+        for (const y of [0.3, 1.25]) c.b("wood", dx0 + 0.01, y, pz - dt - 0.025, dx1 - 0.01, y + 0.1, pz - dt, shade(wood, 0.7));
+        const hxn = side === "left" ? dx0 : dx1;
+        for (const y of [0.35, 1.35]) c.b("metal", Math.min(hxn, hxn + (side === "left" ? 0.28 : -0.28)), y, pz, Math.max(hxn, hxn + (side === "left" ? 0.28 : -0.28)), y + 0.05, pz + 8e-3, IRON);
+        const lx = side === "left" ? dx1 - 0.08 : dx0 + 0.08;
+        c.b("wood", lx - 0.1, 0.95, pz, lx + 0.1, 0.99, pz + 0.025, shade(wood, 0.65));
+      },
+      { label: "prompt.outhouse_door", at: [0, 0.95, pz + 0.04] }
+    );
+    c.add("seats", { id: "seat", pose: "sit", pos: [0, round3(seatY + 0.02), round3(hc + 0.02)], ry: 0, exit: [0, 0, round3(hd + 0.5)] });
+    c.interact("sit", [0, 0.8, round3(hc + 0.3)], { do: "sit", seat: "seat" }, "prompt.sit", 1.3);
+    c.spec.colliders = [];
+    c.collider("wall_back", -bx, 0, bz0, bx, wallTop, bz0 + t);
+    c.collider("wall_left", -bx, 0, bz0 + t, -bx + t, wallTop, bz1 - t);
+    c.collider("wall_right", bx - t, 0, bz0 + t, bx, wallTop, bz1 - t);
+    c.collider("front_left", -bx, 0, bz1 - t, dx0, wallTop, bz1);
+    c.collider("front_right", dx1, 0, bz1 - t, bx, wallTop, bz1);
+    c.collider("bench", -sx, 0, sz0, sx, seatY, sz1);
+    c.add("colliders", { id: "door", center: [0, round3(doorTop / 2), round3(pz - dt / 2)], half: [round3(doorW / 2), round3(doorTop / 2), round3(dt / 2)], part: "door", offWhenOpen: true });
+  }
+  function well(c) {
+    const { hd } = c;
+    const stoneCol = c.main(9275778);
+    const wood = c.wood(8018490);
+    const rim = 0.9;
+    const rIn = 0.38;
+    const rMid = 0.465;
+    const n = 12;
+    const bwid = 2 * rMid * Math.tan(Math.PI / n) + 0.012;
+    for (let course = 0; course < 2; course++) {
+      for (let i = 0; i < n; i++) {
+        const a = (i + course * 0.5) / n * Math.PI * 2;
+        const px = Math.sin(a) * rMid;
+        const pz = Math.cos(a) * rMid;
+        c.box("plain", px, course * 0.45 + 4e-3, pz, bwid, 0.442, 0.17, shade(stoneCol, 0.85 + c.rnd() * 0.3), Math.atan2(px, pz));
+      }
+    }
+    for (let i = 0; i < n; i++) {
+      const a = (i + 0.25) / n * Math.PI * 2;
+      const px = Math.sin(a) * 0.47;
+      const pz = Math.cos(a) * 0.47;
+      c.box("plain", px, rim, pz, bwid + 0.03, 0.05, 0.25, shade(stoneCol, 1.05 + c.rnd() * 0.12), Math.atan2(px, pz));
+    }
+    c.cyl("plain", 0, 0, 0, rIn + 0.01, 0.1, 4867906, "cyl");
+    c.cyl("water", 0, 0.1, 0, rIn, 0.01, 3828358, "cyl");
+    for (const s of [-1, 1]) c.b("wood", s * 0.62 - 0.05, 0, -0.05, s * 0.62 + 0.05, 1.9, 0.05, wood);
+    c.b("wood", -0.68, 1.8, -0.06, 0.68, 1.9, 0.06, shade(wood, 0.9));
+    for (const s of [-1, 1]) {
+      c.box("wood", 0, 1.99, s * 0.33, 1.46, 0.04, 0.8, shade(wood, 0.85), 0, s * 0.5);
+      c.box("plain", 0, 2.02, s * 0.33, 1.44, 0.01, 0.78, 5654074, 0, s * 0.5);
+    }
+    c.b("wood", -0.69, 2.05, -0.03, 0.69, 2.12, 0.03, shade(wood, 0.7));
+    const tz0 = 0.58;
+    const tz1 = hd - 0.02;
+    c.b("wood", -0.3, 0, tz0, 0.3, 0.05, tz1, shade(wood, 0.8));
+    c.b("wood", -0.3, 0.05, tz0, 0.3, 0.3, tz0 + 0.04, shade(wood, 0.9));
+    c.b("wood", -0.3, 0.05, tz1 - 0.04, 0.3, 0.3, tz1, shade(wood, 0.9));
+    c.b("wood", -0.3, 0.05, tz0 + 0.04, -0.26, 0.3, tz1 - 0.04, shade(wood, 1));
+    c.b("wood", 0.26, 0.05, tz0 + 0.04, 0.3, 0.3, tz1 - 0.04, shade(wood, 1));
+    c.b("water", -0.26, 0.05, tz0 + 0.04, 0.26, 0.2, tz1 - 0.04, 3828358);
+    c.box("wood", 0, 0.99, 0.4, 0.16, 0.02, 0.56, shade(wood, 1.1), 0, 0.29);
+    for (const s of [-1, 1]) c.box("wood", s * 0.08, 1, 0.4, 0.015, 0.04, 0.56, shade(wood, 0.8), 0, 0.29);
+    const spindleY = 1.45;
+    c.part(
+      "crank",
+      [0, spindleY, 0],
+      { kind: "knob", axis: [1, 0, 0], angle: 6.2 },
+      () => {
+        c.rod("wood", "x", 0, spindleY, 0, 0.045, 1.24, shade(wood, 1.1));
+        c.b("wood", 0.62, spindleY - 0.01, -0.025, 0.69, spindleY + 0.01, 0.025, shade(wood, 0.9));
+        c.b("wood", 0.66, spindleY - 0.01, -0.025, 0.69, spindleY + 0.2, 0.025, shade(wood, 0.9));
+        c.rod("wood", "x", 0.7, spindleY + 0.2, 0, 0.022, 0.08, shade(wood, 0.7));
+      },
+      { label: "prompt.well_crank", at: false, noSweep: true, group: "draw" }
+    );
+    const bucketY = 0.4;
+    const bucketH = 0.26;
+    const lift = 0.5;
+    c.part(
+      "bucket",
+      [0, bucketY, 0],
+      { kind: "slide", axis: [0, 1, 0], distance: lift },
+      () => {
+        c.cyl("wood", 0, bucketY, 0, 0.13, bucketH, shade(wood, 0.9), "cyl");
+        c.cyl("water", 0, bucketY + bucketH - 0.04, 0, 0.115, 5e-3, 3828358, "cyl");
+        for (const y of [bucketY + 0.04, bucketY + bucketH - 0.06]) c.cyl("metal", 0, y, 0, 0.134, 0.02, IRON, "cyl");
+        c.b("metal", -0.135, bucketY + bucketH, -6e-3, -0.125, bucketY + bucketH + 0.17, 6e-3, IRON);
+        c.b("metal", 0.125, bucketY + bucketH, -6e-3, 0.135, bucketY + bucketH + 0.17, 6e-3, IRON);
+        c.b("metal", -0.135, bucketY + bucketH + 0.16, -6e-3, 0.135, bucketY + bucketH + 0.17, 6e-3, IRON);
+      },
+      { noSweep: true, group: "draw" }
+    );
+    const ropeTop = spindleY - 0.02;
+    const ropeBottom = bucketY + bucketH + 0.17;
+    c.part(
+      "rope",
+      [0, ropeTop, 0],
+      { kind: "scale", axis: [0, 1, 0], scale: 0.08 },
+      () => c.cyl("fabric", 0, ropeBottom, 0, 8e-3, ropeTop - ropeBottom, 11573866, "cyl6"),
+      { noSweep: true, group: "draw" }
+    );
+    c.add("tanks", { id: "well_water", capacity: 2e4, level: 2e4 });
+    const outlet = [0, 0.9, round3(0.66)];
+    c.add("fixtures", { id: "water", kind: "hose", outlet, dir: [0, -1, 0.05], flow: 15, part: "bucket", tank: "well_water" });
+    c.add("emitters", { id: "water_stream", kind: "water", pos: outlet, dir: [0, -1, 0.05], source: "water", size: 0.05, reach: 0.6 });
+    c.interact("use_water", [0.7, spindleY + 0.2, 0], { do: "toggle_fixture", fixture: "water" }, "prompt.well", 1.6);
+    c.interact("use_water_bucket", [0, 0.95, 0.35], { do: "toggle_fixture", fixture: "water" }, "prompt.well", 1.6);
+    c.spec.colliders = [];
+    c.collider("ring", -0.55, 0, -0.55, 0.55, rim + 0.05, 0.55);
+    c.collider("post_l", -0.67, 0, -0.07, -0.57, 1.9, 0.07);
+    c.collider("post_r", 0.57, 0, -0.07, 0.67, 1.9, 0.07);
+    c.collider("trough", -0.3, 0, tz0, 0.3, 0.3, tz1);
+  }
+
   // src/builders/yard.ts
   function binBody(c, o) {
     const { x0, x1, z0, z1, y0, y1, t } = o;
@@ -33435,7 +34543,19 @@ var GameInteractablesHousehold = (() => {
     mailbox,
     dog_house: dogHouse,
     bbq,
-    clothesline
+    clothesline,
+    bunk_bed: bunkBed,
+    wood_stove: woodStove,
+    fireplace,
+    outhouse,
+    well,
+    cooler,
+    campfire,
+    camp_stove: campStove,
+    gas_canister: gasCanister,
+    lantern_lamp: lanternLamp,
+    camp_chair: campChair,
+    camp_table: campTable
   };
   var DEFS = types_default;
   var STRINGS = { en: en_default, "pt-BR": pt_BR_default };
@@ -35228,7 +36348,7 @@ uniform float swayAmplitude;
 const AdaptadorInterativos = (function () {
   'use strict';
 
-  const VERSAO = '0.2.0';
+  const VERSAO = '0.3.0';
 
   // ---------------------------------------------------------------------------------------------------------------------------
   // Tabelas
@@ -35281,7 +36401,7 @@ const AdaptadorInterativos = (function () {
     poltrona: { t: 'armchair' },
     poltrona_alta: { t: 'armchair' },
     banqueta: { t: 'dining_chair' },
-    cadeira_camping: { t: 'dining_chair' },
+    cadeira_camping: { t: 'camp_chair', dim: 'wd' },
     cadeira_balanco: { t: 'armchair' },
     pia_rustica: { composto: 'pia_rustica' }, // cuba da cabana/barraco: a cuba na largura toda, sem armário embaixo; armário aéreo só se há conteudoAereo
     cama_improvisada: { t: 'bed_single', dim: 'wd' },
@@ -35307,6 +36427,21 @@ const AdaptadorInterativos = (function () {
     varal: { t: 'clothesline', dim: 'wh' },
     estante_ferr: { t: 'pantry', variant: 'garage' },
     bancada_ferr: { t: 'pantry', variant: 'garage' },
+    // casas rurais e acampamento (tipos do pacote household 0.1.x: rural e camp)
+    beliche: { t: 'bunk_bed', dim: 'wd' },
+    fogao_lenha: { t: 'wood_stove', dim: 'wd' }, // o tubo sobe até `res.chamine.altura` (cabana); a lareira está em planejarSimples (muda de lugar e de altura)
+    lareira: { t: 'fireplace', dim: 'w' },
+    privada: { t: 'outhouse', dim: 'wdh' },
+    poco: { t: 'well', dim: 'padrao' },
+    cooler: { t: 'cooler', dim: 'wd' },
+    fogueira: { t: 'campfire', dim: 'wd' },
+    fogareiro: { t: 'camp_stove', dim: 'wd' },
+    botijao_camping: { t: 'gas_canister', dim: 'padrao' },
+    mesa_camping: { t: 'camp_table', dim: 'wdh' },
+    // lampiões a querosene/gás: dispositivo `lamp` sem eletricidade (a rede não importa); o de teto é o `hanging`
+    lampiao: { t: 'lantern_lamp', dim: 'x' },
+    lampiao_camping: { t: 'lantern_lamp', dim: 'x' },
+    lampiao_teto: { t: 'lantern_lamp', variant: 'hanging', dim: 'x' },
     // lâmpadas: objetos do adaptador (o kit não tem malha de lâmpada; o renderizador da casa desenha a luminária)
     plafon: { t: 'lamp', watts: 15 },
     pendente: { t: 'lamp', watts: 20 },
@@ -35519,6 +36654,8 @@ const AdaptadorInterativos = (function () {
         tomadas: [], // ids das entradas wall_socket
         interruptores: [], // ids das entradas wall_switch
         luzes: [], // ids das lâmpadas (internas e externas)
+        lampioes: [], // ids dos lampiões (lantern_lamp): luz a querosene/gás, sem rede
+        canisters: [], // ids dos botijões pequenos do camping (gas_canister)
         entradaEnergia: null,
         quadro: null, // id da entrada electrical_panel (quadro de distribuição)
         medidor: null, // id da entrada power_meter (caixa do medidor na fachada ou no pilar)
@@ -35625,6 +36762,35 @@ const AdaptadorInterativos = (function () {
         }
       }
 
+      // lampião: acende com `luzesLigadas` (como as lâmpadas) ou à noite numa casa que não está abandonada
+      function luzInicialLampiao(id, entry) {
+        const v = popts.luzesLigadas;
+        if (typeof v === 'function') return !!v(id, entry);
+        if (typeof v === 'boolean') return v;
+        return !!popts.noite && res.estado !== 'abandonada';
+      }
+
+      // lareira: o pacote desenha a lareira inteira (fornalha com 45 cm de fundo, lareira de piso e peito da chaminé até o forro), com 1,0 m de
+      // profundidade; o PlantasSDK reserva só a parede de 0,5 m. Fica com as costas na parede: o centro avança metade da diferença. A fumaça
+      // sai no topo da chaminé de fora (`res.chamine`), que o renderizador da casa continua desenhando.
+      function planejarLareira(m, e, item) {
+        const def = hh.types.find((t) => t.id === 'fireplace');
+        const falta = (def.d - m.d) / 2;
+        item.x = r3(item.x + Math.sin(item.ry) * falta);
+        item.z = r3(item.z + Math.cos(item.ry) * falta);
+        const com = (res.comodos || []).find((c) => c.id === m.comodo);
+        const a = (res.andares || []).find((x) => x.indice === m.andar);
+        item.h = r3((com && com.pe) || (a && a.pe) || 2.6);
+        const ch = res.chamine;
+        if (ch && ch.lareira === m.id) {
+          if (ch.material === 'stone') item.variant = 'stone';
+          const cx = K.x((ch.aabb[0] + ch.aabb[2]) / 2);
+          const cz = K.z((ch.aabb[1] + ch.aabb[3]) / 2);
+          // topo da chaminé de fora, em coordenadas do mundo (o y é absoluto do plano + a base)
+          e.ligacoes.topoChamine = [cx, r3(o.base + ch.altura), cz];
+        }
+      }
+
       function planejarSimples(m, mapa) {
         const item = baseItem(m);
         const dim = mapa.dim === 'padrao' ? '' : mapa.dim || 'wdh';
@@ -35643,6 +36809,26 @@ const AdaptadorInterativos = (function () {
           e.ligacoes.botijao = m.botijao || null;
         }
         if (mapa.t === 'gas_bottle') plano.botijoes.push({ id: e.id, fogao: m.liga || null, local: m.local || null });
+        if (mapa.t === 'gas_canister') {
+          plano.canisters.push(e.id);
+          if (res.gas && res.gas.botijao === m.id && res.gas.fogareiro) plano.botijoes.push({ id: e.id, fogao: res.gas.fogareiro, local: null }); // o fogareiro usa este botijão
+        }
+        if (mapa.t === 'wood_stove') {
+          // o tubo do fogão a lenha sai pelo telhado: sobe até a altura do topo da chaminé (`res.chamine.altura`, y absoluto do plano)
+          const ch = res.chamine;
+          if (ch && ch.fogao === m.id && ch.altura) {
+            const a = (res.andares || []).find((x) => x.indice === m.andar);
+            const alto = r3(ch.altura - (a ? a.y0 : 0) - (m.y || 0));
+            item.h = alto;
+            item.flueHeight = alto;
+          }
+        }
+        if (mapa.t === 'fireplace') planejarLareira(m, e, item);
+        if (mapa.t === 'lantern_lamp') {
+          e.ligada = luzInicialLampiao(m.id, e);
+          item.on = e.ligada;
+          plano.lampioes.push(e.id);
+        }
         if (mapa.t === 'gas_bottle' && m.local === 'sob_bancada') escondidos.push(e);
         empurrar(e);
       }
@@ -35865,6 +37051,7 @@ const AdaptadorInterativos = (function () {
             // ponto onde o ramal chega na casa, em coordenadas locais do poste (y absoluto)
             house: [r3(K.x(fim[0]) - px), fim[2], r3(K.z(fim[1]) - pz)],
           };
+          if (ee.gato || eletrica.modo === 'gato') item.variant = 'gato'; // ligação clandestina: o ramal sai do poste direto para a casa, sem caixa de medidor
           const e = entrada('entrada_energia', 'service_entrance', item, 'entrada_energia', -1);
           empurrar(e);
           plano.entradaEnergia = e.id;
@@ -35973,7 +37160,16 @@ const AdaptadorInterativos = (function () {
           if (L.circuitoTomada) heater.circuit = L.circuitoTomada;
         }
       }
-      if (entry.tipo === 'stove' && L.fuel) for (const b of spec.burners || []) if (b.fuel === 'auto') b.fuel = L.fuel;
+      if ((entry.tipo === 'stove' || entry.tipo === 'camp_stove') && L.fuel) for (const b of spec.burners || []) if (b.fuel === 'auto') b.fuel = L.fuel;
+      if (entry.tipo === 'fireplace' && L.topoChamine) {
+        // a fumaça sai no topo da chaminé de fora: o ponto do mundo volta para as coordenadas locais do objeto
+        const it = entry.item;
+        const dx = L.topoChamine[0] - it.x;
+        const dz = L.topoChamine[2] - it.z;
+        const lx = Math.cos(it.ry) * dx - Math.sin(it.ry) * dz;
+        const lz = Math.sin(it.ry) * dx + Math.cos(it.ry) * dz;
+        for (const em of spec.emitters || []) if (em.kind === 'smoke') em.pos = [r3(lx), r3(L.topoChamine[1] - entry.piso + 0.02), r3(lz)];
+      }
       if (entry.tipo === 'washing_machine' && entry.ponto) {
         // o pacote já traz a entrada de água (`inlet`, ligada ao aparelho: corre enquanto o ciclo roda); aqui só a vazão do projeto e a rede
         spec.fixtures = spec.fixtures || [];
@@ -35998,7 +37194,8 @@ const AdaptadorInterativos = (function () {
         items: hh.items,
         loot: hh.loot,
         seed: copts.semente != null ? copts.semente : res.semente,
-        grid: copts.rede != null ? !!copts.rede : !!res.eletrica,
+        // sem rede: a cabana e o camping off-grid não têm entrada de energia, tomada nem lâmpada elétrica (lampiões não precisam de rede)
+        grid: copts.rede != null ? !!copts.rede : !!res.eletrica && res.eletrica.modo !== 'offgrid',
         onEvent: copts.onEvent,
         canInteract: copts.canInteract,
         waterSupply: {
@@ -36071,8 +37268,10 @@ const AdaptadorInterativos = (function () {
       const ovLuz = aopts.luzesLigadas !== undefined ? aopts.luzesLigadas : info && info.luzesLigadas;
       if (ovLuz !== undefined) {
         for (const e of plano.itens) if (e.tipo === 'lamp') e.ligada = typeof ovLuz === 'function' ? !!ovLuz(e.id, e) : !!ovLuz;
+        for (const e of plano.itens) if (e.tipo === 'lantern_lamp') e.ligada = typeof ovLuz === 'function' ? !!ovLuz(e.id, e) : !!ovLuz;
         for (const e of plano.itens) if (e.tipo === 'wall_switch') e.ligada = (e.ligacoes.controla || []).some((id) => (plano.itens.find((x) => x.id === id) || {}).ligada === true);
       }
+      for (const e of plano.itens) if (e.tipo === 'lantern_lamp') e.item.on = !!e.ligada; // o lampião nasce no estado do plano
       let rascunho = null; // mundo descartável para testar o lado da dobradiça sem desenhar nada
 
       // Mede quanto as peças de dobradiça abrem (fitSweep) com um lado de dobradiça e um recuo da frente, num mundo descartável.
@@ -36379,7 +37578,13 @@ var GameContracts = (() => {
       }
       const seen = new Set(anchored);
       const queue = [...anchored];
-      while (queue.length) for (const n of adj.get(queue.pop()) ?? []) if (!seen.has(n)) seen.add(n), queue.push(n);
+      while (queue.length) {
+        for (const n of adj.get(queue.pop()) ?? []) {
+          if (seen.has(n)) continue;
+          seen.add(n);
+          queue.push(n);
+        }
+      }
       const lost = structural.filter((p) => !seen.has(p.id)).map((p) => p.id);
       if (lost.length) warnings.push(`structural part(s) ${lost.map((i) => `"${i}"`).join(", ")} cannot reach an anchored part, so they will fall`);
     }
@@ -36488,6 +37693,7 @@ var GameDestruction = (() => {
     quatFromEuler: () => quatFromEuler,
     resolveStrings: () => resolveStrings,
     rotateVec: () => rotateVec,
+    sizeStructure: () => sizeStructure,
     toLocal: () => toLocal,
     toWorld: () => toWorld,
     vec: () => vec
@@ -37903,9 +39109,12 @@ var GameDestruction = (() => {
   var DMG_PER_J = 0.02;
   var BLAST_COUPLING = 0.1;
   var FLAMMABLE_FLUIDS = ["gas", "fuel"];
+  var CUT_SLICE = 1;
+  var cutFactorOf = (shape) => clamp2(Math.max(...shapeDims(shape)) / CUT_SLICE, 1, 50);
   var clamp2 = (v, a, b) => Math.max(a, Math.min(b, v));
   var isLost = (p) => p.st.status === "broken" || p.st.status === "melted" || p.st.status === "ashes";
   var clone = (v) => structuredClone(v);
+  var overloadRate = (stress) => Math.min(0.6, 0.12 + 0.8 * (stress - 1));
   var updateBound = (o) => {
     if (!o.parts.length) return;
     const c = [0, 0, 0];
@@ -38055,6 +39264,7 @@ var GameDestruction = (() => {
           fuel0,
           area: shapeArea(ps.shape),
           thickness: partThickness(ps),
+          cutFactor: cutFactorOf(ps.shape),
           dims: shapeDims(ps.shape),
           bound: shapeBound(ps.shape),
           rt: c?.rt ?? { ...freshRuntime(), prevTemp: pst.temperature },
@@ -38215,7 +39425,10 @@ var GameDestruction = (() => {
         for (const g of o.st.groups) {
           const ps = g.map((id) => o.byId.get(id)).filter((p) => !isLost(p) && !o.collapsed.has(p.spec.id));
           if (ps.length === 0 || g.some((id) => o.byId.get(id).anchored) || !ps.some((p) => p.structural)) continue;
-          for (const p of ps) o.collapsed.add(p.spec.id);
+          for (const p of ps) {
+            o.collapsed.add(p.spec.id);
+            p.st.status = "collapsed";
+          }
           emit({ ...base(o, src), type: "collapse", parts: ps.map((p) => p.spec.id), mass: ps.reduce((sum, p) => sum + p.st.mass, 0) });
         }
       }
@@ -38515,7 +39728,7 @@ var GameDestruction = (() => {
       const effM = p.thickness / Math.max(sin, 0.3);
       const thr = mat.penetration * effM * 1e3;
       const penetrated = E > thr;
-      const scale = mat.damageScale?.ballistic ?? 1;
+      const scale = (mat.damageScale?.ballistic ?? 1) * (mat.fracture === "shatter" ? fragility(mat.ductility, p.thickness) : 1);
       const id = p.spec.id;
       if (!penetrated && mat.ricochetDeg && angle < mat.ricochetDeg) {
         const r = vec.sub(d, vec.scale(n, 2 * vec.dot(d, n)));
@@ -38576,7 +39789,7 @@ var GameDestruction = (() => {
       if (kind === "blunt") wearJoints(o, p, E * 0.3, void 0, 0, src);
       else wearJoints(o, p, E * 0.3, point, 0.06, src);
       const scale = mat.damageScale?.[kind] ?? 1;
-      return applyDamage(o, p, Ec * DMG_PER_J * scale, kind, point, d, E * 0.1, 12, src);
+      return applyDamage(o, p, Ec * DMG_PER_J * scale * (kind === "slash" ? p.cutFactor : 1), kind, point, d, E * 0.1, 12, src);
     };
     const blastObject = (o, point, energy, radius, src) => {
       const start = cur.length;
@@ -38865,7 +40078,7 @@ var GameDestruction = (() => {
               p.rt.stressT = 0.5;
               emit({ ...base(o), type: "stress", part: p.spec.id, stress, load: p.st.load ?? 0 });
             }
-            applyDamage(o, p, (stress - 1) * p.st.maxHp * 0.5 * dt, "blunt", null, null, 5, 3);
+            applyDamage(o, p, overloadRate(stress) * p.st.maxHp * dt, "blunt", null, null, 5, 3);
           } else if (stress > 0.8 && p.mat.ductility < 0.3 && p.rt.stressT <= 0 && p.st.cracks.length < 6) {
             p.rt.stressT = 0.5;
             const { c, q } = partXf(o, p);
@@ -39327,6 +40540,47 @@ var GameDestruction = (() => {
     return { name: "frame", parts, joints, tags: ["structure"] };
   };
 
+  // src/size.ts
+  var sizeStructure = (spec, options = {}) => {
+    const safety = options.safety ?? 0.65;
+    const redundancy = options.redundancy;
+    const loads = (s) => {
+      const w = createDestruction(options.materials ? { materials: options.materials } : {});
+      const id = w.add(s);
+      return new Map(w.state(id).parts.map((p) => [p.id, { load: p.load ?? 0, stress: p.stress ?? 0 }]));
+    };
+    const out = structuredClone(spec);
+    const base = loads(out);
+    const need = /* @__PURE__ */ new Map();
+    for (const p of out.parts) {
+      if (!p.structure || p.structure.role === "none") continue;
+      const b = base.get(p.id);
+      if (!b || b.stress <= 0) continue;
+      need.set(p.id, b.load / safety);
+    }
+    if (redundancy !== void 0) {
+      for (const col of out.parts) {
+        if (col.structure?.role !== "column") continue;
+        const reduced = {
+          ...out,
+          parts: out.parts.filter((p) => p.id !== col.id),
+          joints: (out.joints ?? []).filter((j) => j.a !== col.id && j.b !== col.id)
+        };
+        if (!out.joints) delete reduced.joints;
+        const l = loads(reduced);
+        for (const [id, n] of need) {
+          const r = l.get(id);
+          if (r && r.stress > 0) need.set(id, Math.max(n, r.load / redundancy));
+        }
+      }
+    }
+    for (const p of out.parts) {
+      const n = need.get(p.id);
+      if (n !== void 0) p.structure = { ...p.structure, capacity: n };
+    }
+    return out;
+  };
+
   // src/locale.ts
   var locales = {
     en: {
@@ -39359,7 +40613,7 @@ var GameDestruction = (() => {
         wax: "wax",
         soil: "soil"
       },
-      partStatus: { intact: "intact", damaged: "damaged", broken: "broken", melted: "melted", ashes: "ashes" },
+      partStatus: { intact: "intact", damaged: "damaged", collapsed: "collapsed", broken: "broken", melted: "melted", ashes: "ashes" },
       jointKinds: {
         screw: "screw",
         bolt: "nut and bolt",
@@ -39440,7 +40694,7 @@ var GameDestruction = (() => {
         wax: "cera",
         soil: "terra"
       },
-      partStatus: { intact: "intacto", damaged: "danificado", broken: "quebrado", melted: "derretido", ashes: "cinzas" },
+      partStatus: { intact: "intacto", damaged: "danificado", collapsed: "desabado", broken: "quebrado", melted: "derretido", ashes: "cinzas" },
       jointKinds: {
         screw: "parafuso",
         bolt: "porca e parafuso",
@@ -39651,7 +40905,7 @@ const GEO = {};
   GEO.folha = ler(f);
 }
 // metros por repetição de textura, por material (só materiais com mapa)
-const UVESC = { terra: 2.0, chap: 1.0, bloco: 1.2, telha: 1.0, fibro: 1.0, grama: 2.5, asfalto: 3.0, calcada: 1.0 };
+const UVESC = { terra: 2.0, chap: 1.0, bloco: 1.2, telha: 1.0, fibro: 1.0, grama: 2.5, asfalto: 3.0, calcada: 1.0, tabuaH: 1.08, tabuaV: 1.08, zincoW: 0.6, asfalt: 1.02 };
 const COM_MAPA = { chap: 1, bloco: 1 };
 
 class Acc {
@@ -39764,6 +41018,10 @@ const TEXGEN = {
   grama: () => tex(256, (g, n) => { g.fillStyle = '#9ccb62'; g.fillRect(0, 0, n, n); const r = rngT; for (let i = 0; i < 70; i++) { g.fillStyle = `rgba(${r() < 0.5 ? '200,225,110' : '90,150,60'},${0.10 + r() * 0.12})`; const x = r() * n, y = r() * n, q = 8 + r() * 24; for (const dx of [-n, 0, n]) for (const dy of [-n, 0, n]) { g.beginPath(); g.arc(x + dx, y + dy, q, 0, 6.3); g.fill(); } } for (let i = 0; i < 1400; i++) { g.strokeStyle = `hsl(${78 + r() * 30},${45 + r() * 25}%,${42 + r() * 24}%)`; g.lineWidth = 1; const x = r() * n, y = r() * n; g.beginPath(); g.moveTo(x, y); g.lineTo(x + (r() - 0.5) * 5, y - 3 - r() * 6); g.stroke(); } }),
   asfalto: () => tex(256, (g, n) => { g.fillStyle = '#9a9ea4'; g.fillRect(0, 0, n, n); for (let i = 0; i < 3500; i++) { const v = 110 + rngT() * 90 | 0; g.fillStyle = `rgb(${v},${v},${v + 4})`; g.fillRect(rngT() * n, rngT() * n, 1 + rngT() * 2, 1 + rngT() * 2); } }),
   calcada: () => tex(256, (g, n) => { g.fillStyle = '#9d9a92'; g.fillRect(0, 0, n, n); const q = n / 4; for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) { const v = 214 + (rngT() - 0.5) * 20 | 0; g.fillStyle = `rgb(${v},${v - 3},${v - 10})`; g.fillRect(i * q + 2, j * q + 2, q - 4, q - 4); } }),
+  tabuaH: () => tex(128, (g, n) => { const r = rngT, N = 6, h = n / N; for (let j = 0; j < N; j++) { const v = 208 + (r() - 0.5) * 30 | 0; g.fillStyle = `rgb(${v},${v - 5},${v - 12})`; g.fillRect(0, j * h, n, h); for (let i = 0; i < 26; i++) { g.fillStyle = `rgba(80,52,26,${0.05 + r() * 0.10})`; g.fillRect(r() * n, j * h + 2 + r() * (h - 5), 10 + r() * 50, 1); } g.fillStyle = 'rgba(30,18,8,0.6)'; g.fillRect(0, j * h + h - 2, n, 2); g.fillStyle = 'rgba(255,255,255,0.14)'; g.fillRect(0, j * h, n, 1); } }),
+  tabuaV: () => tex(128, (g, n) => { const r = rngT, N = 6, h = n / N; for (let j = 0; j < N; j++) { const v = 208 + (r() - 0.5) * 30 | 0; g.fillStyle = `rgb(${v},${v - 5},${v - 12})`; g.fillRect(j * h, 0, h, n); for (let i = 0; i < 26; i++) { g.fillStyle = `rgba(80,52,26,${0.05 + r() * 0.10})`; g.fillRect(j * h + 2 + r() * (h - 5), r() * n, 1, 10 + r() * 50); } g.fillStyle = 'rgba(30,18,8,0.6)'; g.fillRect(j * h + h - 2, 0, 2, n); g.fillStyle = 'rgba(255,255,255,0.14)'; g.fillRect(j * h, 0, 1, n); } }),
+  zincoW: () => tex(128, (g, n) => { for (let i = 0; i < 8; i++) { const gr = g.createLinearGradient(i * n / 8, 0, (i + 1) * n / 8, 0); gr.addColorStop(0, '#b9bfc4'); gr.addColorStop(0.45, '#f1f3f4'); gr.addColorStop(1, '#a3a9ae'); g.fillStyle = gr; g.fillRect(i * n / 8, 0, n / 8, n); } for (let i = 0; i < 60; i++) { g.fillStyle = `rgba(90,60,40,${0.03 + rngT() * 0.07})`; g.fillRect(rngT() * n, rngT() * n, 1 + rngT() * 3, 4 + rngT() * 30); } }),
+  asfalt: () => tex(128, (g, n) => { const N = 6, h = n / N; for (let j = 0; j < N; j++) { for (let i = -1; i < 4; i++) { const v = 150 + (rngT() - 0.5) * 50 | 0, x = i * n / 3 + (j % 2) * n / 6; g.fillStyle = `rgb(${v},${v},${v + 4})`; g.fillRect(x + 1, j * h, n / 3 - 2, h); g.fillStyle = 'rgba(0,0,0,0.45)'; g.fillRect(x, j * h, 2, h - 3); } g.fillStyle = 'rgba(0,0,0,0.5)'; g.fillRect(0, j * h + h - 3, n, 3); } }),
   fibro: () => tex(128, (g, n) => { for (let i = 0; i < 8; i++) { const gr = g.createLinearGradient(i * n / 8, 0, (i + 1) * n / 8, 0); gr.addColorStop(0, '#f2f2f2'); gr.addColorStop(0.5, '#cfcfcf'); gr.addColorStop(1, '#f2f2f2'); g.fillStyle = gr; g.fillRect(i * n / 8, 0, n / 8, n); } }),
 };
 const TEX = {}; for (const k of Object.keys(TEXGEN)) TEX[k] = (cfg.texturas && cfg.texturas[k]) || TEXGEN[k](); // texturas do app (cfg.texturas) trocam as procedurais
@@ -39789,6 +41047,7 @@ function criaMats(MV) {
     quadro: L({ map: ATL.quadro }), piso: L({ map: ATL.piso }),
     terra: L({ map: TEX.terra }), chap: L({ map: TEX.chap }), bloco: L({ map: TEX.bloco }), grama: L({ map: TEX.grama }), asfalto: L({ map: TEX.asfalto }), calcada: L({ map: TEX.calcada }),
     telha: L({ map: TEX.telha, side: THREE.DoubleSide }), fibro: L({ map: TEX.fibro, side: THREE.DoubleSide }),
+    tabuaH: L({ map: TEX.tabuaH }), tabuaV: L({ map: TEX.tabuaV }), zincoW: P({ map: TEX.zincoW, shininess: 50, specular: 0x555555 }), asfalt: L({ map: TEX.asfalt, side: THREE.DoubleSide }), lona: L({ side: THREE.DoubleSide }),
     tela: new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide }),
     predio: L({ transparent: true, opacity: 0.2, depthWrite: false }),
   };
@@ -40536,7 +41795,7 @@ MOV.botijao_gas = function (M, A) {
 // ---------- caixa de correio: caixa metálica com tampa articulada (parte), fenda, número e pilar ----------
 MOV.caixa_correio = function (M, A) {
   const K = kit2(M, A, 0), w = M.w || 0.3, d = M.d || 0.22, h = M.h || 0.3, y = M.y != null && M.y > 0 ? M.y : 1.0, est = ESTILO(), pc = est === 'alto' ? 0x2a2c30 : est === 'medio' ? 0xd0b060 : 0xc84a3a, rnd = rngS(SEM0() + '|' + M.seed + '|correio');
-  if (M.poste !== false && !(M.y > 0)) { K.b('liso', 0, 0, -d / 2 - 0.1, 0.12, y, 0.12, 0xb8b4aa); }
+  if (M.poste !== false && (!(M.y > 0) || nm())) { K.b('liso', 0, 0, -d / 2 - 0.1, 0.12, y, 0.12, 0xb8b4aa); }
   K.b('metal', 0, y, 0, w, h * 0.78, d, pc); K.b('metal', 0, y + h * 0.78, 0, w + 0.02, 0.025, d + 0.02, sh(pc, 0.8));
   K.b('metal', 0, y + h * 0.805, 0, w * 0.55, 0.03, d * 0.7, sh(pc, 0.65), 0, 0.5); // teto inclinado
   K.b('liso', 0, y + h * 0.5, d / 2 + 0.002, w * 0.5, 0.012, 0.004, 0x1a1a1a); // fenda
@@ -40545,6 +41804,45 @@ MOV.caixa_correio = function (M, A) {
   K.b('liso', 0.0, y + h * 0.62, d / 2 + 0.004, 0.08, 0.05, 0.004, 0xf2f0ea);
 };
 
+// ---------- móveis rústicos dos templates de madeira e de camping (os que o kit de interativos não desenha) ----------
+MOV.lenha = function (M, A) { // pilha de lenha: toras deitadas em fileiras escalonadas, entre dois estacões
+  const K = kit2(M, A), w = M.w || 1.5, d = M.d || 0.5, h = Math.min(M.h || 1.2, 1.2), rnd = rngS(SEM0() + '|' + (M.seed || M.id || '') + '|lenha'), rr = 0.065, nC = Math.max(2, Math.floor(w / (rr * 2.1))), nR = Math.max(2, Math.min(8, Math.floor(h / (rr * 1.9))));
+  for (const sx of [-1, 1]) K.b('madeira', sx * (w / 2 + 0.03), 0, 0, 0.06, h * 0.9, 0.06, 0x5a4026);
+  for (let j = 0; j < nR; j++) for (let i = 0; i < nC - (j & 1 ? 1 : 0); i++) { const x = (i - (nC - 1) / 2 + (j & 1 ? 0.5 : 0)) * rr * 2.05, y = rr + j * rr * 1.8, c = 0x7a5634 + ((rnd() * 40) | 0) * 0x010100 - 0x141000; K.t('madeira', [x, y, -d / 2 + (rnd() - 0.5) * 0.06], [x, y, d / 2 + (rnd() - 0.5) * 0.06], rr * (0.85 + rnd() * 0.3), c, 'cil6'); }
+};
+MOV.mesa_tronco = function (M, A) { // mesa rústica: tampo de tábua grossa sobre dois cepos
+  const K = kit2(M, A), w = M.w || 1.4, d = M.d || 0.7, h = M.h || 0.75;
+  for (const sx of [-1, 1]) K.c('madeira', sx * (w / 2 - 0.25), 0, 0, 0.16, h - 0.09, 0x6e4a2c, 'cil6');
+  K.b('madeira', 0, h - 0.09, 0, w, 0.09, d, 0x9a7048); K.b('madeira', 0, h - 0.092, 0, w - 0.04, 0.012, d - 0.04, 0x7e5a38);
+};
+MOV.balde = function (M, A) { // balde de zinco com alça
+  const K = kit2(M, A), r = Math.min(M.w || 0.3, M.d || 0.3) / 2, h = M.h || 0.3;
+  K.c('metal', 0, 0, 0, r * 0.82, h * 0.18, 0x8a9096); K.c('metal', 0, h * 0.18, 0, r * 0.92, h * 0.5, 0xaab0b6); K.c('metal', 0, h * 0.68, 0, r, h * 0.3, 0xb6bcc2); K.c('liso', 0, h * 0.96, 0, r * 0.88, 0.012, 0x2a2e32);
+  const n = 8; for (let k = 0; k < n; k++) { const a0 = Math.PI * k / n, a1 = Math.PI * (k + 1) / n; K.t('metal', [Math.cos(a0) * r, h * 0.95 + Math.sin(a0) * r * 0.9, 0], [Math.cos(a1) * r, h * 0.95 + Math.sin(a1) * r * 0.9, 0], 0.006, 0x6a6e72); }
+};
+MOV.saco_dormir = function (M, A) { // saco de dormir: casulo acolchoado com travesseiro
+  const K = kit2(M, A), w = Math.min(M.w || 0.7, 0.8), d = M.d || 1.9, cor = [0x3a6ea5, 0x4a7a4a, 0xc0562a, 0x7a4a8a, 0x8a3a3a][((hId(M.seed || M.id || 'sd') * 5) | 0) % 5];
+  K.b('tecido', 0, 0.01, 0.02, w * 0.92, 0.1, d * 0.88, cor); K.b('tecido', 0, 0.01, -d * 0.43, w * 0.78, 0.1, 0.1, sh(cor, 0.85)); K.b('tecido', 0, 0.105, 0.02, 0.04, 0.012, d * 0.8, sh(cor, 0.6));
+  for (let k = 1; k < 5; k++) K.b('tecido', 0, 0.108, d * 0.44 - k * d * 0.16, w * 0.9, 0.006, 0.014, sh(cor, 0.78));
+  K.b('tecido', 0, 0.1, d * 0.36, w * 0.62, 0.08, 0.3, 0xe8e2d2);
+};
+MOV.colchonete = function (M, A) { // colchonete de espuma
+  const K = kit2(M, A), w = M.w || 0.6, d = M.d || 1.8, cor = [0x2a6a9a, 0x5a5e66, 0x8a4a6a][((hId(M.seed || M.id || 'cl') * 3) | 0) % 3];
+  K.b('tecido', 0, 0, 0, w, 0.035, d, cor); for (let k = 1; k < 6; k++) K.b('tecido', 0, 0.034, -d / 2 + k * d / 6, w, 0.003, 0.012, sh(cor, 0.75));
+};
+MOV.tambor_agua = function (M, A) { // tambor de 200 L com aros e tampa
+  const K = kit2(M, A), r = Math.min(M.w || 0.58, M.d || 0.58) / 2, h = M.h || 0.88, cor = 0x2f5f9a;
+  K.c('liso', 0, 0, 0, r, h, cor); for (const f of [0.08, 0.5, 0.92]) K.c('liso', 0, h * f - 0.02, 0, r * 1.03, 0.04, sh(cor, 0.8)); K.c('liso', 0, h, 0, r * 0.9, 0.025, sh(cor, 1.1)); K.c('liso', 0, h + 0.02, 0.1, 0.06, 0.03, 0x1c3a63);
+};
+MOV.tabua_pilha = function (M, A) { // pilha de tábuas sobre calços
+  const K = kit2(M, A), w = M.w || 1.6, d = M.d || 0.3, h = M.h || 0.5, rnd = rngS(SEM0() + '|' + (M.seed || M.id || '') + '|tab'), n = Math.max(3, Math.min(8, Math.round(h / 0.045)));
+  for (const sx of [-0.35, 0.35]) K.b('madeira', sx * w, 0, 0, 0.09, 0.07, d, 0x5a4026);
+  for (let k = 0; k < n; k++) K.b('madeira', (rnd() - 0.5) * 0.06, 0.07 + k * 0.045, (rnd() - 0.5) * 0.04, w * (0.94 + rnd() * 0.06), 0.04, d * (0.9 + rnd() * 0.1), [0xa88458, 0x9a7a4e, 0xb8946a, 0x8a6a44][(rnd() * 4) | 0]);
+};
+MOV.sucata_zinco = function (M, A) { // chapas de zinco ondulado apoiadas na parede
+  const K = kit2(M, A), w = M.w || 1.4, d = M.d || 0.3, h = M.h || 1.1, rnd = rngS(SEM0() + '|' + (M.seed || M.id || '') + '|zn'), n = 3;
+  for (let k = 0; k < n; k++) { const cor = [0xb9b2a0, 0xa3a39a, 0xb08a68][(rnd() * 3) | 0], x = (k - 1) * w * 0.3 + (rnd() - 0.5) * 0.1; K.b('metal', x, 0.02, -d * 0.2 + k * 0.03, w * 0.5, h, 0.012, cor, (rnd() - 0.5) * 0.3, -0.22); for (let s = 0; s < 6; s++) K.b('metal', x - w * 0.22 + s * w * 0.088, 0.02, -d * 0.2 + k * 0.03 + 0.008, 0.02, h * 0.98, 0.008, sh(cor, 0.82), (rnd() - 0.5) * 0.3, -0.22); }
+};
 // ---------- tipos extras ligados à tabela ----------
 function extraTipos(T, MV) {
   const origCarro = T.carro_garagem;
@@ -40563,6 +41861,7 @@ function extraTipos(T, MV) {
   meu('arvore_peq', (M, A) => arvoreP(M, A, {})); meu('arvore_grande', (M, A) => arvoreP(M, A, { copaBaixa: true })); meu('arbusto', (M, A) => arbustoP(M, A, {})); meu('arbusto_florido', (M, A) => arbustoP(M, A, { flor: 0.9 }));
   meu('planta_alta', (M, A) => plantaVaso(M, A, {})); meu('planta_baixa', (M, A) => plantaVaso(M, A, {})); meu('vaso_ext', (M, A) => plantaVaso(M, A, {})); meu('vaso_chao', (M, A) => plantaVaso(M, A, {})); meu('vaso_mesa', vasoMesa);
   meu('canteiro', (M, A) => canteiroP(M, A, {})); meu('canteiro_peq', (M, A) => canteiroP(M, A, {})); meu('canteiro_horta', (M, A) => canteiroP(M, A, { tipo: 'grama' }));
+  for (const t of ['lenha', 'mesa_tronco', 'balde', 'saco_dormir', 'colchonete', 'tambor_agua', 'tabua_pilha', 'sucata_zinco']) meu(t, MOV[t], 'jogo (rústicos)');
   meu('touceira', (M, A) => { const K = kit2(M, A), rnd = rngS(SEM0() + '|' + M.seed + '|tf'); tufo(K, 0, 0, 0, Math.max(0.2, (M.w || 0.4) / 2), 16, 0x4f8a42, rnd); });
 }
 
@@ -40571,7 +41870,7 @@ function extraTipos(T, MV) {
 let CTX = {}; // contexto da casa em construção/uso (entra(h) troca entre casas)
 const EXT_TIPOS = new Set(['sacada', 'terraco', 'varanda', 'varanda_gourmet']);
 const SEM_TETO = EXT_TIPOS;
-const ABERTO = c => EXT_TIPOS.has(c.tipo) || c.externo === true || c.aberto === true || c.ao_ar_livre === true; // área aberta: sem telhado nem forro
+const ABERTO = c => EXT_TIPOS.has(c.tipo) || c.externo === true || c.aberto === true || c.ao_ar_livre === true || (nm() && (c.tipo === 'alpendre' || c.tipo === 'barraca')); // área aberta: sem telhado nem forro
 const EPS = 1e-3;
 const Y0 = f => { const A = CTX.r.andares; return A[Math.max(0, Math.min(A.length - 1, f))].y0; };
 const corDe = v => (typeof v === 'number' ? v : (typeof v === 'string' && CTX.cores[v] != null ? CTX.cores[v] : null));
@@ -40601,8 +41900,9 @@ function paredeBox(alongU, L, a, b, ya, yb, th, cL, cH, mL, mH) {
   else { bx(mL, L - th / 2, ya, a, L, yb, b, cL); bx(mH, L, ya, a, L + th / 2, yb, b, cH); }
 }
 // cor e material de cada lado de uma parede: lados = [lado de menor coordenada, lado de maior]
-function ladoDe(id, linhaFrente) {
+function ladoDe(id, linhaFrente, w) {
   const R = CTX.r, F = R.fachada;
+  if (nm()) return ladoMad(id, w);
   if (id === 'fora' || !CTX.comPorId[id]) {
     const ac = F.acabamento; let mat = 'reboco', cor = CTX.cores.fachada;
     if (ac === 'chapisco') mat = 'chap'; else if (ac === 'bloco_exposto') { mat = 'bloco'; cor = 0xc4c0b8; } else if (ac === 'reboco_parcial' && !linhaFrente) { mat = 'bloco'; cor = 0xc4c0b8; }
@@ -40626,8 +41926,9 @@ function paredes() {
     const h = altEf(f, w.h);
     const hh = cut ? Math.min(h, 1.2) : h, L = alongU ? w.v0 : w.u0, s0 = Math.min(alongU ? w.u0 : w.v0, alongU ? w.u1 : w.v1), s1 = Math.max(alongU ? w.u0 : w.v0, alongU ? w.u1 : w.v1);
     const frente = alongU && Math.abs(L - vMin) < 0.05;
-    const ladoL = ladoDe(w.lados[0], frente), ladoH = ladoDe(w.lados[1], frente);
+    const ladoL = ladoDe(w.lados[0], frente, w), ladoH = ladoDe(w.lados[1], frente, w);
     CTX.colisores.push({ tipo: 'parede', peca: w.id, f, x0: alongU ? s0 : L - th / 2, z0: alongU ? L - th / 2 : s0, x1: alongU ? s1 : L + th / 2, z1: alongU ? L + th / 2 : s1 });
+    if (w.tipo === 'guardacorpo' && nm()) { balaustrada(alongU, L, s0, s1, y0, w.h || 1.1, w); continue; }
     if (w.tipo === 'guardacorpo') { // guarda-corpo: vidro entre dois trilhos e montantes
       const c0 = CTX.cores.metal != null ? CTX.cores.metal : 0x8a8e92;
       const sx = alongU ? 1 : 0, sz = alongU ? 0 : 1, len = s1 - s0, n = Math.max(1, Math.round(len / 1.4));
@@ -40637,7 +41938,9 @@ function paredes() {
       for (let k = 0; k <= n; k++) { const t = s0 + len * k / n; caixaC('metal', alongU ? t : L, y0 + 0.55, alongU ? L : t, 0.05, 1.1, 0.05, c0); }
       continue;
     }
+    const toras = nm() && CTX.r.construcao.sistema === 'tronco' && w.tipo === 'parede' && (w.ext || w.lados.some(id => (CTX.comPorId[id] || {}).tipo === 'alpendre'));
     const seg = (a, b, ya, yb) => {
+      if (toras) { torasSeg(alongU, L, a, b, y0 + ya, y0 + yb, th, w, Math.abs(a - s0) < 1e-6 && cantoExt(f, w, s0), Math.abs(b - s1) < 1e-6 && cantoExt(f, w, s1), y0); return; }
       paredeBox(alongU, L, a, b, y0 + ya, y0 + yb, th, ladoL.cor, ladoH.cor, ladoL.mat, ladoH.mat);
       // (R46: o rodapé externo e a calçada de proteção são desenhados por rodapeECalcada(), que fecha os cantos)
     };
@@ -40651,27 +41954,30 @@ function paredes() {
     if (w.ext) for (const [pu, pv] of alongU ? [[s0, L], [s1, L]] : [[L, s0], [L, s1]]) { const k = f + ':' + pu.toFixed(2) + ':' + pv.toFixed(2); const e = cantos.get(k) || { n: 0, eixos: new Set(), f, pu, pv, th, hh, y0, cor: ladoL.ext ? ladoL : ladoH }; e.n++; e.eixos.add(w.eixo); e.hh = Math.min(e.hh, hh); cantos.set(k, e); }
   }
   CENA.pc = null;
-  for (const e of cantos.values()) if (e.eixos.size === 2 && e.n === 2) { CENA.grupo = 'f' + e.f; bx(e.cor.mat, e.pu - e.th / 2, e.y0, e.pv - e.th / 2, e.pu + e.th / 2, e.y0 + e.hh, e.pv + e.th / 2, e.cor.cor); }
+  for (const e of cantos.values()) if (e.eixos.size === 2 && e.n === 2 && !(nm() && CTX.r.construcao.sistema === 'tronco')) { CENA.grupo = 'f' + e.f; bx(e.cor.mat, e.pu - e.th / 2, e.y0, e.pv - e.th / 2, e.pu + e.th / 2, e.y0 + e.hh, e.pv + e.th / 2, e.cor.cor); }
 }
 
 function ladoPortaLinha(p) { // cores dos dois lados no vão da porta, pela parede vizinha
   const R = CTX.r, alongU = p.eixo === 'u', a = p.c - p.larg / 2, b = p.c + p.larg / 2;
   const w = R.paredes.find(w => w.andar === p.andar && w.eixo === p.eixo && Math.abs((alongU ? w.v0 : w.u0) - p.pos) < EPS && w.tipo === 'parede' && (Math.abs((alongU ? w.u1 : w.v1) - a) < 0.02 || Math.abs((alongU ? w.u0 : w.v0) - b) < 0.02));
   const lados = w ? w.lados : [p.a, p.b];
-  return [ladoDe(lados[0], false), ladoDe(lados[1], false)];
+  return [ladoDe(lados[0], false, w), ladoDe(lados[1], false, w)];
 }
 let ESTADO_PORTAS = new Map(); // id da porta -> aberta (sobrevive a troca de noite/corte; zera ao trocar de casa)
 function portas() {
   CTX.folhas = [];
   const R = CTX.r, cut = CTX.corte, C = CTX.cores, mad = C.madeira != null ? C.madeira : 0x7a5434, moldura = sh(mad, 0.55);
   for (const p of R.portas) {
+    if (nm() && p.tipo === 'degraus') { degrausMad(p); continue; } // vão aberto com degraus de tábua (alpendre elevado): sem folha
+    if (nm() && p.tipo !== 'degraus' && p.andar === 0 && CTX.estIdx['escada_' + p.id]) degrausMad(p); // porta externa com piso elevado: degraus de tábua do lado de fora
+    const zip = nm() && p.tipo === 'ziper', tenda = zip && (R.tendas || []).find(t => t.ziper === p.id);
     const f = p.andar; CENA.grupo = 'f' + f; const y0 = Y0(f), alongU = p.eixo === 'u', L = p.pos, a = p.c - p.larg / 2, b = p.c + p.larg / 2;
     const wref = R.paredes.find(w => w.andar === f && w.eixo === p.eixo && Math.abs((alongU ? w.v0 : w.u0) - L) < EPS), th = wref ? wref.esp || 0.15 : 0.15, hWall = wref ? wref.h : 3;
     const PMAT = (R.estilo === 'popular' || R.estilo === 'comercial') ? 'portaPint' : 'portaMad'; // textura da folha: pintada ou veio de madeira, conforme o estilo
-    const dH = Math.min(p.modelo === 'aco' ? 2.3 : 2.1, hWall - 0.15), visH = cut ? Math.min(dH, 1.2) : dH, [lL, lH] = ladoPortaLinha(p);
-    if (!cut && hWall > dH + 1e-3) { const wv = paredeProx(f, p.eixo, L, p.c); CENA.pc = wv ? pcDe(wv) : null; paredeBox(alongU, L, a, b, y0 + dH, y0 + altEf(f, hWall), th, lL.cor, lH.cor, lL.mat, lH.mat); CENA.pc = null; }
+    const dH = zip ? Math.min(1.15, (tenda ? tenda.altura : 1) * 0.8) : Math.min(p.modelo === 'aco' ? 2.3 : 2.1, hWall - 0.15), visH = cut ? Math.min(dH, 1.2) : dH, [lL, lH] = ladoPortaLinha(p);
+    if (!cut && !zip && hWall > dH + 1e-3) { const wv = paredeProx(f, p.eixo, L, p.c); CENA.pc = wv ? pcDe(wv) : null; paredeBox(alongU, L, a, b, y0 + dH, y0 + altEf(f, hWall), th, lL.cor, lH.cor, lL.mat, lH.mat); CENA.pc = null; }
     const fb = (u0, y_0, u1, y_1, tt = th + 0.02, cor = moldura) => alongU ? bx('madeira', u0, y0 + y_0, L - tt / 2, u1, y0 + y_1, L + tt / 2, cor) : bx('madeira', L - tt / 2, y0 + y_0, u0, L + tt / 2, y0 + y_1, u1, cor);
-    const jw = 0.05; CENA.pc = etq('batente:' + p.id, 'wood_hard', null, { andar: f }); fb(a, 0, a + jw, visH); fb(b - jw, 0, b, visH); if (!cut) fb(a, dH - jw, b, dH); CENA.pc = null;
+    const jw = zip ? 0.015 : 0.05; if (!zip) { CENA.pc = etq('batente:' + p.id, 'wood_hard', null, { andar: f }); fb(a, 0, a + jw, visH); fb(b - jw, 0, b, visH); if (!cut) fb(a, dH - jw, b, dH); CENA.pc = null; }
     // sentido da abertura: lado do cômodo p.abre
     const amostra = (sd) => comodoEm(f, alongU ? p.c : L + sd * 0.5, alongU ? L + sd * 0.5 : p.c);
     let sw = 1; { const cH = amostra(1), cL = amostra(-1); if (cL && cL.id === p.abre) sw = -1; else if (cH && cH.id === p.abre) sw = 1; }
@@ -40702,10 +42008,11 @@ function portas() {
         const u0 = nf === 2 ? (k ? (aa + bb) / 2 : aa) : aa, u1 = nf === 2 ? (k ? bb : (aa + bb) / 2) : bb, cor = p.ext ? extC : mad;
         const hingeAt = nf === 2 ? (k ? u1 : u0) : (p.dobradica === 'fim' ? u1 : u0), dir = hingeAt === u0 ? 1 : -1, len = u1 - u0; novoGrupo(k, hingeAt);
         const d0 = dir > 0 ? 0.005 : -len + 0.005, d1 = dir > 0 ? len - 0.005 : -0.005;
-        leaf(hingeAt, d0, d1, 0, visH, 0.04, cor, PMAT);
-        { const e0 = Math.min(d0, d1) + 0.1, e1 = Math.max(d0, d1) - 0.1, pc = sh(cor, 0.82); // almofadas da folha
+        if (zip) { const lc = tenda ? COR_LONA[((R.tendas || []).indexOf(tenda) + ((R.semente | 0) % 5)) % COR_LONA.length] : 0xd9792b, zc = Math.min(d0, d1) + 0.05; leaf(hingeAt, d0, d1, 0, visH, 0.012, sh(lc, 1.12), 'lona'); leaf(hingeAt, zc - 0.012, zc + 0.012, 0.03, visH - 0.03, 0.02, 0x2a2c2e, 'metal'); leaf(hingeAt, zc - 0.03, zc + 0.03, visH * 0.45, visH * 0.45 + 0.05, 0.025, 0xb8bcc0, 'metal'); }
+        else leaf(hingeAt, d0, d1, 0, visH, 0.04, cor, PMAT);
+        if (!zip) { const e0 = Math.min(d0, d1) + 0.1, e1 = Math.max(d0, d1) - 0.1, pc = sh(cor, 0.82); // almofadas da folha
           if (e1 - e0 > 0.2 && visH > 1.2) { leaf(hingeAt, e0, e1, 0.15, visH * 0.45, 0.055, pc, PMAT); leaf(hingeAt, e0, e1, visH * 0.5, visH - 0.15, 0.055, pc, PMAT); } }
-        { // espelho da fechadura, buraco da chave e maçaneta (grupo próprio, gira ao abrir)
+        if (!zip) { // espelho da fechadura, buraco da chave e maçaneta (grupo próprio, gira ao abrir)
           const hxp = dir * (len - 0.07), yh = 1.0, gn = CENA.grupo;
           const bk = (da, db, ya, yb, sa, sb, cr, mt) => { const dl = Math.min(da, db), dh = Math.max(da, db), sl = Math.min(sa, sb), sH = Math.max(sa, sb); if (alongU) bx(mt, dl, ya, sl, dh, yb, sH, cr); else bx(mt, sl, ya, dl, sH, yb, dh, cr); };
           for (const sd of [-1, 1]) { bk(hxp - 0.028, hxp + 0.028, yh - 0.13, yh + 0.1, sd * 0.02, sd * 0.026, 0xb8a66e, 'metal'); bk(hxp - 0.008, hxp + 0.008, yh - 0.1, yh - 0.07, sd * 0.026, sd * 0.029, 0x1e1e1e, 'metal'); }
@@ -40897,6 +42204,7 @@ function estruturaEletrica() {
 function cano2(a, b, diam, cor) { const dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2], L = Math.hypot(dx, dy, dz); if (L < 1e-3) return; _q.setFromUnitVectors(_Y, _v3.set(dx / L, dy / L, dz / L)); put('liso', 'cil', (a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2, _q, diam, L, diam, cor); }
 // ===== R46: rodapé externo e calçada de proteção em volta do térreo, fechando os cantos externos =====
 function rodapeECalcada() {
+  if (nm()) return; // casas de madeira: sem rodapé de reboco nem calçada de proteção (a fundação tem o muro baixo do vazio sanitário)
   const R = CTX.r, W = 0.6, t = 0.012, ht = 0.35, cor = sh(CTX.cores.fachada != null ? CTX.cores.fachada : 0xd8d0c0, 0.62), y0 = Y0(0), cal = 0xd4d0c6;
   const ws = R.paredes.filter(w => w.andar === 0 && w.tipo === 'parede').map(w => { const au = w.eixo === 'u'; return { w, au, L: au ? w.v0 : w.u0, a: Math.min(au ? w.u0 : w.v0, au ? w.u1 : w.v1), b: Math.max(au ? w.u0 : w.v0, au ? w.u1 : w.v1), th: w.esp || 0.15 }; });
   CENA.grupo = 'f0';
@@ -40999,7 +42307,9 @@ function pisosELajes() {
     CENA.grupo = 'f' + f; const y0 = Y0(f), bur = buracos(f);
     for (const c of R.comodos.filter(c => c.andar === f)) {
       if (c.tipo === 'vazio' || c.edif || (c.tipo === 'elevador' && f > 0)) continue;
-      const col = corPiso(c); CENA.pc = f > 0 ? (pcEst('laje_' + f + '_' + c.tipo) || pcEst('laje_' + f + '_' + c.id) || pcEst('laje_' + f)) : null;
+      if (nm() && c.tipo === 'barraca') continue; // a barraca tem o próprio piso de lona (tendasMad)
+      if (nm()) { const dk = CTX.estIdx['piso_varanda_' + c.id]; if (dk) { CENA.pc = pcEst('piso_varanda_' + c.id); for (const rc of rectsDe(c)) bx('tabuaH', rc[0], dk.y0, rc[1], rc[2], dk.y1, rc[3], sh(0xb89868, 0.9 + 0.2 * hId(c.id))); continue; } } // deck do alpendre (peça piso_varanda_*)
+      const col = corPiso(c); CENA.pc = f > 0 ? (pcEst('laje_' + f + '_' + c.tipo) || pcEst('laje_' + f + '_' + c.id) || pcEst('laje_' + f)) : (nm() ? pcEst('laje_0') : null);
       for (const rc of subRects(rectsDe(c), bur)) bx('reboco', rc[0], y0 - 0.04, rc[1], rc[2], y0, rc[3], col);
     }
     if (f > 0) { // laje sob o andar
@@ -41007,9 +42317,10 @@ function pisosELajes() {
       for (const rc of subRects(rs, bur)) bx('reboco', rc[0], y0 - 0.24, rc[1], rc[2], y0 - 0.04, rc[3], C.teto != null ? C.teto : 0xeeeae2);
     }
     // forro dos cômodos sem nada em cima
-    CENA.grupo = 't' + f; CENA.pc = pcEst('laje_' + (f + 1)) || (f === nA - 1 ? (pcEst('laje_forro') || pcEst('laje_topo')) : null);
+    CENA.grupo = 't' + f; CENA.pc = pcEst('laje_' + (f + 1)) || (f === nA - 1 ? (pcEst('laje_forro') || pcEst('laje_topo') || (nm() ? pcEst('laje_sotao') : null)) : null);
+    if (nm() && f === nA - 1) CTX.forroTopo = y0 + Math.max(0, ...R.comodos.filter(c => c.andar === f && !ABERTO(c) && c.tipo !== 'vazio').map(c => c.pe)) + 0.05;
     const acima = R.comodos.filter(c => c.andar === f + 1).flatMap(rectsDe);
-    for (const c of R.comodos.filter(c => c.andar === f && !ABERTO(c))) for (const rc of subRects(rectsDe(c), acima)) bx('reboco', rc[0], y0 + c.pe, rc[1], rc[2], y0 + c.pe + 0.2, rc[3], C.teto != null ? C.teto : 0xeeeae2);
+    for (const c of R.comodos.filter(c => c.andar === f && !ABERTO(c))) for (const rc of subRects(rectsDe(c), acima)) bx('reboco', rc[0], y0 + c.pe, rc[1], rc[2], y0 + c.pe + (nm() ? 0.05 : 0.2), rc[3], C.teto != null ? C.teto : 0xeeeae2);
     CENA.pc = null;
   }
 }
@@ -41093,11 +42404,12 @@ function itensDaCasa() {
       if (!rect(m.poligono)) M.poly = m.poligono.map(p => [p[0] - M.x, p[1] - M.z]);
     }
     if (CTX.veg && vegItem(m, M, ext ? 'lote' : 'f' + f)) continue;
-    if (CTX.iv && CTX.iv.subst.has(m.id)) { registraColisao(m, M); continue; } // o kit de interativos desenha este móvel (a colisão continua sendo uma só)
+    if (CTX.iv && CTX.iv.subst.has(m.id)) { if (!CTX.iv.cobre.has(m.id)) registraColisao(m, M); continue; } // o kit de interativos desenha este móvel e leva os colisores dele (sem corpo no kit vale a pegada do móvel)
     const ent = T[m.tipo];
     if (!ent) { caixaRotulada(m, M, ext ? 'lote' : 'f' + f); semModelo.set(m.tipo, (semModelo.get(m.tipo) || 0) + 1); continue; }
     try { construirItem(m, M, ent, api, CENA.grupo); } catch (e) { CENA.grupo = ext ? 'lote' : 'f' + f; console.warn('builder', m.tipo, e); caixaRotulada(m, M, ext ? 'lote' : 'f' + f); semModelo.set(m.tipo, (semModelo.get(m.tipo) || 0) + 1); }
   }
+  if (CTX.iv) for (const o of CTX.iv.colisores) INTER.objs.push(o); // colisores do kit (móveis trocados e cadeiras)
   try { caixaDaguaCasa(api); } catch (e) { console.warn('caixaDagua', e); }
   try { decorLuzes(api); } catch (e) { console.warn('decorLuzes', e); }
   return semModelo;
@@ -41107,15 +42419,16 @@ function caixaDaguaCasa(api) {
   const cd = CTX.r.caixaDagua; if (!cd || !CTX.tipos.caixa_dagua) return;
   const lc = cd.local === 'laje_caixa' && cd.plataforma, laje = cd.local === 'laje' || !!lc, nA = CTX.r.andares.length, f = Math.max(0, Math.min(nA - 1, cd.andar));
   // o SDK dá y no topo da laje de piso; o visor desenha o forro (0,2 m) e a laje de cobertura (0,03 m) acima do pé-direito
-  const base = lc ? cd.plataforma.yTopo : cd.y + (CTX.r.comodos.some(c => c.id === cd.comodo && c.tipo === 'terraco') ? 0 : 0.2 + (laje ? 0.03 : 0));
-  CENA.grupo = laje ? 'f' + f : 'cxd';
+  const cav = nm() && cd.local === 'cavalete', sot = nm() && cd.local === 'sotao';
+  const base = cav ? cd.y : sot && CTX.forroTopo != null ? CTX.forroTopo : lc ? cd.plataforma.yTopo : cd.y + (CTX.r.comodos.some(c => c.id === cd.comodo && c.tipo === 'terraco') ? 0 : 0.2 + (laje ? 0.03 : 0));
+  CENA.grupo = laje ? 'f' + f : cav ? 'f0' : 'cxd';
   if (lc) { // laje da caixa: pilares + laje pequena que sai do telhado inclinado (tanque acima da cumeeira)
     const P = cd.plataforma, [x0, z0, x1, z1] = P.aabb, e = P.espessura, cor = CTX.cores.laje != null ? CTX.cores.laje : 0xb9b5ac;
     CENA.pc = pcEst('laje_caixa'); caixaC('liso', (x0 + x1) / 2, P.yTopo - e / 2, (z0 + z1) / 2, x1 - x0, e, z1 - z0, cor, 0, 0, 0);
     P.pilares.forEach((p, k) => { CENA.pc = pcEst('pilar_caixa_' + k); caixaC('liso', p.u, (P.yBase + P.yTopo - e) / 2, p.v, p.lado, P.yTopo - e - P.yBase, p.lado, cor, 0, 0, 0); });
     CENA.pc = null;
   }
-  if (!laje) { // R44: variante do sótão (grupo cxd, só com o telhado cortado): estrado de concreto sobre quatro pés que descem até o piso do andar, para o tanque não flutuar na vista cortada
+  if (!laje && !cav && !sot) { // R44: variante do sótão (grupo cxd, só com o telhado cortado): estrado de concreto sobre quatro pés que descem até o piso do andar, para o tanque não flutuar na vista cortada
     const cor = CTX.cores.laje != null ? CTX.cores.laje : 0xb9b5ac, yp = Y0(f), hw = cd.w / 2 + 0.1, hd = cd.d / 2 + 0.1;
     caixaC('liso', cd.u, base - 0.06, cd.v, hw * 2, 0.12, hd * 2, cor);
     for (const sx of [-1, 1]) for (const sz of [-1, 1]) caixaC('liso', cd.u + sx * (hw - 0.07), (yp + base - 0.12) / 2, cd.v + sz * (hd - 0.07), 0.1, base - 0.12 - yp, 0.1, cor);
@@ -41207,6 +42520,10 @@ function perimetro() {
     const B = (mat, u0, y0, u1, y1, t, c, off = 0) => alongU ? bx(mat, u0, y0, L + off - t / 2, u1, y1, L + off + t / 2, c) : bx(mat, L + off - t / 2, y0, u0, L + off + t / 2, y1, u1, c);
     const col = { tipo: 'muro', f: -1, x0: alongU ? a : L - th / 2, z0: alongU ? L - th / 2 : a, x1: alongU ? b : L + th / 2, z1: alongU ? L + th / 2 : b }; CTX.colisores.push(col);
     if (s.tipo === 'muro') { B('reboco', a, 0, b, h, th, cor); B('reboco', a, h, b, h + 0.05, th + 0.06, sh(cor, 1.15)); }
+    else if (s.tipo === 'cerca' && nm()) { // cerca rural baixa: mourões de madeira, duas travessas e um fio de arame
+      const np = Math.max(2, Math.round(len / 2.2) + 1); for (let k = 0; k < np; k++) { const u = a + k * len / (np - 1); B('madeira', u - 0.055, 0, u + 0.055, h, 0.11, 0x6a5238 + ((hId(s.id + k) * 24) | 0) * 0x010100); }
+      B('madeira', a, h * 0.32, b, h * 0.32 + 0.07, 0.035, 0x8a6a44, 0.07); B('madeira', a, h * 0.74, b, h * 0.74 + 0.07, 0.035, 0x8a6a44, 0.07); B('metal', a, h * 0.55, b, h * 0.55 + 0.008, 0.008, 0x8a8e92, 0.07);
+    }
     else if (s.tipo === 'cerca') {
       const np = Math.max(2, Math.round(len / 2.4) + 1);
       for (let k = 0; k < np; k++) { const u = a + k * len / (np - 1); B('madeira', u - 0.04, 0, u + 0.04, h, 0.08, 0x6a5a48); }
@@ -41231,6 +42548,274 @@ function perimetro() {
     }
     else if (topo === 'grade') { const gc = C.portao != null ? C.portao : 0x2a2a2e, n = Math.max(2, Math.round(len / 0.14)); for (let k = 0; k <= n; k++) { const u = a + k * len / n; B('metal', u - 0.012, ym, u + 0.012, ym + 0.3, 0.025, gc); B('metal', u - 0.02, ym + 0.3, u + 0.02, ym + 0.38, 0.03, gc); } B('metal', a, ym + 0.08, b, ym + 0.11, 0.03, gc); }
   }
+}
+// ====================== casas de madeira, cabana de toras, barraco e camping (templates novos do PlantasSDK) ======================
+// res.construcao descreve o sistema (wood_frame | tronco | improvisado | lona): paredes de tábua (horizontal/vertical/velha), de toras com cantos encaixados ou de painéis de sucata (um material por segmento),
+// telhado de telha asfáltica, zinco, madeira ou colonial (duas águas, perfil a_frame), fundação visível (pilotis, vazio sanitário, radier, porão), alpendre com degraus, chaminé, cavalete da caixa d'água e barracas.
+// Tudo leva CENA.pc (a peça de res.estrutura, ou uma peça extra), então cada malha tem destructionMaterial/destructionPart e a faixa dela na malha fundida; o que nenhum desenhista cobriu sai como caixa em pecasFaltantes().
+const MADEIRA_SIS = new Set(['wood_frame', 'tronco', 'improvisado', 'lona']);
+const nm = () => !!(CTX.r && CTX.r.construcao && MADEIRA_SIS.has(CTX.r.construcao.sistema));
+const hId = s => { let h = 7; for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) | 0; return (h >>> 0) / 4294967296; };
+// estilo de um lado de parede nos templates de madeira: {mat, cor, ext}. id = cômodo do lado ('fora' = fachada), w = o segmento (material por segmento no barraco)
+function ladoMad(id, w) {
+  const K = CTX.r.construcao, P = K.parede, com = CTX.comPorId[id], fora = id === 'fora' || !com, alp = com && com.tipo === 'alpendre', fac = CTX.cores.fachada != null ? CTX.cores.fachada : 0xc8b090;
+  const mt = w && w.material, h = hId(w ? w.id : id), sucata = K.sistema === 'improvisado';
+  const painel = () => { // painéis de sucata: um material por segmento
+    if (mt === 'steel') return { mat: 'zincoW', cor: [0xd7dde1, 0xbfb6a6, 0xb98f6c, 0x9fb1bd][(h * 4) | 0] };
+    if (mt === 'plywood') return { mat: 'tabuaH', cor: 0xd8b57f };
+    if (mt === 'wood_hard') return { mat: 'tabuaV', cor: 0x7a5a3c };
+    return { mat: 'tabuaH', cor: [0x9a8a74, 0x8c7c68, 0xa8977c][(h * 3) | 0] };
+  };
+  if (fora || alp) {
+    if (sucata) return Object.assign(painel(), { ext: fora });
+    const ac = P.acabamento;
+    if (ac === 'tronco') return { mat: 'madeira', cor: mt === 'wood_hard' ? 0x6e4a2c : 0x9a7048, ext: fora };
+    if (ac === 'tabua_vertical') return { mat: 'tabuaV', cor: fac, ext: fora };
+    if (ac === 'tabua_velha') return Object.assign(painel(), { ext: fora });
+    return { mat: 'tabuaH', cor: fac, ext: fora };
+  }
+  if (!P.interna || P.interna === 'plaster') return { cor: corParede(com), mat: 'reboco', ext: false };
+  if (sucata) return Object.assign(painel(), { ext: false });
+  return { mat: 'tabuaH', cor: sh(0xd9b88a, 0.9 + 0.2 * h), ext: false };
+}
+// viga de seção w x h2 entre dois pontos
+function barra(mat, a, b, w, h2, cor) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2], L = Math.hypot(dx, dy, dz); if (L < 1e-3) return;
+  _q.setFromUnitVectors(_Y, _v3.set(dx / L, dy / L, dz / L)); put(mat, 'box', (a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2, _q, w, L, h2, cor);
+}
+function haste(mat, a, b, diam, cor, seg) { // cilindro entre dois pontos
+  const dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2], L = Math.hypot(dx, dy, dz); if (L < 1e-3) return;
+  _q.setFromUnitVectors(_Y, _v3.set(dx / L, dy / L, dz / L)); put(mat, seg || 'cil', (a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2, _q, diam, L, diam, cor);
+}
+// um trecho de parede de toras empilhadas (diametro_tronco) entre a..b e yA..yB; e0/e1 = a ponta é canto externo (a tora avança ou para na tora do outro lado, alternando por fiada)
+function torasSeg(alongU, L, a, b, yA, yB, th, w, e0, e1, yBase) {
+  const d = +CTX.r.construcao.parede.diametro_tronco || 0.26, r = d / 2, pitch = d * 0.86, dura = w.material === 'wood_hard', base = dura ? 0x6e4a2c : 0x9a7048, hw = hId(w.id) * 977;
+  if (alongU) bx('madeira', a, yA, L - th * 0.3, b, yB, L + th * 0.3, sh(base, 0.45)); else bx('madeira', L - th * 0.3, yA, a, L + th * 0.3, yB, b, sh(base, 0.45)); // calafetagem entre as toras
+  const k0 = Math.ceil((yA - 0.03 - yBase) / pitch), k1 = Math.floor((yB + 0.03 - yBase - d) / pitch);
+  for (let k = k0; k <= k1; k++) {
+    const yc = yBase + r + k * pitch, par = (k & 1) === (alongU ? 0 : 1), j = _h2(k * 13 + 5, (hw | 0) + 7), cor = sh(base, 0.86 + 0.28 * j);
+    const x0 = a - (e0 && par ? r + 0.05 : 0), x1 = b + (e1 && par ? r + 0.05 : 0), len = x1 - x0; if (len < 0.05) continue;
+    if (alongU) { _q.setFromEuler(_e.set(0, 0, PE, 'YXZ')); put('madeira', 'cil', (x0 + x1) / 2, yc, L, _q, d, len, d, cor); } else { _q.setFromEuler(_e.set(PE, 0, 0, 'YXZ')); put('madeira', 'cil', L, yc, (x0 + x1) / 2, _q, d, len, d, cor); }
+    for (const [ex, on] of [[x0, e0 && par], [x1, e1 && par]]) if (on) { // ponta da tora que avança: anel claro de corte
+      const q = _q; if (alongU) put('madeira', 'cil', ex, yc, L, q, d * 0.98, 0.012, d * 0.98, sh(base, 1.35)); else put('madeira', 'cil', L, yc, ex, q, d * 0.98, 0.012, d * 0.98, sh(base, 1.35)); }
+  }
+}
+// guarda-corpo de madeira (alpendre, mezanino): montantes, corrimão, travessa e balaústres
+function balaustrada(alongU, L, s0, s1, y0, h, w) {
+  const mad = w.material === 'wood_hard' ? 0x6e4a2c : 0xa88458, len = s1 - s0, n = Math.max(1, Math.round(len / 1.2)), T = (c, y_, cs, hh, lo = 0.06, la = 0.06) => alongU ? bx('madeira', c - cs / 2, y0 + y_, L - lo / 2, c + cs / 2, y0 + y_ + hh, L + lo / 2, mad) : bx('madeira', L - lo / 2, y0 + y_, c - cs / 2, L + lo / 2, y0 + y_ + hh, c + cs / 2, mad);
+  for (let k = 0; k <= n; k++) T(s0 + len * k / n, 0, 0.09, h, 0.09);
+  const trilho = (y_, hh, esp) => alongU ? bx('madeira', s0, y0 + y_, L - esp / 2, s1, y0 + y_ + hh, L + esp / 2, sh(mad, 1.08)) : bx('madeira', L - esp / 2, y0 + y_, s0, L + esp / 2, y0 + y_ + hh, s1, sh(mad, 1.08));
+  trilho(h - 0.06, 0.06, 0.11); trilho(0.12, 0.06, 0.05);
+  const nb = Math.max(2, Math.round(len / 0.14)); for (let k = 1; k < nb; k++) T(s0 + len * k / nb, 0.18, 0.035, h - 0.26, 0.035);
+}
+function cantoExt(f, w, s) { // a ponta s do segmento w (ao longo do eixo dele) encontra outra parede externa de outro eixo: canto da casa
+  const au = w.eixo === 'u', pu = au ? s : w.u0, pv = au ? w.v0 : s;
+  return CTX.r.paredes.some(q => q !== w && q.andar === f && q.ext && q.tipo === 'parede' && q.eixo !== w.eixo && ((Math.abs(q.u0 - pu) < 0.03 && Math.abs(q.v0 - pv) < 0.03) || (Math.abs(q.u1 - pu) < 0.03 && Math.abs(q.v1 - pv) < 0.03)));
+}
+// telhado dos templates de madeira: duas águas (perfil a_frame = mais íngreme) a partir de res.telhado (aabb com beiral, y0 = beiral, cumeeira, eixo da cumeeira), em telha asfáltica, zinco, madeira ou colonial
+function telhadoMad() {
+  const R = CTX.r, T = R.telhado, K = R.construcao, nA = R.andares.length; CENA.grupo = 'roof'; CTX.telhadoRects = [];
+  CTX.calha = calhaCfg(); CTX.calha.ncond = 0; CTX.calha.nbuz = 0; CTX.calha.bz = new Set(); CTX.calha.on = false; CTX.calhaInfo = { calhas: [], condutores: [], ralos: [] };
+  if (!T || T.forma === 'tenda' || !T.aabb) return;
+  const [x0, z0, x1, z1] = T.aabb, yb = T.y0, yr = T.cumeeira != null ? T.cumeeira : yb + 1, b = T.beiral || 0.5, cob = T.cobertura || K.telhado.cobertura, alongX = T.eixo === 'u', xm = (x0 + x1) / 2, zm = (z0 + z1) / 2;
+  const half = alongX ? (z1 - z0) / 2 : (x1 - x0) / 2, tp = (yr - yb) / Math.max(0.1, half), corT = CTX.cores.telhado != null ? CTX.cores.telhado : 0x6a4a3a, fac = ladoMad('fora', null), th = 0.15;
+  const cor = cob === 'zinco' ? [0xb4bcc2, 0xaaa59a, 0xb89a80][(hId(R.semente + 'z') * 3) | 0] : cob === 'madeira' ? sh(0x7a5a38, 0.9 + 0.2 * hId(R.semente + 'm')) : cob === 'asfaltica' ? sh(corT, 1.9) : corT;
+  const plano = pts => { // uma água
+    let cx = 0, cz = 0; for (const p of pts) { cx += p[0]; cz += p[2]; } CENA.pc = pcAgua(cx / pts.length, cz / pts.length);
+    if (cob === 'zinco') telhaRelevo('fibro', pts, cor, 'fibrocimento');
+    else if (cob === 'colonial') telhaRelevo('telha', pts, cor, 'colonial');
+    else if (cob === 'asfaltica') poli('asfalt', pts, cor, [0, 1, 0]);
+    else { poli('tabuaH', pts, cor, [0, 1, 0]); poli('tabuaH', pts.slice().reverse(), sh(cor, 0.8), [0, -1, 0]); }
+  };
+  if (alongX) { plano([[x0, yb, z0], [x1, yb, z0], [x1, yr, zm], [x0, yr, zm]]); plano([[x0, yb, z1], [x1, yb, z1], [x1, yr, zm], [x0, yr, zm]]); }
+  else { plano([[x0, yb, z0], [x0, yb, z1], [xm, yr, z1], [xm, yr, z0]]); plano([[x1, yb, z0], [x1, yb, z1], [xm, yr, z1], [xm, yr, z0]]); }
+  // cumeeira
+  CENA.pc = pcAgua(xm, zm); const capa = cob === 'asfaltica' ? 0x2c2c30 : cob === 'madeira' ? 0x5a3e24 : sh(cor, 0.55);
+  if (cob === 'colonial') cumeeira(alongX ? [x0, yr, zm] : [xm, yr, z0], alongX ? [x1, yr, zm] : [xm, yr, z1], 'colonial', cor);
+  else if (alongX) bx('metal', x0, yr - 0.02, zm - 0.1, x1, yr + 0.07, zm + 0.1, capa); else bx('metal', xm - 0.1, yr - 0.02, z0, xm + 0.1, yr + 0.07, z1, capa);
+  // paredes que fecham o oitão (triângulo mais a faixa entre o topo da parede e o telhado no plano da parede) e o friso nos beirais
+  const e = b, at = tp * e, fx0 = x0 + e, fx1 = x1 - e, fz0 = z0 + e, fz1 = z1 - e;
+  CENA.pc = pcAgua(xm, zm);
+  const gab = (pts, dica) => { poli(fac.mat, pts, fac.cor, dica); poli(fac.mat, pts.slice().reverse(), sh(fac.cor, 0.85), [-dica[0], -dica[1], -dica[2]]); };
+  if (alongX) { // cumeeira em x: oitões em x0+e e x1-e (planos x = const), beirais longos em z
+    for (const sg of [-1, 1]) { const xe = sg < 0 ? fx0 : fx1; gab([[xe, yb, fz0], [xe, yb + at, fz0], [xe, yr, zm], [xe, yb + at, fz1], [xe, yb, fz1]], [sg, 0, 0]); }
+    for (const ze of [fz0, fz1]) bx(fac.mat, fx0, yb, ze - th / 2, fx1, yb + at, ze + th / 2, fac.cor);
+  } else {
+    for (const sg of [-1, 1]) { const ze = sg < 0 ? fz0 : fz1; gab([[fx0, yb, ze], [fx0, yb + at, ze], [xm, yr, ze], [fx1, yb + at, ze], [fx1, yb, ze]], [0, 0, sg]); }
+    for (const xe of [fx0, fx1]) bx(fac.mat, xe - th / 2, yb, fz0, xe + th / 2, yb + at, fz1, fac.cor);
+  }
+  // forro do beiral e fáscia
+  const fas = cob === 'zinco' ? 0x5a4a3a : sh(corT, 0.5);
+  if (alongX) { for (const ze of [z0, z1]) { bx('madeira', x0, yb - 0.04, Math.min(ze, ze < zm ? fz0 : fz1), x1, yb, Math.max(ze, ze < zm ? fz0 : fz1), 0xcfae7c); bx('madeira', x0, yb - 0.1, ze - 0.02, x1, yb + 0.03, ze + 0.02, fas); } }
+  else { for (const xe of [x0, x1]) { bx('madeira', Math.min(xe, xe < xm ? fx0 : fx1), yb - 0.04, z0, Math.max(xe, xe < xm ? fx0 : fx1), yb, z1, 0xcfae7c); bx('madeira', xe - 0.02, yb - 0.1, z0, xe + 0.02, yb + 0.03, z1, fas); } }
+  // empena: tábuas de borda nas inclinadas
+  const emp = alongX ? [[x0, z0, x0, zm], [x0, zm, x0, z1], [x1, z0, x1, zm], [x1, zm, x1, z1]] : [[x0, z0, xm, z0], [xm, z0, x1, z0], [x0, z1, xm, z1], [xm, z1, x1, z1]];
+  for (const [ax, az, bx_, bz] of emp) { const ya = (alongX ? Math.abs(az - zm) : Math.abs(ax - xm)) === 0 ? yr : yb, yb2 = (alongX ? Math.abs(bz - zm) : Math.abs(bx_ - xm)) === 0 ? yr : yb; barra('madeira', [ax, ya + 0.02, az], [bx_, yb2 + 0.02, bz], 0.04, 0.16, fas); }
+  CTX.telhadoRects.push({ f: nA - 1, r: [fx0, fz0, fx1, fz1], yb, tp, gable: true, alongX, ext: [x0, z0, x1, z1], rm: half });
+  // telhado do alpendre (peça telhado_varanda_*): meia-água encostada na casa
+  for (const p of (CTX.r0.estrutura && CTX.r0.estrutura.pecas) || []) {
+    if (!/^telhado_varanda_/.test(p.id)) continue; const [a0, c0, a1, c1] = p.aabb, ye0 = p.y0, ye1 = p.y1;
+    CENA.pc = pcEst(p.id); const pts = [[a0, ye0, c0], [a1, ye0, c0], [a1, ye1, c1], [a0, ye1, c1]];
+    if (cob === 'zinco') telhaRelevo('fibro', pts, cor, 'fibrocimento'); else if (cob === 'colonial') telhaRelevo('telha', pts, cor, 'colonial'); else if (cob === 'asfaltica') poli('asfalt', pts, cor, [0, 1, 0]); else { poli('tabuaH', pts, cor, [0, 1, 0]); poli('tabuaH', pts.slice().reverse(), sh(cor, 0.8), [0, -1, 0]); }
+    bx('madeira', a0, ye0 - 0.08, c0 - 0.02, a1, ye0 + 0.02, c0 + 0.02, fas);
+  }
+  CENA.pc = null;
+}
+// tesouras: cada peça tesoura_* vira duas empenas e o tirante (a seção cruza a casa na direção em que a peça é mais larga)
+function tesourasMad(r0) {
+  const T = r0.telhado; if (!T) return; CENA.grupo = 'roof';
+  for (const p of (r0.estrutura && r0.estrutura.pecas) || []) {
+    if (!/^tesoura_/.test(p.id) || !p.aabb) continue; const [a, c, a2, c2] = p.aabb, emX = (a2 - a) >= (c2 - c), z = (c + c2) / 2, xm = (a + a2) / 2, ye = p.y0, ya = p.y1, mad = p.material === 'wood_hard' ? 0x7a5636 : 0xa88458; CENA.pc = pcEst(p.id);
+    const P = (u, y_) => emX ? [u, y_, z] : [z, y_, u], lo = emX ? a : c, hi = emX ? a2 : c2, mid = (lo + hi) / 2;
+    barra('madeira', P(lo, ye - 0.07), P(mid, ya - 0.17), 0.06, 0.14, mad); barra('madeira', P(hi, ye - 0.07), P(mid, ya - 0.17), 0.06, 0.14, mad); barra('madeira', P(lo, ye + 0.05), P(hi, ye + 0.05), 0.06, 0.12, sh(mad, 0.9));
+    barra('madeira', P(mid, ye + 0.05), P(mid, ya - 0.2), 0.05, 0.05, sh(mad, 0.85)); void xm;
+  }
+  CENA.pc = null;
+}
+// fundação visível: vazio sanitário = muro baixo de concreto sob as paredes externas (com respiros); pilotis, radier e porão saem das peças da planta (pecasFaltantes)
+function fundacaoMad() {
+  const R = CTX.r, F = R.construcao.fundacao, E = CTX.elev || 0, y0 = Y0(0); if (!F) return; CENA.grupo = 'f0';
+  if (F.tipo === 'vazio_sanitario' && E > 0.05) {
+    const conc = 0xa7a49c; let kk = 0;
+    const faixa = (id, alongU, L, a, b, th) => { // muro de a a b sob a linha L; respiros a cada ~2,2 m
+      CENA.pc = etq('muro_fund:' + id, 'concrete', null, { andar: 0, massa: Math.max(50, (b - a) * th * E * 2400), tags: ['foundation'] });
+      if (alongU) bx('reboco', a - th / 2, 0, L - th / 2, b + th / 2, y0 - 0.02, L + th / 2, conc); else bx('reboco', L - th / 2, 0, a - th / 2, L + th / 2, y0 - 0.02, b + th / 2, conc);
+      const n = Math.floor((b - a) / 2.2); for (let k = 0; k < n; k++) { const c = a + (k + 0.5) * (b - a) / n; for (const sd of [-1, 1]) { const o = sd * (th / 2 + 0.004); if (alongU) bx('liso', c - 0.17, 0.12, L + o - 0.004, c + 0.17, 0.12 + Math.min(0.14, E * 0.4), L + o + 0.004, 0x2a2a28); else bx('liso', L + o - 0.004, 0.12, c - 0.17, L + o + 0.004, 0.12 + Math.min(0.14, E * 0.4), c + 0.17, 0x2a2a28); } }
+      kk++;
+    };
+    for (const w of R.paredes) { if (w.andar !== 0 || !w.ext || w.tipo !== 'parede') continue; const au = w.eixo === 'u'; faixa(w.id, au, au ? w.v0 : w.u0, Math.min(au ? w.u0 : w.v0, au ? w.u1 : w.v1), Math.max(au ? w.u0 : w.v0, au ? w.u1 : w.v1), w.esp || 0.15); }
+    for (const p of R.portas) { if (p.andar !== 0 || !p.ext || p.tipo === 'degraus' || p.tipo === 'ziper') continue; const au = p.eixo === 'u'; faixa('p' + p.id, au, p.pos, p.c - p.larg / 2, p.c + p.larg / 2, 0.15); }
+  }
+  CENA.pc = null;
+}
+// pé-direito duplo (cômodo 'vazio' do andar de cima): a planta não põe parede sobre a do térreo; fecha as bordas externas sem parede, do piso do andar ao forro dele
+function fechaVazios() {
+  const R = CTX.r; let n = 0;
+  for (const c of R.comodos) {
+    if (c.tipo !== 'vazio') continue; const f = c.andar, y0 = Y0(f), hh = c.pe || 1.8, th = 0.15;
+    for (const [a, b, c2, d] of rectsDe(c)) for (const [au, L, s0, s1, sd] of [[true, b, a, c2, -1], [true, d, a, c2, 1], [false, a, b, d, -1], [false, c2, b, d, 1]]) {
+      const mid = (s0 + s1) / 2, fora = comodoEm(f, au ? mid : L + sd * 0.4, au ? L + sd * 0.4 : mid);
+      if (fora && fora.tipo !== 'alpendre') continue; if (R.paredes.some(w => w.andar === f && w.eixo === (au ? 'u' : 'v') && Math.abs((au ? w.v0 : w.u0) - L) < 0.03 && Math.min(au ? w.u0 : w.v0, au ? w.u1 : w.v1) < s1 - 0.05 && Math.max(au ? w.u0 : w.v0, au ? w.u1 : w.v1) > s0 + 0.05)) continue;
+      const st = ladoMad('fora', { id: 'vz' + c.id + n, material: 'wood_soft' }); CENA.grupo = 'f' + f; CENA.pc = etq('fecha_vazio:' + c.id + ':' + (n++), 'wood_soft', 'parede_vedacao', { andar: f, massa: Math.max(80, (s1 - s0) * hh * th * 500) });
+      if (au) bx(st.mat, s0 - th / 2, y0, L - th / 2, s1 + th / 2, y0 + hh, L + th / 2, st.cor); else bx(st.mat, L - th / 2, y0, s0 - th / 2, L + th / 2, y0 + hh, s1 + th / 2, st.cor);
+    }
+  }
+  CENA.pc = null;
+}
+// degraus da porta de tipo 'degraus' (modelo abertura): n degraus de tábua entre o piso elevado e o chão, com as duas longarinas
+function degrausMad(p) {
+  const f = p.andar, y0 = Y0(f), au = p.eixo === 'u', L = p.pos, H = Math.max(0.1, y0), n = Math.max(2, p.degraus || Math.ceil(H / 0.19)), larg = Math.max(0.9, p.larg), c = p.c;
+  const out = () => { for (const sd of [-1, 1]) { const q = comodoEm(f, au ? c : L + sd * 0.4, au ? L + sd * 0.4 : c); if (!q) return sd; } return -1; };
+  const sd = out(), prof = Math.min(1.3, 0.28 * n), dp = prof / n, rise = H / n, mad = 0xa88458, soa = sh(mad, 0.7);
+  CENA.grupo = 'f' + f; CENA.pc = pcEst('escada_' + p.id) || etq('escada_' + p.id, 'wood_soft', 'escada', { andar: f });
+  const B = (u0, y_0, o0, u1, y_1, o1, cor) => { const oa = L + sd * Math.min(o0, o1), ob = L + sd * Math.max(o0, o1); if (au) bx('madeira', u0, y_0, Math.min(oa, ob), u1, y_1, Math.max(oa, ob), cor); else bx('madeira', Math.min(oa, ob), y_0, u0, Math.max(oa, ob), y_1, u1, cor); };
+  for (let i = 0; i < n; i++) { const top = H - (i + 1) * rise, o0 = i * dp + 0.0, o1 = (i + 1) * dp + (i === 0 ? 0.05 : 0); B(c - larg / 2, top - 0.04, 0.04 + o0, c + larg / 2, top, 0.04 + o1 + 0.03, sh(mad, 0.95 + 0.1 * _h2(i, 3))); B(c - larg / 2 + 0.03, 0, 0.04 + o0, c + larg / 2 - 0.03, top - 0.04, 0.04 + o0 + 0.025, soa); } // degrau e espelho
+  for (const s2 of [-1, 1]) { const u = c + s2 * (larg / 2 - 0.025), a = [0, H - 0.1, 0.04], b = [0, 0.05, 0.04 + prof]; // longarina inclinada
+    const P = (o, y_) => au ? [u, y_, L + sd * o] : [L + sd * o, y_, u]; barra('madeira', P(a[2], a[1] + 0.12), P(b[2], b[1] + 0.12), 0.05, 0.2, soa); }
+  CENA.pc = null;
+}
+// chaminé (res.chamine): lareira de tijolo/pedra (massa do chão ao topo, com ressalto e chapéu) ou tubo de aço do fogão a lenha (colarinho, tubo e chapéu)
+function chaminesMad() {
+  const C = CTX.r.chamine; if (!C || !C.aabb) return; CENA.grupo = 'f0'; const [x0, z0, x1, z1] = C.aabb, top = C.altura, y0 = Y0(0), cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
+  CENA.pc = pcEst('chamine') || etq('chamine', C.material || 'brick', 'pilar', { andar: 0, massa: 8000 });
+  if (C.tubo || C.tipo === 'tubo') {
+    const r = Math.min(x1 - x0, z1 - z0) / 2, aco = 0x3a3c40; cilB('metal', cx, y0 + 0.9, cz, r, top - y0 - 0.9, aco); cilB('metal', cx, y0 + 0.9, cz, r * 1.35, 0.05, sh(aco, 1.4));
+    cilB('metal', cx, top - 0.02, cz, r * 1.7, 0.03, sh(aco, 0.8)); _q.identity(); put('metal', 'cone', cx, top + 0.1, cz, _q, r * 4.2, 0.2, r * 4.2, aco); for (const k of [0.35, 0.65]) cilB('metal', cx, y0 + 0.9 + (top - y0 - 0.9) * k, cz, r * 1.12, 0.03, sh(aco, 1.5));
+    CENA.grupo = 'roof'; cilB('metal', cx, top - 1.25, cz, r * 1.6, 0.04, sh(aco, 0.9)); // arremate de chapa no telhado
+  } else {
+    const cor = C.material === 'stone' ? 0x8a8a84 : 0xa8553a, mat = 'reboco';
+    bx(mat, x0, 0, z0, x1, top, z1, cor); bx(mat, x0 - 0.06, 0, z0 - 0.06, x1 + 0.06, 0.5, z1 + 0.06, sh(cor, 0.92)); // base com ressalto
+    for (let y = 0.3; y < top - 0.4; y += 0.5) { bx(mat, x0 - 0.01, y, z0 - 0.01, x1 + 0.01, y + 0.025, z1 + 0.01, sh(cor, 0.78)); } // fiadas escuras
+    bx(mat, x0 - 0.08, top, z0 - 0.08, x1 + 0.08, top + 0.1, z1 + 0.08, sh(cor, 1.12)); bx(mat, x0 + 0.05, top + 0.1, z0 + 0.05, x1 - 0.05, top + 0.28, z1 - 0.05, sh(cor, 0.95)); bx(mat, x0 - 0.04, top + 0.28, z0 - 0.04, x1 + 0.04, top + 0.34, z1 + 0.04, sh(cor, 1.12)); // coroa e chapéu
+    bx('liso', cx - (x1 - x0) * 0.2, top + 0.1, cz - (z1 - z0) * 0.2, cx + (x1 - x0) * 0.2, top + 0.28, cz + (z1 - z0) * 0.2, 0x1c1a18);
+  }
+  CENA.pc = null;
+}
+// cavalete da caixa d'água (suporte.tipo = cavalete): quatro pés, duas vigas com travessas, contraventos (X) ou amarração de corda
+function cavaleteMad() {
+  const cd = CTX.r.caixaDagua; if (!cd || cd.local !== 'cavalete' || !cd.suporte) return; const S = cd.suporte; CENA.grupo = 'f0';
+  const mad = S.material === 'wood_hard' ? 0x7a5636 : 0xa88458, H = S.altura || cd.y, ps = S.pilares || [], ys = cd.y;
+  ps.forEach((p, k) => { CENA.pc = pcEst('pilar_cavalete_' + k) || etq('pilar_cavalete_' + k, S.material || 'wood_soft', 'pilar', { andar: 0 }); bx('madeira', p.u - p.lado / 2, 0, p.v - p.lado / 2, p.u + p.lado / 2, H - 0.12, p.v + p.lado / 2, sh(mad, 0.92 + 0.1 * _h2(k, 9))); });
+  const us = ps.map(p => p.u), vs = ps.map(p => p.v), u0 = Math.min(...us), u1 = Math.max(...us), v0 = Math.min(...vs), v1 = Math.max(...vs), lado = ps[0] ? ps[0].lado : 0.1;
+  [[v0, 0], [v1, 1]].forEach(([v, k]) => { CENA.pc = pcEst('viga_cavalete_' + k) || etq('viga_cavalete_' + k, S.material || 'wood_soft', 'viga', { andar: 0 }); bx('madeira', u0 - lado, H - 0.12, v - lado / 2, u1 + lado, H, v + lado / 2, sh(mad, 1.05)); });
+  CENA.pc = etq('estrado_cavalete', S.material || 'wood_soft', null, { andar: 0, massa: 12 }); const nT = 7; for (let k = 0; k < nT; k++) { const v = v0 + 0.04 + k * (v1 - v0 - 0.08) / (nT - 1); bx('madeira', u0 - lado * 0.4, H, v - 0.04, u1 + lado * 0.4, H + 0.025, v + 0.04, sh(mad, 0.85 + 0.2 * _h2(k, 4))); }
+  if (S.contraventos) { CENA.pc = etq('contravento_cavalete', S.material || 'wood_soft', null, { andar: 0, massa: 8 }); for (const v of [v0, v1]) { barra('madeira', [u0, 0.3, v], [u1, H - 0.2, v], 0.04, 0.09, sh(mad, 0.8)); barra('madeira', [u1, 0.3, v], [u0, H - 0.2, v], 0.04, 0.09, sh(mad, 0.8)); } for (const u of [u0, u1]) { barra('madeira', [u, 0.3, v0], [u, H - 0.2, v1], 0.04, 0.09, sh(mad, 0.8)); barra('madeira', [u, 0.3, v1], [u, H - 0.2, v0], 0.04, 0.09, sh(mad, 0.8)); } }
+  if (S.amarra === 'rope') { CENA.pc = etq('corda_cavalete', 'fabric', null, { andar: 0, massa: 1 }); for (const p of ps) for (const dy of [0.12, 0.18, 0.24]) cilB('liso', p.u, H - dy, p.v, p.lado * 0.62, 0.03, 0xc9b27a); }
+  CENA.pc = null; void ys;
+}
+// entrada de energia clandestina (eletrica.entradaEnergia.gato): estaca de madeira e fio emendado, sem medidor
+function gatoMad() {
+  const E = CTX.r.eletrica, en = E && E.entradaEnergia; if (!en || !en.gato || !en.ligacao) return; const L = en.ligacao, P = en.poste; CENA.grupo = CTX.r.lote ? 'lote' : 'f0';
+  CENA.pc = etq('gato:estaca', 'wood_soft', null, { andar: 0, massa: 6, tags: ['pole'] }); const top = (L.y || 2.6) + 0.3;
+  haste('madeira', [L.u, 0, L.v], [L.u + 0.12, top, L.v], 0.1, 0x6a4a30); bx('madeira', L.u - 0.25, top - 0.12, L.v - 0.03, L.u + 0.35, top - 0.08, L.v + 0.03, 0x7a5a3c);
+  CENA.pc = etq('gato:fiacao', 'copper', null, { andar: 0, massa: 2, tags: ['wiring'] });
+  const a = [P.u - 0.2, P.h - 0.5, P.v], b = [L.u + 0.35, top - 0.1, L.v], n = 8; let ant = a;
+  for (let k = 1; k <= n; k++) { const t = k / n, p = [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t - Math.sin(t * Math.PI) * 0.55, a[2] + (b[2] - a[2]) * t]; haste('liso', ant, p, 0.016, 0x18181a); ant = p; }
+  haste('liso', [L.u + 0.35, top - 0.1, L.v], [L.u + 0.1, (L.y || 2.6), L.v], 0.014, 0x18181a); haste('liso', [L.u + 0.1, (L.y || 2.6), L.v], [L.u + 0.05, 1.65, L.v], 0.014, 0x18181a);
+  _q.identity(); put('liso', 'esf', L.u + 0.1, (L.y || 2.6), L.v, _q, 0.09, 0.09, 0.09, 0x1d3f7a); // emenda com fita isolante
+  CENA.pc = null;
+}
+// ---------------- barracas (res.tendas): domo ou túnel de lona, piso, varetas de alumínio, estacas e cordas; a porta de zíper é a folha da porta (portas()) ----------------
+const COR_LONA = [0xd9792b, 0x3a7ca5, 0x6a8f5a, 0xc2453a, 0xe0b43a];
+function perfilTenda(t, p = 2.6) { return Math.pow(Math.max(0, 1 - Math.pow(Math.abs(t), p)), 1 / p); } // |t| em [0,1] -> altura relativa (lateral quase vertical)
+function tendasMad() {
+  const T = CTX.r.tendas; if (!T || !T.length) return; CENA.grupo = 'f0';
+  T.forEach((t, ti) => {
+    const [x0, z0, x1, z1] = t.aabb, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, hx = (x1 - x0) / 2, hz = (z1 - z0) / 2, h = t.altura, lona = COR_LONA[(ti + ((CTX.r.semente | 0) % 5)) % COR_LONA.length], id = t.id;
+    CENA.pc = pcEst('piso_' + id) || etq('piso_' + id, 'plastic', 'laje', { andar: 0 }); bx('liso', x0, 0, z0, x1, 0.02, z1, 0x3b4a5a);
+    CENA.pc = pcEst('lona_' + id) || etq('lona_' + id, 'fabric', 'telhado', { andar: 0 });
+    const tun = t.tipo === 'tunel', alongX = hx >= hz, M = 10, S = tun ? 3 : 16, R_ = tun ? 0 : 4;
+    const Q4 = (a, b, c, d, cor, dica) => { poli('lona', [a, b, c, d], cor, dica); };
+    if (tun) { // seção em arco ao longo do eixo maior, tampas planas nas pontas
+      const len = alongX ? hx * 2 : hz * 2, wd = alongX ? hz : hx, ax0 = alongX ? x0 : z0;
+      const P = (s, j) => { const tt = -1 + 2 * j / M, y_ = h * perfilTenda(tt), off = tt * wd, ax = ax0 + len * s / S; return alongX ? [ax, y_, cz + off] : [cx + off, y_, ax]; };
+      for (let s = 0; s < S; s++) for (let j = 0; j < M; j++) { const a = P(s, j), b = P(s + 1, j), c = P(s + 1, j + 1), d = P(s, j + 1); Q4(a, b, c, d, sh(lona, 0.96 + 0.07 * ((s + j) & 1)), [(a[0] + c[0]) / 2 - cx, 1, (a[2] + c[2]) / 2 - cz]); }
+      for (const s of [0, S]) { const pts = []; for (let j = 0; j <= M; j++) pts.push(P(s, j)); poli('lona', pts, sh(lona, 0.8), alongX ? [s ? 1 : -1, 0, 0] : [0, 0, s ? 1 : -1]); poli('lona', pts.slice().reverse(), sh(lona, 0.8), alongX ? [s ? -1 : 1, 0, 0] : [0, 0, s ? -1 : 1]); }
+    } else { // domo: anéis do topo até a borda, lateral quase vertical
+      const RN = 5, P = (r, k) => { const ang = k * 2 * Math.PI / S, rr = r / RN; return [cx + Math.cos(ang) * hx * rr, h * perfilTenda(rr), cz + Math.sin(ang) * hz * rr]; };
+      for (let r = 0; r < RN; r++) for (let k = 0; k < S; k++) { const a = P(r, k), b = P(r + 1, k), c = P(r + 1, k + 1), d = P(r, k + 1); if (r === 0) poli('lona', [P(0, 0), b, c], sh(lona, 0.95), [0, 1, 0]); else Q4(a, b, c, d, sh(lona, 0.95 + 0.08 * ((r + k) & 1)), [(a[0] + c[0]) / 2 - cx, 1, (a[2] + c[2]) / 2 - cz]); }
+    }
+    // varetas de alumínio: arcos que seguem o perfil, uma peça por vareta (a aabb diz a direção: alongada em x/z)
+    (CTX.r0.estrutura.pecas || []).filter(q => q.id.indexOf('vareta_' + id + '_') === 0).forEach(q => {
+      CENA.pc = pcEst(q.id); const [a, b, a2, b2] = q.aabb, emX = (a2 - a) > (b2 - b), pts = [], n = 12;
+      for (let j = 0; j <= n; j++) { const tt = -1 + 2 * j / n; if (tun) { const y_ = h * perfilTenda(tt, 2.6) + 0.02; pts.push(alongX ? [(a + a2) / 2, y_, cz + tt * hz] : [cx + tt * hx, y_, (b + b2) / 2]); } else { const y_ = h * perfilTenda(tt) + 0.02; pts.push(emX ? [cx + tt * hx, y_, (b + b2) / 2] : [(a + a2) / 2, y_, cz + tt * hz]); } }
+      for (let j = 0; j < n; j++) haste('metal', pts[j], pts[j + 1], 0.024, 0xc2c6ca, 'cil6'); });
+    // estacas e cordas
+    (CTX.r0.estrutura.pecas || []).filter(q => q.id.indexOf('estaca_' + id + '_') === 0).forEach((q, k) => {
+      CENA.pc = pcEst(q.id); const sx = (q.aabb[0] + q.aabb[2]) / 2, sz = (q.aabb[1] + q.aabb[3]) / 2, dx = sx - cx, dz = sz - cz, dl = Math.hypot(dx, dz) || 1;
+      haste('madeira', [sx, 0, sz], [sx + dx / dl * 0.07, 0.2, sz + dz / dl * 0.07], 0.035, 0x8a6a40);
+      CENA.pc = etq('corda_' + id + '_' + k, 'fabric', null, { andar: 0, massa: 0.3 }); const ex = clampN(sx, x0, x1), ez = clampN(sz, z0, z1);
+      haste('liso', [sx + dx / dl * 0.07, 0.18, sz + dz / dl * 0.07], [ex, tun ? h * 0.35 : h * 0.3, ez], 0.008, 0xd8d0b0); });
+    CENA.pc = null;
+  });
+}
+const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
+function tendasColisores() { // a lona é parede para quem anda: quatro lados com o vão da porta de zíper
+  const T = CTX.r.tendas; if (!T) return;
+  for (const t of T) {
+    const [x0, z0, x1, z1] = t.aabb, e = 0.05, d = CTX.r.portas.find(p => p.id === t.ziper), id = 'lona_' + t.id;
+    const lado = (u0, v0, u1, v1, eixo, pos) => { // eixo 'u': o lado corre em x; pos = linha
+      const cortes = d && d.eixo === (eixo === 'u' ? 'u' : 'v') && Math.abs(d.pos - pos) < 0.08 ? [d.c - d.larg / 2, d.c + d.larg / 2] : null, A = eixo === 'u' ? [u0, u1] : [v0, v1], seg = cortes ? [[A[0], cortes[0]], [cortes[1], A[1]]] : [A];
+      for (const [a, b] of seg) if (b - a > 0.02) CTX.colisores.push({ tipo: 'parede', peca: id, dano: 'borracha', f: 0, x0: eixo === 'u' ? a : pos - e, z0: eixo === 'u' ? pos - e : a, x1: eixo === 'u' ? b : pos + e, z1: eixo === 'u' ? pos + e : b });
+    };
+    lado(x0, z0, x1, z0, 'u', z0); lado(x0, z1, x1, z1, 'u', z1); lado(x0, z0, x0, z1, 'v', x0); lado(x1, z0, x1, z1, 'v', x1);
+  }
+}
+// peças de res.estrutura que nenhum desenhista cobriu viram caixas (ou cilindros) no volume da própria peça: assim toda peça tem malha, material e faixa
+const MAT_PECA = { wood_soft: ['madeira', 0xa88458], wood_hard: ['madeira', 0x7a5636], plywood: ['madeira', 0xc2a46e], mdf: ['madeira', 0xb89a6a], steel: ['metal', 0x8a8e92], aluminium: ['metal', 0xc2c6ca], concrete: ['reboco', 0x9d9b95], stone: ['reboco', 0x8a8a84], brick: ['reboco', 0xa8553a], plastic: ['liso', 0x2f6aa8], fabric: ['lona', 0x6a8f5a], ceramic: ['reboco', 0xb4623e], glass: ['vidro', 0xffffff], plaster: ['reboco', 0xd8d4c8] };
+function pecasFaltantes(r0) {
+  const E = r0.estrutura; if (!E || !E.pecas) return; const R = CTX.r, nA = R.andares.length, feito = new Set();
+  for (const A of CENA.accs.values()) for (const l of A.lim) if (l.pc) feito.add(l.pc.id);
+  const vt = E.pecas.filter(p => /^viga_teto_/.test(p.id) && p.y1 != null), ceil = Y0(nA - 1) + Math.max(0, ...R.comodos.filter(c => c.andar === nA - 1 && c.tipo !== 'vazio' && !ABERTO(c)).map(c => c.pe));
+  let dy = vt.length ? (ceil - 0.02) - Math.max(...vt.map(p => p.y1)) : 0; if (Math.abs(dy) < 0.05) dy = 0; // a planta às vezes deixa as vigas do forro sem a elevação da fundação: assentam sob o forro
+  for (const p of E.pecas) {
+    if (feito.has(p.id) || !p.aabb || p.id === 'caixa_dagua') continue; const [a0, c0, a1, c1] = p.aabb; let ya = p.y0, yb = p.y1; if (ya == null || yb == null) continue;
+    const forro = /^(viga_teto|laje_sotao)/.test(p.id); if (forro) { ya += dy; yb += dy; }
+    const m = MAT_PECA[p.material] || ['liso', 0x8a8a84], v = 0.92 + 0.16 * hId(p.id), cor = sh(m[1], v), alto = forro || /^(tesoura|telhado|prato)/.test(p.id) || p.role === 'telhado';
+    CENA.grupo = alto ? 'roof' : 'f' + Math.max(0, Math.min(nA - 1, p.andar || 0)); CENA.pc = pcEst(p.id);
+    if (p.forma === 'cil') cilB(m[0], (a0 + a1) / 2, ya, (c0 + c1) / 2, Math.min(a1 - a0, c1 - c0) / 2, yb - ya, cor); else bx(/^piso_varanda/.test(p.id) ? 'tabuaH' : m[0], a0, ya, c0, a1, yb, c1, cor);
+  }
+  CENA.pc = null;
 }
 // caminhos do SDK (lote.caminhos): calçamento do portão até a porta; vem por cima dos pisos de zona (gramado 0.02, cerâmica 0.035)
 function caminhos() {
@@ -41798,7 +43383,7 @@ function registraColisao(m, M) {
   const h = m.h || 0, y = M.y || 0;
   if (NAO_COLIDE.test(m.tipo) || m.categoria === 'piso_ext' || h < 0.3 || y >= 0.9 || !(m.w > 0.05) || !(m.d > 0.05)) return;
   let w = m.w, d = m.d; if (/arvore|palmeira/.test(m.tipo)) { w = Math.min(w, 0.5); d = Math.min(d, 0.5); }
-  INTER.objs.push({ f: M.andar, cx: m.x, cz: m.z, c: Math.cos(M.ry), s: Math.sin(M.ry), hw: w / 2, hd: d / 2, tipo: m.tipo });
+  INTER.objs.push({ f: M.andar, cx: m.x, cz: m.z, c: Math.cos(M.ry), s: Math.sin(M.ry), hw: w / 2, hd: d / 2, tipo: m.tipo, y0: y, top: y + h });
 }
 function distObj(o, x, z) { // distância assinada ao retângulo (negativa dentro)
   const dx = x - o.cx, dz = z - o.cz, lx = dx * o.c - dz * o.s, lz = dx * o.s + dz * o.c, ex = Math.abs(lx) - o.hw, ez = Math.abs(lz) - o.hd;
@@ -42077,8 +43662,8 @@ function ivAcumula(mat, g, ox, oy, oz, ry, cor) {
 }
 // 1ª fase (antes dos móveis do SDK): planeja, cria o mundo do kit, desenha cada objeto (estático nos acumuladores, peças móveis em grupos) e liga água, luz e rede elétrica
 function ivConstroi(h, agua) {
-  const K = IVK, r = CTX.r, A = K.A, mundo0 = null; void mundo0;
-  const plano = A.planejar(r, { semente: r.semente });
+  const K = IVK, r = CTX.r, A = K.A;
+  const plano = A.planejar(r, { semente: r.semente, noite: !!CTX.noite }); // kit 0.3.0: `noite` decide as luzes que o cômodo não guarda (lampião, lâmpada sem cômodo)
   const IV = { k: K, plano, mundo: null, agua, entradas: new Map(), roots: [], subst: new Set(), salas: new Map(), lampSala: new Map(), anim: new Map(), telas: new Map(), efx: null, itens: null, itensSujo: true, itensT: 0, sujo: true, lista: null, listaT: 0, t: 0, circuitos: [], interruptorSalas: new Set(), avisos: [], tBuild: 0 };
   h.IV = IV; const t0 = performance.now();
   const lampadas = new Set(plano.itens.filter(e => e.tipo === 'lamp').map(e => e.id));
@@ -42090,30 +43675,19 @@ function ivConstroi(h, agua) {
     let S = IV.salas.get(m.comodo); if (!S) IV.salas.set(m.comodo, S = { id: m.comodo, lamps: [], ef: false, switches: [] }); S.lamps.push(e.id); IV.lampSala.set(e.id, m.comodo);
   }
   const quer = sala => luzBase(sala); // intenção inicial da lâmpada: o estado guardado do cômodo, senão a noite
+  const luzesLigadas = (id, ent) => { const sala = IV.lampSala.get(id); return sala ? quer(sala) : !!ent.ligada; }; // o que não é de um cômodo fica como o plano decidiu (noite, casa com rede, lampião)
   const entPorId = new Map(plano.itens.map(e => [e.id, e]));
   const entPorItem = new Map(plano.itens.map(e => [e.item, e]));
   IV.mats = { plain: MATS.liso, metal: MATS.metal, wood: MATS.madeira, glass: MATS.vidro, fabric: MATS.tecido, plant: MATS.planta, water: MATS.agua, emissive: MATS.emissivo, atlas_picture: MATS.quadro, atlas_floor: MATS.piso };
   const ev = e => ivEvento(h, e);
   const mundo = IV.mundo = A.criarMundo(r, { agua, semente: r.semente, onEvent: ev });
-  const add0 = mundo.add;
-  mundo.add = (id, spec, tr) => { // estado inicial: lâmpada acesa se o cômodo está aceso (noite ou guardado); tecla do interruptor na mesma posição
-    const e = entPorId.get(id);
-    if (e && e.tipo === 'lamp') {
-      const sala = IV.lampSala.get(id); spec.devices[0].on = sala ? quer(sala) : !!CTX.noite;
-      // a luminária não é alvo do E (quem acende é o interruptor): a ação só vale com a trava '_x' aberta, o que ivLuzSala faz por um instante
-      spec.parts = (spec.parts || []).concat([{ id: '_x', pivot: [0, 0, 0], motion: { kind: 'slide', axis: [0, 1, 0], distance: 0.001 }, label: '' }]);
-      spec.interactions = [{ id: 'device.lamp', pos: [0, 0, 0], action: { do: 'toggle_device', device: 'lamp' }, label: '', requires: { object: id, part: '_x' } }];
-    }
-    else if (e && e.tipo === 'wall_switch') { const l = (e.ligacoes.controla || [])[0], sala = l && IV.lampSala.get(l); if (sala) for (const p of spec.parts || []) if (p.id === 'rocker') p.t0 = quer(sala) ? 1 : 0; }
-    return add0(id, spec, tr);
-  };
-  const saida = A.adicionar(mundo, plano, { bloqueado: A.bloqueadoDe(r), construir: (tipo, item) => ivDesenha(IV, entPorItem.get(item), tipo, item) });
-  mundo.add = add0;
+  const saida = A.adicionar(mundo, plano, { bloqueado: A.bloqueadoDe(r), luzesLigadas, construir: (tipo, item) => ivDesenha(IV, entPorItem.get(item), tipo, item) });
   IV.avisos = saida.avisos; IV.saida = saida;
+  ivColisores(IV);
   if (h.estado.iv) { // reconstrução (noite/corte): volta portas, gavetas, disjuntores, aparelhos; as lâmpadas seguem a intenção por cômodo
     try {
       const st = JSON.parse(JSON.stringify(h.estado.iv));
-      for (const [id, o] of Object.entries(st.objects)) { const e = entPorId.get(id); if (!e) { delete st.objects[id]; continue; } if (e.tipo === 'lamp' && o.devices && o.devices.lamp) { const sala = IV.lampSala.get(id); o.devices.lamp.on = sala ? quer(sala) : !!CTX.noite; } else if (e.tipo === 'wall_switch' && o.parts && o.parts.rocker !== undefined) { const l = (e.ligacoes.controla || [])[0], sala = l && IV.lampSala.get(l); if (sala) o.parts.rocker = quer(sala) ? 1 : 0; } }
+      for (const [id, o] of Object.entries(st.objects)) { const e = entPorId.get(id); if (!e || e.tipo === 'lamp' || e.tipo === 'wall_switch') delete st.objects[id]; } // lâmpadas e teclas nascem do plano (luzesLigadas); o resto volta como estava
       mundo.load(st);
     } catch (err) { console.warn('interativos: estado', err); }
   }
@@ -42125,6 +43699,16 @@ function ivConstroi(h, agua) {
   for (const S of IV.salas.values()) S.ef = ivSalaEf(IV, S);
   IV.tBuild = performance.now() - t0;
   return IV;
+}
+// colisores fixos do kit (world.colliders({merge:true}): caixas do mesmo objeto unidas; peças que se mexem, como portas de armário, ficam de fora: quem anda passa pelo que abre).
+// Valem no lugar da pegada do móvel do PlantasSDK quando o kit tem corpo para ele (cadeiras e o que o PlantasSDK não coloca também bloqueiam).
+function ivColisores(IV) {
+  const w = IV.mundo, comPeca = new Set(); IV.colisores = []; IV.cobre = new Set();
+  for (const E of IV.entradas.values()) for (const c of E.spec.colliders || []) if (c.part) comPeca.add(E.id + ':' + c.id);
+  for (const c of w.colliders({ merge: true })) {
+    if (comPeca.has(c.id)) continue; const E = IV.entradas.get(c.object); if (!E || !(c.hw > 0.02) || !(c.hd > 0.02)) continue;
+    IV.colisores.push({ f: E.andar, cx: c.cx, cz: c.cz, c: Math.cos(c.ry), s: Math.sin(c.ry), hw: c.hw, hd: c.hd, tipo: E.tipo, y0: c.y0 - E.pos[1], top: c.y1 - E.pos[1], kit: E.id }); IV.cobre.add(E.origem);
+  }
 }
 function ivSalaEf(IV, S) { const w = IV.mundo; for (const id of S.lamps) if (w.power.isOn(id, 'lamp') && w.power.isPowered(id, 'lamp')) return true; return false; }
 // desenha um objeto do kit: estático nos acumuladores da casa (grupo do andar), peças móveis num grupo com a posição do objeto
@@ -42139,8 +43723,9 @@ function ivDesenha(IV, ent, tipo, item) {
   const tela = spec.devices && spec.devices.some(d => d.kind === 'screen');
   let corpo = null;
   CENA.grupo = grupo; const pcAnt = CENA.pc;
-  if (tipo === 'gas_bottle') { // botijão do kit de interativos: peça de destruição (contém gás, explode); a geometria estática fundida leva a faixa dela
-    CENA.pc = etq('botijao:' + ent.id, 'steel', null, { andar: ent.andar, massa: 11, forma: 'cil', espessura: 0.003, fill: 0.03, contains: { fluid: 'gas', liters: 13, pressurized: true }, explodes: { energy: 120000, radius: 5, atC: 300 }, tags: ['gas_bottle'] });
+  if (tipo === 'gas_bottle' || tipo === 'gas_canister') { // botijão do kit de interativos (de casa ou cartucho de camping): peça de destruição (contém gás, explode); a geometria estática fundida leva a faixa dela
+    const gr = tipo === 'gas_bottle' ? { massa: 11, litros: 13, energia: 120000, raio: 5 } : { massa: 0.45, litros: 0.45, energia: 9000, raio: 2 };
+    CENA.pc = etq((tipo === 'gas_bottle' ? 'botijao:' : 'cartucho:') + ent.id, 'steel', null, { andar: ent.andar, massa: gr.massa, forma: 'cil', espessura: tipo === 'gas_bottle' ? 0.003 : 0.0008, fill: 0.03, contains: { fluid: 'gas', liters: gr.litros, pressurized: true }, explodes: { energy: gr.energia, radius: gr.raio, atC: 300 }, tags: ['gas_bottle'] });
     for (const m of out.group.children) if (!m.name.startsWith('static:')) m.traverse(o => { if (o.isMesh) { o.userData.destructionPart = CENA.pc.id; o.userData.destructionMaterial = 'steel'; } });
   }
   try {
@@ -42151,10 +43736,8 @@ function ivDesenha(IV, ent, tipo, item) {
       } else root.add(m);
     }
   } finally { CENA.grupo = g0; CENA.pc = pcAnt; }
-  const base = new Set(Object.values(IV.mats));
   root.traverse(o => { if (!o.isMesh) return; o.userData.iv = ent.id;
     if (o.castShadow) { if (!o.geometry.boundingSphere) o.geometry.computeBoundingSphere(); if (o.geometry.boundingSphere.radius < 0.07) o.castShadow = false; } // peças miúdas (teclas, disjuntores, puxadores) não projetam sombra: menos desenho no passe do sol
-    for (const m of Array.isArray(o.material) ? o.material : [o.material]) if (m && !base.has(m) && m.userData && m.userData.mascaraLuz && m.onBeforeCompile === THREE.Material.prototype.onBeforeCompile) { m.userData.mascaraLuz = false; mascaraLuz(m); } // cópias do mergeParts perdem o gancho da máscara de luz
   });
   const E = { id: ent.id, tipo, entry: ent, andar: ent.andar, grupo, root, partes: out.parts, spec, tela: corpo, pos: [item.x, ent.piso, item.z], ry: item.ry, origem: ent.origem };
   IV.entradas.set(ent.id, E);
@@ -42205,7 +43788,7 @@ function ivEvento(h, e) {
   const IV = h.IV; if (!IV) { if (e.type === 'message') msgHud(e.text); return; }
   IV.sujo = true;
   switch (e.type) {
-    case 'part': if (e.part === '_x') break; IV.anim.set(e.object + '|' + e.part, { object: e.object, part: e.part, alvo: e.target, t0: IV.t }); IV.itensSujo = true; invalida(); break;
+    case 'part': IV.anim.set(e.object + '|' + e.part, { object: e.object, part: e.part, alvo: e.target, t0: IV.t }); IV.itensSujo = true; invalida(); break;
     case 'device': { const sala = IV.lampSala.get(e.object); if (sala) ESTADO_INTER.set('luz:' + sala, !!e.on); invalida(); break; }
     case 'message': msgHud(e.text); break;
     case 'pickup': IV.itensSujo = true; if (e.actor === 'player' && e.stack) { const d = IV.mundo.t('item.' + e.stack.type); msgHud('Pegou: ' + d + (e.stack.qty > 1 ? ' x' + e.stack.qty : '')); } break;
@@ -42218,7 +43801,25 @@ function ivAssento(IV) {
   const w = IV.mundo, s = w.seatOf('player'); if (!s) return null;
   const o = w.get(s.object), seat = o.spec.seats.find(q => q.id === s.seat), L = IV.k.GI.localToWorld, tr = o.transform, E = IV.entradas.get(s.object);
   const eye = L(tr, [seat.pos[0], seat.pos[1] + (seat.eye === undefined ? (seat.pose === 'lie' ? 0.18 : 0.62) : seat.eye), seat.pos[2]]);
-  return { objeto: s.object, assento: s.seat, pose: seat.pose, olho: eye, yaw: tr.ry + seat.ry, pitch: seat.pose === 'lie' ? 0.55 : -0.08, saida: L(tr, seat.exit), andar: E ? E.andar : 0, tipo: E ? E.tipo : null };
+  const yaw = tr.ry + seat.ry, vista = seat.pose === 'lie' ? null : ivVistaSentado(E, eye, yaw);
+  if (vista) { eye[0] -= Math.sin(yaw) * vista.recuo; eye[2] -= Math.cos(yaw) * vista.recuo; }
+  return { objeto: s.object, assento: s.seat, pose: seat.pose, olho: eye, yaw, pitch: seat.pose === 'lie' ? 0.55 : vista ? vista.pitch : -0.08, saida: L(tr, seat.exit), andar: E ? E.andar : 0, tipo: E ? E.tipo : null };
+}
+// Sentado de frente para uma mesa (escrivaninha, mesa de jantar) o olho do kit fica a palmos do tampo e, olhando reto, só se vê a parede. Com um móvel de tampo (0,6 m ou mais, abaixo do olho) logo à frente:
+// o olho recua até 0,3 m da borda (quem senta se encosta na cadeira) e o olhar desce até a ponta do tampo. Devolve {recuo, pitch} ou null.
+function ivVistaSentado(E, eye, yaw) {
+  const f = !E ? 0 : E.andar < 0 ? 0 : E.andar, base = E ? E.pos[1] : 0, alt = eye[1] - base, fx = Math.sin(yaw), fz = Math.cos(yaw);
+  if (!(alt > 0.5)) return null;
+  const serve = o => (o.f !== -1 ? o.f === f : f === 0) && o.top > 0.6 && o.top < alt - 0.12 && !o.kit;
+  let d0 = -1, d1 = -1, top = 0;
+  for (let d = 0.02; d <= 1.3; d += 0.03) {
+    const x = eye[0] + fx * d, z = eye[2] + fz * d; let hit = null;
+    for (const o of INTER.objs) if (serve(o) && distObj(o, x, z) < 0) { hit = o; break; }
+    if (hit) { if (d0 < 0) { d0 = d; top = hit.top; } d1 = d; } else if (d0 >= 0) break;
+  }
+  if (d0 < 0) return null;
+  const recuo = Math.max(0, Math.min(0.25, 0.3 - d0));
+  return { recuo, pitch: Math.max(-0.5, Math.min(-0.08, -Math.atan2(alt - top, Math.max(0.35, d1 + recuo)))) };
 }
 // por quadro: mundo do kit, poses que mudam, luzes dos cômodos, telas, efeitos e itens dos recipientes abertos
 function ivAtualiza(h, dt, tempo, foco) {
@@ -42235,8 +43836,8 @@ function ivAtualiza(h, dt, tempo, foco) {
   for (const S of IV.salas.values()) { const ef = ivSalaEf(IV, S); if (ef !== S.ef) { S.ef = ef; aplicaLuz(S.id); if (cfg.onLuz) cfg.onLuz(S.id, ef); } }
   for (const [id, sc] of IV.telas) { const on = w.power.isOn(id, 'tv') && w.power.isPowered(id, 'tv'); if (sc.on !== on) { sc.setOn(on); invalida(); } if (on) { const ch = w.power.channel(id, 'tv'); if (sc.channel !== ch) sc.setChannel(ch); sc.update(dt); invalida(); } }
   const em = w.emitters();
-  if (em.length && !IV.efx && IVK.efeitos) { const g = h.casaGrupo; IV.efx = K.gfx.createEffects(g, { maxParticles: 1400, seed: 11, document: DOC }); }
-  if (IV.efx) { const vivo = IV.efx.stats().alive; if (em.length || vivo) { IV.efx.update(dt, em, IVK.camera ? (typeof IVK.camera === 'function' ? IVK.camera() : IVK.camera) : undefined); invalida(); } }
+  if (em.length && !IV.efx && IVK.efeitos) IV.efx = K.gfx.createEffects({ scene: h.casaGrupo, camera: IVK.camera || null, maxParticles: 1400, seed: 11, document: DOC }); // kit 0.3.0: a câmera é do efeito (objeto, função ou null = lente de 90 graus)
+  if (IV.efx) { const vivo = IV.efx.stats().alive; if (em.length || vivo) { IV.efx.update(dt, em); invalida(); } }
   if (IVK.itens && IV.itensSujo && IV.t - IV.itensT > 0.1 && !IV.anim.size) ivItens(IV, h);
 }
 // itens dentro dos recipientes abertos (uma malha só por casa, reconstruída quando algo abre, fecha ou é pego)
@@ -42278,25 +43879,32 @@ function ivItens(IV, h) {
   } finally { CENA.grupo = g0; }
   invalidaSombra();
 }
-// alvo do E entre os objetos do kit: o melhor candidato do mundo (alcance e cone), sem parede no meio; devolve {score, txt, acao, alvo}
+// rótulo do E: verbo e objeto do kit (o kit não leva "E:" nos textos)
+const ivRotulo = k => 'E: ' + k.verb.charAt(0).toLowerCase() + k.verb.slice(1) + (k.noun ? ' ' + k.noun : '');
+// alvo do E entre os objetos do kit: o melhor candidato do mundo (alcance e cone, `filter` tira o que é de outro andar, o que a parede esconde e o que o app exclui), devolve {score, txt, acao, alvo}.
+// Sem candidato disponível, o que está na mira mas indisponível (precisa abrir antes, sem energia, trancado) vira um aviso com o motivo (world.t(reason)) e acao() devolve false.
 function ivAlvo(IV, o, opc) {
-  const w = IV.mundo, andar = o.andar < 0 ? 0 : o.andar;
-  const k = w.target({ x: o.x, y: o.y, z: o.z, yaw: (o.yaw || 0) + Math.PI, pitch: o.pitch || 0 }, { reach: opc && opc.alcance || 2.3, cone: opc && opc.cone || 0.55 });
+  const w = IV.mundo, andar = o.andar < 0 ? 0 : o.andar, olho = { x: o.x, y: o.y, z: o.z, yaw: (o.yaw || 0) + Math.PI, pitch: o.pitch || 0 };
+  const ok = k => {
+    const E = IV.entradas.get(k.object); if (!E) return false;
+    if (opc && opc.excluir && opc.excluir(E, k)) return false;
+    if (E.andar >= 0 && E.andar !== andar) return false;
+    return !paredeBloqueia(o.x, o.z, k.pos[0], k.pos[2], E.andar < 0 ? 0 : E.andar);
+  };
+  const base = { reach: opc && opc.alcance || 2.3, cone: opc && opc.cone || 0.55, filter: ok, kinds: opc && opc.tipos || undefined };
+  let k = w.target(olho, base), indisp = false;
+  if (!k) { k = w.target(olho, Object.assign({ includeUnavailable: true }, base)); indisp = !!k; }
   if (!k) return null;
-  const E = IV.entradas.get(k.object); if (!E) return null;
-  if (opc && opc.excluir && opc.excluir(E, k)) return null;
-  if (E.andar >= 0 && E.andar !== andar) return null;
-  const p = k.pos, d = Math.hypot(p[0] - o.x, p[1] - o.y, p[2] - o.z);
-  if (paredeBloqueia(o.x, o.z, p[0], p[2], E.andar < 0 ? 0 : E.andar)) return null;
+  const E = IV.entradas.get(k.object), p = k.pos, d = Math.hypot(p[0] - o.x, p[1] - o.y, p[2] - o.z);
   const cp = Math.cos(o.pitch || 0), vx = Math.sin(o.yaw) * cp, vy = Math.sin(o.pitch || 0), vz = Math.cos(o.yaw) * cp;
   const ang = Math.acos(Math.max(-1, Math.min(1, ((p[0] - o.x) * vx + (p[1] - o.y) * vy + (p[2] - o.z) * vz) / (d || 1))));
-  const txt = 'E: ' + k.label.charAt(0).toLowerCase() + k.label.slice(1);
-  const alvo = { kit: true, id: k.id, tipo: 'kit:' + k.kind, objeto: E, item: k, andar: E.andar, pos: p.slice(), txt: () => txt };
-  return { score: ang * 2 + d * 0.3 - 0.2, txt, acao: () => { IV.sujo = true; return k.act('player'); }, alvo };
+  const txt = indisp ? (k.noun ? k.noun.charAt(0).toUpperCase() + k.noun.slice(1) + ': ' : '') + w.t(k.reason) : ivRotulo(k);
+  const alvo = { kit: true, id: k.id, tipo: 'kit:' + k.kind, objeto: E, item: k, andar: E.andar, pos: p.slice(), disponivel: !indisp, motivo: indisp ? k.reason : null, txt: () => txt };
+  return { score: ang * 2 + d * 0.3 - 0.2 + (indisp ? 0.5 : 0), txt, indisponivel: indisp, acao: () => { IV.sujo = true; return indisp ? false : k.act('player'); }, alvo };
 }
 function ivLuzSala(IV, sala, on) { // liga ou apaga as lâmpadas do cômodo (o que o interruptor antigo fazia)
   const S = IV.salas.get(sala), w = IV.mundo; if (!S) return;
-  for (const id of S.lamps) if (w.power.isOn(id, 'lamp') !== on) { w.setPart(id, '_x', 1, true); w.act(id + ':device.lamp', 'player'); w.setPart(id, '_x', 0, true); }
+  for (const id of S.lamps) w.setDevice(id, 'lamp', !!on);
 }
 
 // portas e gavetas dos móveis do kit viram partes 'ix:porta:<móvel>:..' e 'ix:gaveta:<móvel>:..' (mesmos nomes do SDK, para o jogo abrir o armário do loot)
@@ -42320,7 +43928,7 @@ function ivDescarta(h) {
 // o que a casa mostra a quem usa: casa.interativos
 function ivPublica(h) {
   const IV = h.IV, w = IV.mundo, K = IV.k, com = fn => (...a) => { entra(h); return fn(...a); };
-  const rot = k => 'E: ' + k.label.charAt(0).toLowerCase() + k.label.slice(1);
+  const rot = ivRotulo;
   IV.bloqueado = K.A.bloqueadoDe(h.CTX.r);
   IV.pub = {
     ativo: true, mundo: w, plano: IV.plano, kit: K, entradas: IV.entradas, circuitos: IV.circuitos, salas: IV.salas, avisos: IV.avisos, agua: IV.agua,
@@ -42328,13 +43936,16 @@ function ivPublica(h) {
     bloqueado: IV.bloqueado,                                                    // (x, z, andar) -> dentro de parede (mesma checagem do fitSweep das portas dos móveis)
     objetosDoMovel: mid => [...IV.entradas.values()].filter(E => E.origem === mid),   // um móvel do PlantasSDK pode virar vários objetos (pia = cuba + armário + aéreo)
     alvo: com((olho, opc) => ivAlvo(IV, olho, opc)),                            // {score, txt, acao, alvo} do melhor objeto do kit para olho {x,y,z,yaw,pitch,andar} (coordenadas da casa)
-    interage: com((olho, opc) => { const a = ivAlvo(IV, olho, opc); if (!a) return false; if (cfg.onInteragir && cfg.onInteragir({ id: a.alvo.id, tipo: a.alvo.tipo, rotulo: a.txt, ref: a.alvo }, a) === false) return false; return !!a.acao(); }),
-    interagiveis: com(() => w.interactables().map(k => { const E = IV.entradas.get(k.object); return { id: k.id, tipo: 'kit:' + k.kind, andar: E ? E.andar : 0, pos: k.pos, raio: k.radius, rotulo: rot(k), agir: () => k.act('player') }; })),
+    interage: com((olho, opc) => { const a = ivAlvo(IV, olho, opc); if (!a || a.indisponivel) return false; if (cfg.onInteragir && cfg.onInteragir({ id: a.alvo.id, tipo: a.alvo.tipo, rotulo: a.txt, ref: a.alvo }, a) === false) return false; return !!a.acao(); }),
+    interagiveis: com(() => w.interactables().map(k => { const E = IV.entradas.get(k.object); return { id: k.id, tipo: 'kit:' + k.kind, andar: E ? E.andar : 0, pos: k.pos, raio: k.radius, rotulo: rot(k), disponivel: k.available, motivo: k.reason || null, agir: () => k.act('player') }; })),
     assento: () => ivAssento(IV),                                               // {objeto, assento, pose: 'sit'|'lie', olho, yaw, pitch, saida, andar} se o jogador está sentado/deitado
     sentar: com((objeto, assento) => !!w.sit(objeto, assento, 'player')),
     levantar: com(() => w.stand('player')),
     abre: com((mid, alvo) => { for (const E of IV.entradas.values()) if (E.origem === mid) for (const p of E.spec.parts || []) if (IV_PORTA.test(p.id)) w.setPart(E.id, p.id, alvo ? 1 : 0); }), // abre ou fecha todas as portas e gavetas de um móvel
     disjuntor: com((circuito, on) => { if (on === undefined) return w.power.breaker(circuito); w.power.setBreaker(circuito, !!on); const q = IV.plano.quadro && IV.entradas.get(IV.plano.quadro); if (q && q.partes['breaker_' + circuito]) w.setPart(q.id, 'breaker_' + circuito, on ? 1 : 0); IV.sujo = true; return !!on; }),
+    dispositivo: com((objeto, dispositivo, on) => { IV.sujo = true; return w.setDevice(objeto, dispositivo, !!on); }), // liga/desliga aparelho do kit (world.setDevice)
+    torneira: com((objeto, fixture, on) => { IV.sujo = true; return w.setFixture(objeto, fixture, !!on); }),            // abre/fecha torneira, chuveiro (world.setFixture)
+    boca: com((objeto, boca, on) => { IV.sujo = true; return w.setBurner(objeto, boca, !!on); }),                        // acende/apaga boca de fogão, fogareiro (world.setBurner)
     luzLigada: sala => { const S = IV.salas.get(sala); return S ? S.ef : null; },
     luz: com((sala, on) => { ivLuzSala(IV, sala, !!on); }),
     anima: com(() => IV.anim.size > 0),
@@ -42482,7 +44093,7 @@ void main() {`).replace('getPointLightInfo( pointLight, geometryPosition, direct
         objs = objs.filter(Boolean); if (!objs.length) return; const pc = etq(id, mat, role, extra); CTX.pecasObj.set(id, objs);
         for (const o of objs) o.traverse(m => { if (!m.isMesh) return; const u = m.userData; u.destructionPart = id; u.destructionMaterial = mat; if (role) u.structuralRole = role; if (pc.contains) u.destructionContains = pc.contains; if (pc.explodes) u.destructionExplodes = pc.explodes; });
       };
-      for (const fo of CTX.folhas) { const pr = r.portas.find(p => p.id === fo.id); tagObj('porta:' + fo.id, fo.gs, fo.tipo === 'aco' ? 'steel' : (pr && pr.ext) ? 'wood_hard' : 'mdf', null, { andar: fo.andar, massa: fo.tipo === 'aco' ? 60 : 18, tags: ['door'] }); }
+      for (const fo of CTX.folhas) { const pr = r.portas.find(p => p.id === fo.id); tagObj('porta:' + fo.id, fo.gs, fo.tipo === 'aco' ? 'steel' : (pr && pr.tipo === 'ziper') ? 'fabric' : (pr && pr.ext) ? 'wood_hard' : 'mdf', null, { andar: fo.andar, massa: fo.tipo === 'aco' ? 60 : 18, tags: ['door'] }); }
       const cap = r.hidraulica ? +r.hidraulica.capacidade_l || 0 : 0;
       for (const [id, g] of Object.entries(CTX.partes || {})) {
         const tp = g.userData.parte;
@@ -42525,6 +44136,9 @@ void main() {`).replace('getPointLightInfo( pointLight, geometryPosition, direct
       const est = {
         sistema: (r0.construcao && r0.construcao.sistema) || 'alvenaria', pecas, apoios, niveis: (E0.niveis || []).slice(), elevacao: E0.elevacao || 0, porId,
         malhasDe: id => malhas.get(id) || [],
+        // opções para renderer.bind(idDoObjeto, casa.grupo, est.bindOpcoes()): malha fundida por faixa de vértices ({mesh, range:[v0,v1)}), malha de uma peça e grupos soltos pelo objeto
+        bindPartes() { const r = {}; for (const [id, l] of malhas) r[id] = l.map(it => it.obj ? it.obj : it.todo ? it.mesh : { mesh: it.mesh, range: [it.v0, it.v1] }); return r; },
+        bindOpcoes() { return { parts: this.bindPartes() }; },
         // acerto do raycast (objeto + faceIndex) -> id da peça: malha fundida pelas faixas, malha de uma peça (ou grupo solto) pelo userData
         pecaDe(obj, face) { for (let n = obj; n; n = n.parent) { const u = n.userData; if (!u) continue; if (u.faixas && face != null) { const ix = face * 3; for (const f of u.faixas) if (ix >= f.i0 && ix < f.i1) return f.id; } if (u.destructionPart) return u.destructionPart; } return null; },
         spec: o => specDe(est, o),
@@ -42640,13 +44254,14 @@ void main() {`).replace('getPointLightInfo( pointLight, geometryPosition, direct
 
     function construir(r0, opts) {
       opts = opts || {};
-      const r = aplicaEdificacoes(r0); // R43: a edícula (res.edificacoes) entra como cômodo, paredes, porta, janelas e itens na planta que o SDK desenha; res.r continua sendo a planta original
+      const r1 = aplicaEdificacoes(r0), elev = r1.construcao && MADEIRA_SIS.has(r1.construcao.sistema) && r1.construcao.fundacao ? +r1.construcao.fundacao.elevacao || 0 : 0; // fundação elevada (pilotis, vazio sanitário, radier): todos os andares sobem `elev` (res.estrutura já vem com a elevação)
+      const r = elev > 0 ? Object.assign({}, r1, { andares: r1.andares.map(a => Object.assign({}, a, { y0: a.y0 + elev })) }) : r1; // R43: a edícula (res.edificacoes) entra como cômodo, paredes, porta, janelas e itens na planta que o SDK desenha; res.r continua sendo a planta original
       const t0 = performance.now();
       const h = { CTX: { mv: MV, tipos: TIPOS }, INTER: novoINTER(), estado: opts.estado || novoEstado(), ESP: novoESP(), qual: opts.qualidade === 'jogo' || opts.qualidade === 'alta' ? opts.qualidade : (cfg.qualidade === 'jogo' ? 'jogo' : 'alta'), lodAtual: 0, lodMin: 0 };
       entra(h);
       CENA.accs.clear(); LUZES.length = 0;
       const pr = opts.predio || {};
-      CTX.r = r; CTX.cores = r.cores; CTX.corte = !!opts.corte; CTX.noite = !!opts.noite; CTX.rotulos = []; CTX.colisores = []; CTX.escadas = []; CTX.semTerreno = opts.terreno === false;
+      CTX.r = r; CTX.r0 = r0; CTX.elev = elev; CTX.forroTopo = null; CTX.cores = r.cores; CTX.corte = !!opts.corte; CTX.noite = !!opts.noite; CTX.rotulos = []; CTX.colisores = []; CTX.escadas = []; CTX.semTerreno = opts.terreno === false;
       CTX.comPorId = {}; for (const c of r.comodos) CTX.comPorId[c.id] = c;
       CTX.pecas = new Map(); CTX.pecasObj = new Map(); CTX.estIdx = {}; for (const e of (r0.estrutura && r0.estrutura.pecas) || []) CTX.estIdx[e.id] = e; CTX.aguas = (r0.telhado && r0.telhado.aguas) || []; CTX.noPc = false;
       CENA.separa = opts.pecas === 'malhas'; CENA.pc = null;
@@ -42656,12 +44271,15 @@ void main() {`).replace('getPointLightInfo( pointLight, geometryPosition, direct
       CTX.veg = VEG ? { G: VEG.G, S: VEG.S, mats: vegMats, grupos: new Map(), ok: new Map(), opts: QUAL === 'jogo' ? { quality: 'game' } : { lod: 0, triangleBudget: 60000 } } : null; CTX.vegInfo = null;
       terreno();
       if (r.lote) { if (!opts.semPerimetro) { perimetro(); portoesInter(); } caminhos(); } // GANCHO DO JOGO (estágio 2): opts.semPerimetro:true não desenha muro/grade/portões do lote (o jogo tem o próprio muro destrutível nos lotes do Jardim Aurora)
-      paredes(); rodapeECalcada(); CTX.colParedes = CTX.colisores.length; portas(); janelas(); pisosELajes(); edificacoes(); escadas(); elevador();
+      paredes(); tendasColisores(); rodapeECalcada(); CTX.colParedes = CTX.colisores.length; portas(); janelas(); pisosELajes(); edificacoes(); escadas(); elevador();
+      if (nm()) { fundacaoMad(); fechaVazios(); chaminesMad(); cavaleteMad(); tendasMad(); }
       const agua = criaAgua(r, h.estado); CTX.iv = null; h.IV = null;
       if (IVK) { try { h.IV = CTX.iv = ivConstroi(h, agua); } catch (e) { console.warn('interativos', e); CTX.iv = h.IV = null; } } // kit de interativos: planeja, desenha e liga (ver 75)
       const semModelo = itensDaCasa(); interruptores(); canosAgua(); estruturaEletrica();
-      telhados(); solar();
+      if (nm()) telhadoMad(); else telhados();
+      solar();
       if (CTX.mostraPredio) predio();
+      if (nm()) { tesourasMad(r0); gatoMad(); pecasFaltantes(r0); }
       for (const c of r.comodos) { if (c.tipo === 'vazio') continue; const [a, b, c2, d] = rectsDe(c)[0]; CTX.rotulos.push({ pos: new THREE.Vector3((a + c2) / 2, Y0(c.andar) + 1.1, (b + d) / 2), texto: c.nome, grupo: 'f' + c.andar, tipo: 'comodo', andar: c.andar }); }
       const espelhosCopia = ESPELHOS.map((E, i) => Object.assign({ i }, E)), gs = fechaCena(MATS);
       for (const fo of CTX.folhas) { // folhas das portas: grupos soltos com a origem na dobradiça, dentro do grupo do andar
@@ -42681,8 +44299,8 @@ void main() {`).replace('getPointLightInfo( pointLight, geometryPosition, direct
       CTX.animPortas = CTX.animPortas || false;
 
       // ---- colisores públicos: paredes/portas/muros/portões (aabb) e móveis (obb) ----
-      for (const c of CTX.colisores) { c.aabb = [c.x0, c.z0, c.x1, c.z1]; if (c.tipo === 'parede') c.danificavel = tagDano('alvenaria'); }
-      const colisores = CTX.colisores.concat(INTER.objs.map(o => ({ tipo: 'movel', f: o.f, obb: { cx: o.cx, cz: o.cz, hw: o.hw, hd: o.hd, c: o.c, s: o.s }, item: o.tipo, off: false })));
+      for (const c of CTX.colisores) { c.aabb = [c.x0, c.z0, c.x1, c.z1]; if (c.tipo === 'parede') c.danificavel = tagDano(c.dano || 'alvenaria'); }
+      const colisores = CTX.colisores.concat(INTER.objs.map(o => ({ tipo: 'movel', f: o.f, obb: { cx: o.cx, cz: o.cz, hw: o.hw, hd: o.hd, c: o.c, s: o.s }, item: o.tipo, off: false, y0: o.y0, top: o.top, kit: o.kit || undefined })));
 
       // ---- partes (id -> {grupo, tipo, abre(t), danificavel}) ----
       const partes = {}, pAbre = (def, t) => { def.alvo = t; def.t = t; ESTADO_INTER.set(def.nome, t); if (def.col) { def.col.off = t > 0.5; colMudou(def.col); } aplicaPeca(def); INTER.anim.delete(def); invalidaSombra(); };
@@ -42870,6 +44488,7 @@ void main() {`).replace('getPointLightInfo( pointLight, geometryPosition, direct
   }
   // specDe(estrutura, {fs, projeto, vedacao}) -> DestructibleSpec no espaço da casa (x = u, y = altura, z = v; o chão é y = 0).
   // `estrutura` é res.estrutura da planta ou casa.estrutura (com as peças marcadas). Cada peça vira uma caixa; 'chao' é a fundação ancorada.
+  // Com o kit (GameDestruction.sizeStructure, ou o.sizeStructure) a capacidade vem de sizeStructure(spec,{safety:fs, redundancy:n1}); sem o kit (ou com legado:true) vale o cálculo próprio abaixo.
   // projeto (padrão true): a capacidade de cada peça estrutural vem da carga em repouso, como num projeto com folga. Pilares e paredes portantes: projeto N-1, ou seja, a tensão em repouso
   // é no máximo `fs` (0,65) e perder QUALQUER outro pilar ou parede portante deixa o elemento em no máximo `n1` (0,97) da capacidade, então a casa aguenta uma perda e, sem ajuda,
   // cai com duas. Vigas, lajes, telhado e escadas: carga / `fsOutros` (0,45). Sem isso as massas da planta (telhado de 54 t sobre pilares de 20 cm) passam do que o concreto do núcleo
@@ -42878,7 +44497,8 @@ void main() {`).replace('getPointLightInfo( pointLight, geometryPosition, direct
     o = o || {}; const fs = o.fs != null ? o.fs : 0.65, n1 = o.n1 != null ? o.n1 : 0.97, fo = o.fsOutros != null ? o.fsOutros : 0.45, parts = [], joints = [], tem = new Set();
     const pecas = est.pecas.filter(p => p.aabb && (!o.filtro || o.filtro(p))).map(p => (o.vedacao && p.role === 'parede_portante') ? Object.assign({}, p, { role: 'parede_vedacao' }) : p);
     const est2 = { pecas, apoios: est.apoios.filter(a => !o.filtro || (pecas.some(p => p.id === a.de) && (a.sobre === 'chao' || pecas.some(p => p.id === a.sobre)))) };
-    const cargas = o.projeto === false ? null : cargasProjeto(est2), rho = new Map(); // rho: pior aumento de carga de cada pilar/parede portante quando QUALQUER outro pilar/parede portante falha
+    const SZ = o.projeto === false || o.legado ? null : (o.sizeStructure || (globalThis.GameDestruction && globalThis.GameDestruction.sizeStructure) || null); // kit: dimensiona a capacidade pela carga em repouso (safety) e pela perda de um pilar (redundancy)
+    const cargas = o.projeto === false || SZ ? null : cargasProjeto(est2), rho = new Map(); // rho (sem o kit): pior aumento de carga de cada pilar/parede portante quando QUALQUER outro pilar/parede portante falha
     if (cargas) for (const j of pecas) { if (j.role !== 'pilar' && j.role !== 'parede_portante') continue; const c2 = cargasProjeto(est2, j.id); for (const [id, c] of c2) { const c0 = cargas.get(id); if (c0 && c / c0 > (rho.get(id) || 1)) rho.set(id, c / c0); } }
     let x0 = 1e9, z0 = 1e9, x1 = -1e9, z1 = -1e9;
     for (const p of pecas) {
@@ -42896,7 +44516,8 @@ void main() {`).replace('getPointLightInfo( pointLight, geometryPosition, direct
       if (!tem.has(a.de) || !tem.has(a.sobre)) continue;
       joints.push({ id: a.de + '~' + a.sobre, a: a.de, b: a.sobre, kind: JUNTA_DES[a.tipo] || 'resting', bears: a.carga === false ? false : 'a_on_b' });
     }
-    return { name: o.nome || 'casa', parts, joints, tags: ['structure', 'house'] };
+    const spec = { name: o.nome || 'casa', parts, joints, tags: ['structure', 'house'] };
+    return SZ ? SZ(spec, { safety: fs, redundancy: n1 }) : spec;
   }
   return { criar, versao: VERSAO, EXT_TIPOS, rectsDe, aberto, planejaLOD, specDe, cargasProjeto, ROLE_DES };
 })();
@@ -43280,7 +44901,7 @@ function sincAndar() { const nA = CASA.r.andares.length; [...$('andarSeg').child
 function depois(fn, ms = 160) { let h; return (...a) => { clearTimeout(h); h = setTimeout(() => fn(...a), ms); }; }
 function mudou(refit = true) { reconstroi(refit); }
 const mudouAtraso = depois(() => mudou(true));
-const GRUPOS_TPL = [['Baixa renda', ['casaA', 'popular_laje', 'popular_geminada', 'sobrado']], ['Classe média', ['media_terrea_moderna', 'sobrado_medio_moderno']], ['Alto padrão', ['alto_padrao_contemporanea', 'mansao']], ['Apartamentos', ['apartamento', 'apartamento_novo']], ['Comercial', ['mercado', 'farmacia']]];
+const GRUPOS_TPL = [['Baixa renda', ['casaA', 'popular_laje', 'popular_geminada', 'sobrado']], ['Classe média', ['media_terrea_moderna', 'sobrado_medio_moderno']], ['Alto padrão', ['alto_padrao_contemporanea', 'mansao']], ['Apartamentos', ['apartamento', 'apartamento_novo']], ['Comercial', ['mercado', 'farmacia']], ['Madeira e precárias', ['casa_madeira_americana', 'chale_madeira', 'cabana_tronco', 'barraco', 'barraca_camping']]];
 $('selT').innerHTML = GRUPOS_TPL.map(([g, ids]) => `<optgroup label="${g}">` + ids.map(id => TPLS.find(t => t.id === id)).filter(Boolean).map(t => `<option value="${t.id}">${t.nome}</option>`).join('') + '</optgroup>').join('') + (TPLS.filter(t => !GRUPOS_TPL.some(g => g[1].includes(t.id))).map(t => `<option value="${t.id}">${t.nome}</option>`).join(''));
 $('selT').onchange = e => { S.t = e.target.value; S.n = null; S.w = null; S.d = null; S.a = -1; S.el = 0; mudou(true); };
 $('inS').onchange = e => { S.s = Math.max(0, Math.floor(+e.target.value) || 0); mudou(true); };
