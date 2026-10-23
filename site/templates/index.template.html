@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{SITE_TITLE}}</title>
+<style>
+:root{--bg:#eceae4;--paper:#f7f6f2;--fg:#22251f;--muted:#5d6157;--line:#c9c7bd;--accent:#b5521f;--chip:#e2dfd5;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161813;--paper:#1e211b;--fg:#e3e2da;--muted:#a2a597;--line:#383c32;--accent:#e0773f;--chip:#2a2e26;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#161813;--paper:#1e211b;--fg:#e3e2da;--muted:#a2a597;--line:#383c32;--accent:#e0773f;--chip:#2a2e26;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+nav{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);padding:24px 16px;background:var(--paper)}
+nav h1{font:800 30px/.95 "Arial Narrow",Impact,sans-serif;text-transform:uppercase;margin:0 0 18px}
+nav h1 span{display:block;font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.14em;color:var(--accent);margin-top:6px}
+nav a{display:flex;justify-content:space-between;padding:7px 10px;color:var(--fg);text-decoration:none;border-radius:6px;font-weight:600}
+nav a small{color:var(--muted);font-weight:400}
+nav a:hover,nav a.on{background:var(--chip);color:var(--accent)}
+main{padding:28px 24px 64px;max-width:1040px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;align-items:center}
+.bar b{font:600 12px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.bar button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--paper);color:var(--fg);padding:5px 12px;border-radius:99px;cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+section{margin-bottom:30px;scroll-margin-top:16px}
+section h2{font:700 13px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{display:block;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;color:var(--fg);text-decoration:none}
+.card:hover,.card:focus-visible{border-color:var(--accent);outline:none}
+.card strong{display:block;font-size:16px}
+.card p{margin:4px 0 10px;color:var(--muted);font-size:13px}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tags span{font-size:11.5px;background:var(--chip);border-radius:4px;padding:1px 7px;color:var(--muted)}
+.tags span.t-jogavel{background:var(--accent);color:#fff}
+.hide{display:none}
+nav a .lbl,section h2{display:flex;align-items:center;gap:8px}
+nav a svg{color:var(--muted);flex:none}
+nav a:hover svg,nav a.on svg{color:var(--accent)}
+.card strong{display:flex!important;align-items:center;gap:8px}
+.ci{display:grid;place-items:center;width:28px;height:28px;border-radius:6px;background:var(--chip);color:var(--accent);flex:none}
+nav h1 .logo{display:grid;place-items:center;width:38px;height:38px;border-radius:9px;background:var(--accent);color:#1a0f08;margin-bottom:10px}
+nav h1 .logo svg{width:24px;height:24px}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:720px){.wrap{grid-template-columns:1fr}nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}nav .links{display:flex;flex-wrap:wrap;gap:4px}nav a small{display:none}main{padding:20px 16px 48px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <h1><i class="logo">{{SITE_ICON}}</i>ZombiAdA<span>CÓPIA OFFLINE</span></h1>
+  <div class="links" id="nav"></div>
+</nav>
+<main>
+  <div class="bar" id="bar"><b>Mostrar</b></div>
+  <div id="list"></div>
+  <footer>Tudo aqui funciona sem internet: three.js, fontes e código estão embutidos em cada arquivo. Abra esta página pelo navegador e clique em qualquer cartão. Cópia gerada em {{BUILD_DATE}} pelo pipeline (<code>make docs</code>).</footer>
+</main>
+</div>
+<script>
+const TEAMS=/*@@TEAMS@@*/[];
+const FILTERS=/*@@FILTERS@@*/[];
+const ICONS=/*@@ICONS@@*/{};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const slug=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+document.getElementById("nav").innerHTML=TEAMS.map(([id,n,p])=>`<a href="#${id}"><span class="lbl">${ICONS[id]||""}${n}</span><small>${p.length}</small></a>`).join("");
+document.getElementById("list").innerHTML=TEAMS.map(([id,n,p])=>`<section id="${id}"><h2>${ICONS[id]||""}${n}</h2><div class="cards">${p.map(([h,t,d,g])=>`<a class="card" href="${h}" data-tags="${g.join("|")}"><strong><span class="ci">${ICONS[id]||""}</span>${esc(t)}</strong><p>${esc(d)}</p><div class="tags">${g.map(x=>`<span class="t-${slug(x)}">${x}</span>`).join("")}</div></a>`).join("")}</div></section>`).join("");
+const bar=document.getElementById("bar");
+FILTERS.forEach((f,i)=>{const b=document.createElement("button");b.textContent=f;b.setAttribute("aria-pressed",i===0);b.onclick=()=>apply(f);bar.appendChild(b)});
+function apply(f){
+ bar.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.textContent===f));
+ document.querySelectorAll(".card").forEach(c=>c.classList.toggle("hide",f!=="Tudo"&&!c.dataset.tags.split("|").includes(f)));
+ document.querySelectorAll("section").forEach(s=>s.classList.toggle("hide",!s.querySelector(".card:not(.hide)")));
+ try{localStorage.setItem("zf",f)}catch(e){}
+}
+try{const f=localStorage.getItem("zf");if(f&&FILTERS.includes(f))apply(f)}catch(e){}
+</script>
+</body>
+</html>

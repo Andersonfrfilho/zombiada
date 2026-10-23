@@ -1,0 +1,10 @@
+{
+  "name": "zombiada-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "site": "node tools/build/build-site.mjs && node tools/build/check-offline.mjs",
+    "check": "node tools/build/check-offline.mjs"
+  },
+  "engines": { "node": ">=20" }
+}
