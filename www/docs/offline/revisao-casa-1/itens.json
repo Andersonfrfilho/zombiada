@@ -1,0 +1,618 @@
+{
+  "titulo": "Revisão da Casa tipo A (Anderson, 22/10)",
+  "itens": [
+    {
+      "id": "R01",
+      "grupo": "Câmera",
+      "texto": "Faltou modo livre voador no visor",
+      "frente": "visor-interacao",
+      "status": "corrigido",
+      "nota": "Botão \"Voo livre\" ao lado de \"Primeira pessoa\": WASD com arraste do mouse, Espaço/E sobem, Q/Ctrl descem, Shift acelera, sem colisão (atravessa paredes e telhado) e com botões na tela para toque."
+    },
+    {
+      "id": "R02",
+      "grupo": "Colisão",
+      "texto": "Passamos por dentro dos objetos",
+      "frente": "visor-interacao",
+      "status": "corrigido",
+      "nota": "Na primeira pessoa o jogador colide com as pegadas orientadas dos móveis e itens (abaixo de 0,9 m de altura e acima de 0,3 m; tapetes passam), e agora também com muros e portões do lote, que antes eram descartados."
+    },
+    {
+      "id": "R03",
+      "grupo": "Banheiro",
+      "texto": "Espelhos não refletem",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Espelho mais próximo usa Reflector real só quando a câmera está no cômodo, com fallback de cubo de ambiente nos demais. Verificado em primeira pessoa (casaA semente 3, espelho do quarto): diante dele o Reflector fica ligado e mostra o cômodo refletido; teste em t_interacao.mjs."
+    },
+    {
+      "id": "R04",
+      "grupo": "Banheiro",
+      "texto": "Box de vidro encostado na janela",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "nota": "Box de vidro não bloqueia mais a janela (hjan 1,95 m no catálogo, teste de janelas bloqueadas reforçado) e janelas de banheiro ficam altas e pequenas, acima do vidro."
+    },
+    {
+      "id": "R05",
+      "grupo": "Banheiro",
+      "texto": "Chuveiro esquisito: usar formas mais redondas",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Chuveiro com ducha redonda, braço curvo, registro redondo e box com perfis arredondados."
+    },
+    {
+      "id": "R06",
+      "grupo": "Lote",
+      "texto": "Terreno de terra com repetição muito nítida",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Terra com segunda camada de ruído, rotação/deslocamento de UV por trecho e variação macro, quebrando a repetição."
+    },
+    {
+      "id": "R07",
+      "grupo": "Lote",
+      "texto": "Caminho até a porta (todas as portas externas)",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "nota": "Toda porta externa do térreo ganha caminho pedestre pavimentado até o portão social, a vaga ou outro caminho (laterais e faixa dos fundos), cfg.alvoPorta em mercado e farmácia, e teste de propriedade (código no commit do R13). O visor desenha todos os caminhos pedestres (frente, fundos e laterais) e o t_abertos.mjs confirma 0 portas externas sem caminho em 324 casos."
+    },
+    {
+      "id": "R08",
+      "grupo": "Portas",
+      "texto": "Portas com cores estáticas, sem fechadura e maçaneta com movimento",
+      "frente": "visor-interacao",
+      "status": "corrigido",
+      "nota": "Folhas das portas ganharam textura pintada ou de veio de madeira conforme o estilo, espelho de fechadura com buraco de chave e maçaneta de alavanca que gira ao apertar E antes da folha abrir; porta trancada (protegida) sacode a maçaneta e mostra \"Trancada\" no HUD."
+    },
+    {
+      "id": "R09",
+      "grupo": "Colisão",
+      "texto": "Objetos atravessam paredes",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "nota": "Auditoria das pegadas (incluindo itens de parede com profundidade): nenhuma invade parede ou muro nos dados do SDK; adicionados testes de propriedade (pegada dentro das faces internas do cômodo e fora do corpo das paredes e do muro)."
+    },
+    {
+      "id": "R10",
+      "grupo": "Janelas",
+      "texto": "Janelas mal posicionadas",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "nota": "Janelas agora ficam centralizadas (ou com vãos iguais) no trecho de parede externa entre cantos, junções e portas, a pelo menos 0,3 m de cada um, e as de banheiro são altas e pequenas; teste de propriedade adicionado."
+    },
+    {
+      "id": "R11",
+      "grupo": "Luz",
+      "texto": "Interruptores de luz que funcionam",
+      "frente": "visor-interacao",
+      "status": "corrigido",
+      "nota": "Interruptor com tecla basculante ao lado da porta principal de cada cômodo (1,10 m, lado da fechadura): E liga ou desliga as lâmpadas do cômodo (malhas emissivas e luzes de ponto), escurecendo visivelmente o cômodo à noite."
+    },
+    {
+      "id": "R12",
+      "grupo": "Luz",
+      "texto": "Maior diversidade de lâmpadas e luminárias",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Lâmpadas variadas por cômodo e estilo (plafon, pendente, trilho, bulbo, abajur, luminária, arandela) com temperatura de cor variável."
+    },
+    {
+      "id": "R13",
+      "grupo": "Acesso",
+      "texto": "Não consegui entrar no cômodo do fundo",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "nota": "Causa raiz: o preenchimento só exigia folga de 0,12 m e tratava a borda inteira de cômodos em L como aberta (itens entravam na parede); agora exige disco de 0,24 m (raio do jogador) por portas e aberturas, partesUteis recua só onde há parede, e o teste faz BFS em grade fina de todos os cômodos a partir da porta/escada. Verificado no visor: caminhada em primeira pessoa da porta da frente a todos os cômodos de casaA semente 1 (w=11,4), inclusive o dos fundos, passando pelas portas com E; entrou no t_interacao.mjs (também em w=8, w=14 e outros modelos). Ao mirar o centro de uma porta ao lado do interruptor, o aviso do E agora é o da porta."
+    },
+    {
+      "id": "R14",
+      "grupo": "Interação",
+      "texto": "Não consegui abrir a cortina",
+      "frente": "visor-interacao",
+      "status": "corrigido",
+      "nota": "E abre e fecha a cortina próxima: os dois painéis deslizam para as laterais do varão e voltam."
+    },
+    {
+      "id": "R15",
+      "grupo": "Jardim",
+      "texto": "Plantas esquisitas no jardim",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Jardim com arbustos em blobs, palmeiras com folhas, flores, tufos e vasos, sem planos cruzados."
+    },
+    {
+      "id": "R16",
+      "grupo": "Telhado",
+      "texto": "Telhado não está encostado na laje",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Telhado agora fecha na laje com cinta, beiral e fascia, sem vão visível."
+    },
+    {
+      "id": "R17",
+      "grupo": "Destruição",
+      "texto": "Atirar e botar fogo para ver destruição, explosões e fluidos",
+      "frente": "motor-jogo",
+      "status": "aguardando decisão"
+    },
+    {
+      "id": "R18",
+      "grupo": "Portão",
+      "texto": "Portão não encostado na parede; faltam motor e trilho que seguram o portão",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Portão alinhado ao vão, com pilares, dobradiças, trilho e caixa de motor com cremalheira nos padrões médio/alto."
+    },
+    {
+      "id": "R19",
+      "grupo": "Portão",
+      "texto": "Portãozinho não fecha",
+      "frente": "visor-interacao",
+      "status": "corrigido",
+      "nota": "Portãozinho abre e fecha com E (gira para dentro do lote) e bloqueia quando fechado; o portão da garagem também abre com E (basculante levanta, de correr desliza), e os colisores do muro e dos portões passaram a valer."
+    },
+    {
+      "id": "R20",
+      "grupo": "Lote",
+      "texto": "Não tem caixa de correio na casa",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "nota": "Caixa de correio (caixa_correio, categoria correio, slot correio) montada no muro da frente ao lado do portão social em toda casa, com teste (código no commit do R13). O visor desenha a caixa de correio no muro ao lado do portão e E abre e fecha a tampa (parte porta_correio)."
+    },
+    {
+      "id": "R21",
+      "grupo": "Área de serviço",
+      "texto": "Tanques e torneiras mal desenhados e não funcionam",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Tanque com cuba, tábua de esfregar e pés; torneiras novas com macaneta móvel e fio d'água oculto (agua_torneira)."
+    },
+    {
+      "id": "R22",
+      "grupo": "Destruição",
+      "texto": "Caixa d'água deve vazar ou quebrar com tiro",
+      "frente": "motor-jogo",
+      "status": "aguardando decisão"
+    },
+    {
+      "id": "R23",
+      "grupo": "Telhado",
+      "texto": "Caixa d'água normalmente fica em cima da laje",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "nota": "Caixa d'água sai do quintal e vai para res.caixaDagua (laje ou sótão do último andar, com u, v, y, dimensões e aabb) com teste (código no commit do R13). O visor desenha a caixa d'água de res.caixaDagua: sobre a laje (telhado de laje) ou no sótão, que só aparece com o telhado cortado; não há mais caixa no quintal."
+    },
+    {
+      "id": "R24",
+      "grupo": "Destruição",
+      "texto": "Na quebradeira deve aparecer a laje",
+      "frente": "motor-jogo",
+      "status": "aguardando decisão"
+    },
+    {
+      "id": "R25",
+      "grupo": "Lote",
+      "texto": "Varal com roupas muito estático: precisa de animação",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Varal animado por vento no shader, sem alocação por quadro."
+    },
+    {
+      "id": "R26",
+      "grupo": "Cozinha",
+      "texto": "Pia piscando de preto para prata",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Tampo da pia dividido em faixas sem faces coplanares e tapetes em camadas separadas, eliminando o flicker preto/prata."
+    },
+    {
+      "id": "R27",
+      "grupo": "Móveis",
+      "texto": "Armários na frente da janela",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "nota": "Balcões de cozinha com armário aéreo (aereo no catálogo) não ficam sob a janela; quando só cabem ali saem com aereo:false, e o teste cobre itens altos, aéreos e baixos acima do peitoril. O visor segue m.aereo: com aereo:false não desenha o armário aéreo (casaA semente 1, w=11,4: sem armário na frente da janela); com aereo:true desenha em y 1,55 a 2,15 m."
+    },
+    {
+      "id": "R28",
+      "grupo": "Estado",
+      "texto": "Casa protegida mostra elementos esquisitos como cruzes vermelhas",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Portas bloqueadas da casa protegida usam tábuas de madeira pregadas em vez da cruz vermelha. Verificado no visor (casaA semente 1, protegida): tábuas de madeira nas portas, sem cruzes vermelhas."
+    },
+    {
+      "id": "R29",
+      "grupo": "Interação",
+      "texto": "Não consigo abrir armários",
+      "frente": "visor-interacao",
+      "status": "corrigido",
+      "nota": "E abre a porta de armário, guarda-roupa ou geladeira (gira na dobradiça) e as gavetas (deslizam) que estão sob a mira, a até 1,6 m, com aviso no HUD."
+    },
+    {
+      "id": "R30",
+      "grupo": "Garagem",
+      "texto": "Carro encostado na parede",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "nota": "Carros na vaga e na garagem mantêm 0,6 m das paredes e 0,8 m do lado do motorista, dentro da vaga, com campos motorista e folgaCarro e teste (código no commit do R13). O visor desenha o carro dentro da pegada do item, com a rotação dele e a 0,9 m das paredes na casaA semente 1."
+    },
+    {
+      "id": "R31",
+      "grupo": "Garagem",
+      "texto": "O carro da casa não combina com os modelos de veículos já desenhados no projeto: usar os veículos do Garage SDK",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "nota": "Carro trocado por modelos do Garage SDK (17 veículos escolhidos por estilo e semente: populares/antigos, médios, premium/SUV), fundidos por material, simplificados e com pintura por vértice, sem editar o SDK."
+    },
+    {
+      "id": "R32",
+      "grupo": "Móveis",
+      "texto": "Portas de geladeira e armários atravessam a parede; sem profundidade nem itens dentro",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Portas de geladeira e armários com dobradiça na frente, abertura até 100° e varredura da folha inteira contra as paredes (fitSweep): nenhuma pose entra na parede, testado em 255 casas com o lado da dobradiça escolhido longe da parede. Carcaça com profundidade e forro interno claro."
+    },
+    {
+      "id": "R33",
+      "grupo": "Quintal",
+      "texto": "Casinha do cachorro com a entrada toda preta",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Casinha com vão real na parede da frente, paredes internas e piso claros e almofada; a entrada não fica mais preta."
+    },
+    {
+      "id": "R34",
+      "grupo": "Itens",
+      "texto": "Armários com profundidade e itens dentro que dá para pegar, coerentes com cada móvel",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Armários, geladeira, guarda-roupa, cômoda, criado, despensa, banheiro, lixeiras e caixa de correio têm prateleiras e gavetas com espaços para itens; o conteúdo vem do PlantasSDK (conteudo) e cada item pode ser pego (90 itens com tamanho e peso, só cabe o que cabe no espaço)."
+    },
+    {
+      "id": "R35",
+      "grupo": "Quarto",
+      "texto": "Espelho do guarda-roupa na posição incorreta",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Espelho do guarda-roupa na face externa de uma porta, centralizado e 4 mm à frente, girando junto com a porta."
+    },
+    {
+      "id": "R36",
+      "grupo": "Cozinha",
+      "texto": "Fogão sem botijão de gás",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Botijão P13 com registro ao lado do fogão (ou em nicho/sob a pia), ligado ao fogão pela mangueira."
+    },
+    {
+      "id": "R37",
+      "grupo": "Portão",
+      "texto": "Portão grande abre errado: só a parte de cima mexe, deveria correr para o meio",
+      "frente": "visor-interacao",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Portão grande: a causa era o filtro que capturava só as barras superiores da folha (a lâmina e os requadros ficavam fixos no muro), então só o alto mexia. Agora a folha inteira é uma parte só: o de correr desliza a folha toda pelo trilho (que cobre o curso e abre para o lado que cabe no lote), o de giro gira inteiro pelas dobradiças e o basculante inclina inteiro pelo eixo do topo. t_portao testa os três tipos em 12 sementes: raios pelo vão batem fechado e passam livres aberto, e o E abre e fecha."
+    },
+    {
+      "id": "R38",
+      "grupo": "Garagem",
+      "texto": "Carro com rodas quebradas (time de Veículos)",
+      "frente": "veiculos",
+      "status": "corrigido",
+      "nota": "O carro vinha quebrado do carroModelo do visor (agrupaVerts rasgava para-choques, faróis e grade; o corte de peças pequenas sumia com detalhes). Removido no Casa3DSDK; os carros agora vêm do veiculos/frota-leve (FrotaLeve), inteiros: ~150 mil triângulos em 'alta' (visor) e ~16 mil em 'jogo' (6 materiais), cor da pintura pela semente, e as caixas de dano (metal, vidro, borracha, combustível) entram em partes. Verificado no visor, casaA semente 1.",
+      "rodada": 2
+    },
+    {
+      "id": "R39",
+      "grupo": "Jardim",
+      "texto": "Plantas ainda ruins; adicionar cactos, árvores e flores (time de vegetação)",
+      "frente": "vegetacao",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Vegetação do pacote game-vegetation integrada (cfg.vegetacao): itens de planta viram malhas fundidas por grupo (madeira, folhagem, flores) com espécies mapeadas por tipo, canteiros por scatter, vento e curvatura ao redor do jogador em atualiza(dt, tempo, foco); casa.vegetacao expõe plantas, triângulos e colisores. gerar.mjs embute os dois IIFEs. Também: máscara de luz tolera shader de inspeção; walk.mjs cobre a edícula."
+    },
+    {
+      "id": "R40",
+      "grupo": "Banheiro",
+      "texto": "Espelhos ainda não refletem",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Espelhos com Reflector real no espelho mais próximo que está de frente para a câmera e mapa de ambiente nos outros; a orientação foi corrigida pelo revisor."
+    },
+    {
+      "id": "R41",
+      "grupo": "Banheiro",
+      "texto": "Torneira e chuveiro não ligam",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Torneira, chuveiro e descarga do kit: E liga e a caixa d'água (casa.agua) gasta os litros; verificado no visor (t_interativos)."
+    },
+    {
+      "id": "R42",
+      "grupo": "Colisão",
+      "texto": "Box do banheiro e roupas do varal travam o jogador e não se mexem ao passar",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Portas do box e roupas do varal não bloqueiam: balançam (mola amortecida) quando o jogador passa, e a porta do box abre ao ser empurrada."
+    },
+    {
+      "id": "R43",
+      "grupo": "Acesso",
+      "texto": "Cômodo do fundo sem porta nem janela, não dá para entrar",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "A edícula do quintal (res.edificacoes) agora é desenhada como prédio entrável: o SDK a promove a cômodo, paredes com o vão da porta, porta (mesmo sistema das outras: folha, colisor, E, parte porta:<id>), janelas (com grade e partes de dano), forro, telhado do mesmo tipo da casa (com calha), piso elevado acima da terra e os itens do uso (cama, escrivaninha, estante etc.) com plafon. A caixa antiga 'edicula' deixou de ser desenhada. t_edicula (casaA sementes 1, 5, 6, 10 e 11, os quatro usos): porta fechada barra, aberta entra, E alterna, colisores das paredes, janelas, telhado e itens com modelo."
+    },
+    {
+      "id": "R44",
+      "grupo": "Telhado",
+      "texto": "Caixa d'água não aparece na laje",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "A caixa laje_caixa (plataforma e pilares acima do telhado) já estava desenhada; faltava a variante do sótão: com o telhado cortado o tanque (grupo cxd) flutuava sobre paredes cortadas a 1,2 m. Agora o sótão ganha estrado de concreto sobre quatro pés que descem ao piso do andar, aparece só com o telhado cortado (botão de corte) e some com o telhado. t_caixa cobre sotao (casaA 2 e 10, sobrado 2 e 10), laje_caixa (casaA 1 e 3) e laje (casaA 5 e 7): grupo, visibilidade com e sem corte, apoio e altura sobre o telhado."
+    },
+    {
+      "id": "R45",
+      "grupo": "Destruição",
+      "texto": "Telhado e paredes quebram com colisão, explosão, tiro ou objeto pesado",
+      "frente": "motor-jogo",
+      "status": "aberto",
+      "rodada": 2
+    },
+    {
+      "id": "R46",
+      "grupo": "Lote",
+      "texto": "Terra ainda repete; cantos externos sem completar piso e rodapé",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Terra: a grade vinha do atlas, que repetia um quadrado de 2 m com borrão escuro e a cor por vértice só variava dentro de cada quadrado (4 vértices). Agora a terra batida usa material próprio com UV de mundo contínuo (sem emendas) e shader que mistura três amostras da textura em escalas e rotações diferentes por ruído de mundo, mais variação de brilho e cor em quatro escalas (0,7 m a 38 m) e manchas de umidade. Cantos: o rodapé externo era desenhado por trecho de parede e parava antes do canto, deixando o canto de baixo aberto; agora rodapeECalcada() desenha o rodapé contínuo (fecha cantos convexos, termina na face da outra parede nos côncavos e T) e uma calçada de proteção de 60 cm em volta do térreo, com os cantos preenchidos. Vale para qualquer template e também para a edícula. t_chao: UV contínuo, shader, sem quadrados de atlas na terra e 12 casos de cantos (rodapé e calçada em todo canto convexo)."
+    },
+    {
+      "id": "R47",
+      "grupo": "Luz",
+      "texto": "Todas as lâmpadas com interruptor que funciona",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Interruptor do kit em cada cômodo (tecla na parede) liga e apaga as luminárias do cômodo no visor e no jogo; o disjuntor do quadro corta o circuito e apaga a luz. Verificado no visor (t_interativos: casaA, sobrado, popular_laje, media_terrea_moderna, mansão, apartamento) e no jogo (a fonte de luz da noite acompanha o interruptor)."
+    },
+    {
+      "id": "R48",
+      "grupo": "Lote",
+      "texto": "Caixa de correio com portinhola e cartas dentro",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Caixa de correio do kit: E abre a portinhola e a mira lê as cartas (visor, t_interacao e t_interativos)."
+    },
+    {
+      "id": "R49",
+      "grupo": "Energia",
+      "texto": "Fogão acende; tomadas na casa; aparelhos ligados em tomada",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "No visor e no jogo o E acende a boca do fogão e liga a TV (a TV só liga energizada pela tomada); as tomadas e os circuitos vêm do plano elétrico da casa (casa.interativos). Verificado nas casas do t_interativos."
+    },
+    {
+      "id": "R50",
+      "grupo": "Energia",
+      "texto": "Fiação da casa: entrada de energia, relógio, eletrodutos",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "A estrutura elétrica de res.eletrica agora é desenhada: poste de concreto com cruzeta e isoladores (mais dois postes vizinhos e a rede pela rua), ramal de ligação até o cabeçote, descida em eletroduto de aço, caixa do medidor com visor no pilar do portão ou na fachada, quadro de disjuntores na parede do cômodo e eletrodutos aparentes (em L, prumados nas descidas) só nos circuitos com exposto:true. Tomadas e interruptores ficam com o time de móveis: o SDK só registra as posições e normais em casa.eletrica (poste, medidor, quadro, tomadas, interruptores). t_eletrica em 9 casos de 7 templates (raios no poste, ramal, medidor, quadro e nas descidas dos eletrodutos)."
+    },
+    {
+      "id": "R51",
+      "grupo": "Interação",
+      "texto": "Persiana não fecha",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Persiana do kit: E fecha e abre (visor, t_interativos, em todas as casas que têm persiana)."
+    },
+    {
+      "id": "R52",
+      "grupo": "Interação",
+      "texto": "Sentar e deitar no sofá",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "E senta no sofá e deita na cama em primeira pessoa (visor) e no jogo; o jogador fica parado, e WASD, espaço ou E levantam em lugar livre. Verificado no visor (t_interativos) e no jogo (t/interativos-jogo.mjs)."
+    },
+    {
+      "id": "R53",
+      "grupo": "Interação",
+      "texto": "Sentar na cadeira",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Cadeiras, poltronas e bancos com lugar para sentar."
+    },
+    {
+      "id": "R54",
+      "grupo": "Interação",
+      "texto": "TV não liga",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "E liga e desliga a TV (tela acesa com canal, visor e jogo)."
+    },
+    {
+      "id": "R55",
+      "grupo": "Telhado",
+      "texto": "Calhas nas caídas do telhado e condutor até o ralo com grade",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Calha era sorteada por semente (cerca de 30% popular e 60% médio e alto) e só havia até 2 condutores por casa, sem destino no chão. Agora toda casa tem calha em todo beiral que cai (lado do telhado que não encosta no andar de cima), vale também para a edícula; cada calha tem escoamento: condutores nos cantos livres (ou na ponta livre da corrida quando o canto está bloqueado) descem rente à parede até um ralo de piso com grelha (moldura, fundo escuro e barras) ligado por um tubo rente ao chão. Nas lajes há um buzinote por lado livre, com descida até o ralo. Na casa abandonada um condutor continua solto de propósito. casa.calhas lista calhas, condutores e ralos. t_calha: 17 casos (calha em todo lado livre, condutor com ralo, lajes)."
+    },
+    {
+      "id": "R56",
+      "grupo": "Telhado",
+      "texto": "Telhado muito reto: precisa do formato das telhas",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "O telhado era um plano com textura. Agora cada água é uma tira extrudada na direção da queda com perfil: colonial com fileiras curvas de capa e canal (período 20 cm, amplitude 3 cm, cor alternada por fileira e normais do perfil), fibrocimento com ondas de 17,7 cm. Cumeeira e espigões ganham capa (meia-cana de barro com juntas no colonial, capa angular no fibrocimento). A geometria continua fundida numa malha por material do telhado (nenhum draw call a mais); em qualidade jogo o perfil usa 4 segmentos por período. t_telhado: 13 casos de 9 templates (malhas fundidas, amplitude e período do relevo medidos por raios, altura da capa na cumeeira e nos espigões)."
+    },
+    {
+      "id": "R57",
+      "grupo": "Telhado",
+      "texto": "Painéis solares em algumas casas",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "O SDK agora desenha res.paineisSolares: no tipo telhado os painéis (moldura prateada, vidro azul e grade de células) ficam deitados na água do telhado, seguindo a inclinação calculada pela altura real da cobertura no ponto; no rack_laje ficam inclinados em racks de metal sobre a laje, com o lado baixo voltado ao norte. O inversor (caixa, tela e led) fica na parede externa com eletroduto subindo ao beiral. Tudo é fundido nas malhas do grupo do telhado (some com o corte); casa.solar lista painéis e inversor. Observação sobre a planta: em alto_padrao_contemporanea s11 alguns painéis do rack caem sobre a sacada, então o SDK os apoia no piso dela. t_solar (9 casos de 4 templates, telhado e rack): n painéis, apoio (distância painel-água entre 0,02 e 0,5 m), malhas fundidas e inversor na parede."
+    },
+    {
+      "id": "R58",
+      "grupo": "Quintal",
+      "texto": "Latas de lixo abrem e têm profundidade",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Lixeira do kit: E abre e fecha a tampa (trash_bin e wheelie_bin), verificado no visor."
+    },
+    {
+      "id": "R59",
+      "grupo": "Quintal",
+      "texto": "Churrasqueira melhor, que acende e solta fumaça",
+      "frente": "time-moveis",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Churrasqueira do kit: E acende o carvão e a fumaça sai (verificado no visor: emissores e partículas vivas)."
+    },
+    {
+      "id": "R60",
+      "grupo": "Destruição",
+      "texto": "Andar pela casa com as armas",
+      "frente": "motor-jogo",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Etapa 2: o jogo desenha as casas do Aurora (menos a Casa 3) e as das Palmeiras com o Casa3DSDK, e o jogador anda armado dentro delas (teste implementacao/jogo-web/t/tiro-casa3d.mjs): tiro na parede deixa furo e desconta a vida da parede, tiro no vidro trinca e quebra pelas tags 'danificavel' do SDK. Fogo, explosão, destruição de paredes e telhado e o vazamento da caixa d'água ficam para a etapa 3."
+    },
+    {
+      "id": "R61",
+      "grupo": "Luz",
+      "texto": "Lâmpada externa com a luz saindo do chão em vez da lâmpada, e brilho forte demais",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Lâmpada externa nasce na luminária (y do mundo, antes relativa ao andar), fraca (3,2) e de alcance curto (5,5 m, decay 2). Luz de cômodo agora fica presa ao cômodo por máscara no shader (parede/laje não deixam passar), com indireto falso; só os 2 cômodos mais próximos da câmera projetam sombra (cubo 512), o resto usa a máscara."
+    },
+    {
+      "id": "R62",
+      "grupo": "Luz",
+      "texto": "Paredes não bloqueiam a luz das lâmpadas: a luz vaza entre cômodos e para fora",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Lâmpada externa nasce na luminária (y do mundo, antes relativa ao andar), fraca (3,2) e de alcance curto (5,5 m, decay 2). Luz de cômodo agora fica presa ao cômodo por máscara no shader (parede/laje não deixam passar), com indireto falso; só os 2 cômodos mais próximos da câmera projetam sombra (cubo 512), o resto usa a máscara."
+    },
+    {
+      "id": "R63",
+      "grupo": "Lote",
+      "texto": "Cerca de arame (concertina) do muro atravessa a parede de um cômodo",
+      "frente": "visor-visual",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Concertina e arame farpado do topo do muro são cortados onde a casa encosta no muro do lote (antes atravessavam a parede do cômodo); cada ponta cortada ganha um poste de fechamento. Vale para qualquer template (trechosLivres usa os cômodos e a edícula)."
+    },
+    {
+      "id": "R64",
+      "grupo": "Colisão",
+      "texto": "Abajur e mesa de canto atravessam a parede",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "O abajur agora é item do SDK (categoria luz_mesa, montagem apoio, 0,36 m) afastado das paredes e sem dividir o tampo com o vaso; o visor deve desenhar o abajur de res.moveis em vez de inventar um no centro do criado."
+    },
+    {
+      "id": "R65",
+      "grupo": "Móveis",
+      "texto": "Gaveta aberta não forma uma caixa: sem fundo nem laterais",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Gaveta é uma caixa aberta em cima com fundo, laterais, fundo traseiro e frente; corre 75% da profundidade e os itens andam com ela."
+    },
+    {
+      "id": "R66",
+      "grupo": "Planta",
+      "texto": "Só tem banheiro dentro do quarto; falta banheiro social com acesso pela circulação",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "A porta do banheiro da casaA passou para a parede da sala (banheiro social, sem passar pelo quarto) e a pia foi para a parede dos fundos; teste exige banheiro social em toda casa; o jogo precisa mover o vão do banheiro de (w-1,45, vb) para a parede da sala."
+    },
+    {
+      "id": "R67",
+      "grupo": "Lote",
+      "texto": "Sombra das roupas do varal pisca quando balançam ao sol (sombra não acompanha a animação)",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Roupas balançam no shader com o mesmo movimento aplicado ao mapa de sombra (customDepthMaterial e customDistanceMaterial), então a sombra acompanha e não pisca."
+    },
+    {
+      "id": "R68",
+      "grupo": "Lote",
+      "texto": "Varal: base de ferro pisca dentro do piso e os três cabos não estão ligados às hastes",
+      "frente": "time-moveis",
+      "status": "pronto no SDK",
+      "rodada": 2,
+      "nota": "Pronto no SDK de móveis (game-interactables-household) e testável na Bancada de móveis interativos; aparece no visor e no jogo quando o Mapa no jogo integrar. Placa da base 1 mm acima do piso (sem z-fighting) e os três fios começam e terminam exatamente nas pontas dos braços das hastes; roupas com formato real presas por prendedores."
+    },
+    {
+      "id": "R69",
+      "grupo": "Água",
+      "texto": "Encanamento lógico: a caixa d'água alimenta torneiras, chuveiro e descarga; seca se esvaziar ou levar tiro; recarga por chuva ou baldes; canos visíveis só na saída da caixa, sob a pia e quando a parede quebra",
+      "frente": "sdk-plantas",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "casa.agua (rede em tempo de execução): capacidade de res.hidraulica.capacidade_l, nasce cheia; nivel(), consumir(pontoId, litros) devolve os litros entregues (só o que resta quando seca; 0 para ponto inexistente), encher(l) limitada à capacidade, vazar(taxa em l/s) aplicado em atualiza, on('seco'|'cheio', fn) com off, e o mapa itemPonto (item -> id do ponto). Tiro na caixa d'água (casa.dano) abre vazamento proporcional ao estrago. O nível sobrevive à reconstrução pelo mesmo estado. Canos desenhados em PVC marrom: saida_caixa e sob_pia sempre visíveis (fundidos nas malhas do andar); os trechos de parede são partes escondidas 'cano:<trecho>' (tipo cano_parede) que a destruição revela com abre(1). t_agua em 8 templates."
+    },
+    {
+      "id": "R70",
+      "grupo": "Colisão",
+      "texto": "Jogador atravessa portas fechadas",
+      "frente": "estrutura",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Etapa 2 feita: a colisão própria do jogo (setDoor/doorHit) foi trocada pela do Casa3DSDK nas casas do SDK. Teste implementacao/jogo-web/t/porta-fechada.mjs: andando de verdade, a porta fechada para o jogador e a aberta deixa passar, em 7 portas do térreo e do 1º andar. Zumbis abrem as portas dos andares de cima (c3ZumbisAbrem)."
+    },
+    {
+      "id": "R71",
+      "grupo": "Escada",
+      "texto": "Escada sem fim: falta patamar e ligação com o andar de cima",
+      "frente": "estrutura",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Escada com patamar de chegada de 0,9 m no topo (piso plano no andar de cima, degraus mais curtos, vão da laje recortado) e a caminhada em 1ª pessoa termina em pé no patamar do andar de cima (teste t_escada.mjs: sobrado, mansão de 3 andares, alto padrão). Lances empilhados seguem com o pouso intermediário. Porta de saída do patamar depende da planta (PlantasSDK)."
+    },
+    {
+      "id": "R72",
+      "grupo": "Visor",
+      "texto": "Botão de cortar paredes altas e telhado não funciona",
+      "frente": "estrutura",
+      "status": "corrigido",
+      "rodada": 2,
+      "nota": "Funciona na build extraída para o Casa3DSDK (telhado some, paredes cortam a 1,2 m, caixa d'água do sótão aparece) e foi coberto por teste (t_corte.mjs); o visor local do usuário era uma versão antiga: substituir por docs/offline/jogo/visor-casas-3d.html."
+    }
+  ]
+}

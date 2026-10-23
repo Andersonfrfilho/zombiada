@@ -1,0 +1,30 @@
+# Servidor estático do ZombiAdA.
+# O Railway define a variável PORT; localmente usa 8080.
+:{$PORT:8080} {
+	root * /srv
+
+	# Compressão
+	encode zstd gzip
+
+	# Cache curto para HTML (muda com frequência), longo para o resto
+	@html path *.html /
+	header @html Cache-Control "public, max-age=300"
+	@outros not path *.html
+	header @outros Cache-Control "public, max-age=86400"
+
+	# Registro de acessos na saída padrão
+	log {
+		output stdout
+	}
+
+	# Páginas de veículos que outras páginas linkam pela raiz (pasta veiculos/ do projeto)
+	redir /veiculos/* /docs/offline{uri} 302
+
+	# Tenta o arquivo, depois a pasta com index.html; senão 404 simples
+	try_files {path} {path}/index.html
+	file_server
+
+	handle_errors {
+		respond "404 - página não encontrada" 404
+	}
+}
