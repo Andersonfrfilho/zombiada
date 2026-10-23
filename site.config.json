@@ -1,0 +1,452 @@
+{
+  "title": "ZombiAdA offline",
+  "pagesBase": "docs/offline",
+  "sections": [
+    {
+      "id": "jogo",
+      "name": "Jogo",
+      "pages": [
+        {
+          "path": "jogo/zombiada-jardim-aurora.html",
+          "title": "ZombiAdA Jardim Aurora",
+          "description": "Fatia jogável em 3D (versão antiga, sem as correções da Casa 3)",
+          "tags": [
+            "Jogável",
+            "3D",
+            "Simulação"
+          ]
+        },
+        {
+          "path": "jogo/revisao-final-fatia-jogavel.html",
+          "title": "Revisão final e fatia jogável",
+          "description": "Documento de revisão",
+          "tags": [
+            "Documento"
+          ]
+        },
+        {
+          "path": "jogo/antes-do-dia-1.html",
+          "title": "Antes do Dia 1",
+          "description": "Surto gradual: fases do D−6 ao Dia 1, simulador do contágio, SDKs e integração",
+          "tags": [
+            "Documento"
+          ]
+        },
+        {
+          "path": "jogo/bancada-moveis-interativos.html",
+          "title": "Bancada de móveis interativos",
+          "description": "Casa de teste em primeira pessoa com os 37 móveis e objetos do time de móveis: abrir portas e gavetas, pegar itens, gás, energia, água, sentar, deitar, persiana, churrasqueira e varal",
+          "tags": [
+            "3D",
+            "Testes"
+          ]
+        },
+        {
+          "path": "sala-de-testes/sala-de-testes.html",
+          "title": "Sala de testes de destruição",
+          "description": "Pegar, carregar, arremessar, atirar, queimar, derreter, desmontar e ver a estrutura desabar; 22 testes com botões e log em JSON. Cada time carrega seus objetos nela",
+          "tags": [
+            "3D",
+            "Testes"
+          ]
+        },
+        {
+          "path": "sala-de-testes/area-moveis.html",
+          "title": "Sala de testes: móveis e objetos",
+          "description": "Os 39 móveis e objetos da casa na sala de destruição, com 12 cenários: porta da geladeira a tiro, cadeira chutada, sofá pegando fogo, botijão explodindo, vidro do box, churrasqueira na explosão",
+          "tags": [
+            "3D",
+            "Testes"
+          ]
+        },
+        {
+          "path": "sala-de-testes/area-casas.html",
+          "title": "Sala de testes: casas e prédios",
+          "description": "As casas do Casa3DSDK na sala de destruição, com 6 cenários: um pilar cai e a laje fica, dois pilares derrubam a laje e o telhado, parede de vedação, vidro a tiro, caixa d'água furada e botijão explodindo",
+          "tags": [
+            "3D",
+            "Testes"
+          ]
+        },
+        {
+          "path": "jogo/bancada-de-hordas.html",
+          "title": "Bancada de Hordas",
+          "description": "Teste de desempenho da horda",
+          "tags": [
+            "Simulação",
+            "3D"
+          ]
+        },
+        {
+          "path": "jogo/sdks-e-revisoes.html",
+          "title": "SDKs e revisões",
+          "description": "Documentação dos SDKs (câmera, modo livre, plantas, modelos 3D) e as imagens de antes e depois de cada revisão",
+          "tags": [
+            "3D",
+            "Documento"
+          ]
+        },
+        {
+          "path": "jogo/visor-casas-3d.html",
+          "title": "Visor de casas 3D",
+          "description": "Gera cada planta em 3D na hora: sortear, estado, andares, corte do telhado, dia e noite, primeira pessoa",
+          "tags": [
+            "3D"
+          ]
+        },
+        {
+          "path": "jogo/revisao-casa-a.html",
+          "title": "Revisão da Casa tipo A",
+          "description": "Os 31 pontos da sua revisão com status, nota de cada correção e link para abrir a casa no visor",
+          "tags": [
+            "Testes",
+            "Documento"
+          ]
+        },
+        {
+          "path": "jogo/visor-plantas.html",
+          "title": "Visor de plantas e lotes",
+          "description": "Casa A, sobrado, mercado, farmácia, apartamento e mansão vistos de cima: posições gravadas, sorteio por semente, muros, portões, quintal e piscina",
+          "tags": [
+            "Documento"
+          ]
+        },
+        {
+          "path": "jogo/checklist-mapa.html",
+          "title": "Checklist do mapa",
+          "description": "548 elementos (casas, cômodos, móveis, portas, janelas, muros, veículos), status e nota salvos no computador, Ir no jogo abre o jogo no lugar",
+          "tags": [
+            "Testes",
+            "Documento"
+          ]
+        },
+        {
+          "path": "jogo/zombiada-modo-livre.html",
+          "title": "ZombiAdA versão atual (modo livre e cenários)",
+          "description": "Casa 3 nova, câmeras (O troca), Esc e Sair para o início, painel M com os cenários de teste",
+          "tags": [
+            "Jogável",
+            "3D"
+          ]
+        },
+        {
+          "path": "jogo/cenarios-de-teste.html",
+          "title": "Cenários de teste",
+          "description": "Checklist com fotos; vereditos salvos no computador, com exportar e importar para o online",
+          "tags": [
+            "Testes"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kit",
+      "name": "Kit de peças",
+      "pages": [
+        {
+          "path": "kit/kit-zombiada.html",
+          "title": "Kit ZombiAdA",
+          "description": "Índice de todas as peças com medidas, lote de montagem, lote de teste padrão e veredito por peça",
+          "tags": [
+            "3D",
+            "Catálogo",
+            "Testes"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mapa",
+      "name": "Mapa",
+      "pages": [
+        {
+          "path": "mapa/mapa-vale-cinzento.html",
+          "title": "Mapa do Vale Cinzento",
+          "description": "",
+          "tags": [
+            "Interativo"
+          ]
+        },
+        {
+          "path": "mapa/galeria-vale-cinzento.html",
+          "title": "Galeria do Vale Cinzento",
+          "description": "",
+          "tags": [
+            "3D",
+            "Animação"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zumbis",
+      "name": "Zumbis e personagens",
+      "pages": [
+        {
+          "path": "zumbis-personagens/bestiario.html",
+          "title": "Bestiário",
+          "description": "",
+          "tags": [
+            "3D",
+            "Animação"
+          ]
+        },
+        {
+          "path": "zumbis-personagens/elenco.html",
+          "title": "Elenco",
+          "description": "",
+          "tags": [
+            "3D",
+            "Animação"
+          ]
+        },
+        {
+          "path": "zumbis-personagens/personagens.html",
+          "title": "Personagens",
+          "description": "",
+          "tags": [
+            "Documento"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sobreviventes",
+      "name": "Sobreviventes e facções",
+      "pages": [
+        {
+          "path": "sobreviventes/os-vivos-do-vale.html",
+          "title": "Os Vivos do Vale",
+          "description": "",
+          "tags": [
+            "Documento"
+          ]
+        },
+        {
+          "path": "sobreviventes/retratos-do-vale.html",
+          "title": "Retratos do Vale",
+          "description": "",
+          "tags": [
+            "3D",
+            "Animação"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "armas",
+      "name": "Armas e itens",
+      "pages": [
+        {
+          "path": "armas-itens/arsenal.html",
+          "title": "Arsenal",
+          "description": "",
+          "tags": [
+            "Catálogo"
+          ]
+        },
+        {
+          "path": "armas-itens/galeria-3d-arsenal.html",
+          "title": "Galeria 3D do Arsenal",
+          "description": "",
+          "tags": [
+            "3D",
+            "Animação"
+          ]
+        },
+        {
+          "path": "armas-itens/itens-vale-cinzento.html",
+          "title": "Itens do Vale Cinzento",
+          "description": "",
+          "tags": [
+            "3D",
+            "Catálogo"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "veiculos",
+      "name": "Veículos",
+      "pages": [
+        {
+          "path": "veiculos/garagem.html",
+          "title": "Garagem",
+          "description": "Mantida pelo time de veículos em veiculos/",
+          "tags": [
+            "3D",
+            "Animação"
+          ]
+        },
+        {
+          "path": "veiculos/frota.html",
+          "title": "Frota",
+          "description": "",
+          "tags": [
+            "Catálogo"
+          ]
+        },
+        {
+          "path": "veiculos/sala-de-testes/sala-veiculos.html",
+          "title": "Sala de testes: veículos",
+          "description": "Atirar, amassar, queimar, soltar rodas e para-choques, tanque explodindo: 11 cenários",
+          "tags": [
+            "3D",
+            "Testes"
+          ]
+        },
+        {
+          "path": "veiculos/frota-leve.html",
+          "title": "Frota leve (jogo e casas)",
+          "description": "69 veículos em qualidade Jogo e Alta, cor por semente, peças danificáveis",
+          "tags": [
+            "3D"
+          ]
+        },
+        {
+          "path": "veiculos/frota-leve/out/montagem-1.png",
+          "title": "Comparação Jogo × Alta (1)",
+          "description": "",
+          "tags": [
+            "Documento"
+          ]
+        },
+        {
+          "path": "veiculos/sdk-demo-rali.html",
+          "title": "Demo do SDK de veículos (outro jogo)",
+          "description": "Rali Cósmico: prova de que o SDK é genérico",
+          "tags": [
+            "3D"
+          ]
+        },
+        {
+          "path": "veiculos/diagnostico/carro-visor-atual.png",
+          "title": "Diagnóstico do carro no visor de casas",
+          "description": "",
+          "tags": [
+            "Documento"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "efeitos",
+      "name": "Efeitos",
+      "pages": [
+        {
+          "path": "efeitos/laboratorio-explosoes.html",
+          "title": "Laboratório de Explosões",
+          "description": "",
+          "tags": [
+            "Simulação",
+            "3D"
+          ]
+        },
+        {
+          "path": "efeitos/oficina-vfx.html",
+          "title": "Oficina de VFX",
+          "description": "",
+          "tags": [
+            "Animação",
+            "3D"
+          ]
+        },
+        {
+          "path": "efeitos/padrao-fluidos.html",
+          "title": "Padrão de Fluidos",
+          "description": "",
+          "tags": [
+            "Simulação",
+            "3D"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "animais",
+      "name": "Animais",
+      "pages": [
+        {
+          "path": "animais/bichos-do-vale.html",
+          "title": "Bichos do Vale",
+          "description": "",
+          "tags": [
+            "3D",
+            "Animação"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vegetacao",
+      "name": "Vegetação",
+      "pages": [
+        {
+          "path": "vegetacao/viveiro.html",
+          "title": "Viveiro do Vale",
+          "description": "Galeria 3D de árvores, palmeiras, flores, cactos, suculentas e gramas do SDK game-vegetation, com canteiro de teste, vento e LOD",
+          "tags": [
+            "3D"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arte",
+      "name": "Arte geral",
+      "pages": [
+        {
+          "path": "arte/cena-de-arte.html",
+          "title": "Cena de Arte",
+          "description": "",
+          "tags": [
+            "3D"
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": [
+    "Tudo",
+    "Jogável",
+    "Animação",
+    "Simulação",
+    "3D",
+    "Testes",
+    "Documento"
+  ],
+  "kit": {
+    "template": "kit/kit-zombiada.template.html",
+    "output": "kit/kit-zombiada.html",
+    "librarySource": "mapa/galeria-vale-cinzento.html"
+  },
+  "artifacts": {
+    "RLRHckn97FjHNDHM23DRvb": "jogo/zombiada-jardim-aurora.html",
+    "VcdTu9bhVwaF25mWhSHctg": "jogo/revisao-final-fatia-jogavel.html",
+    "Mu3Xy7Lm9DXc1fJGNMrM3p": "jogo/antes-do-dia-1.html",
+    "PnECnpTUc9dKYZodhvg8km": "jogo/bancada-moveis-interativos.html",
+    "Rzi7WsQ9ivTnwUEFRFTLzZ": "sala-de-testes/sala-de-testes.html",
+    "U4ygb8zHgtuJ7mi4MgN5Po": "sala-de-testes/area-moveis.html",
+    "2iCyhJbt7jkEG3q13RzfnZ": "jogo/bancada-de-hordas.html",
+    "2UG1Mhe9LqJkQKKVsJkTWR": "jogo/zombiada-modo-livre.html",
+    "Y7KVx52yC6Rohc7xFWJNxU": "jogo/cenarios-de-teste.html",
+    "FchNV6FWcWreFFHLnNkuAP": "mapa/mapa-vale-cinzento.html",
+    "AeuwWYcdRpcv86yW3nz3yi": "mapa/galeria-vale-cinzento.html",
+    "X1Q11t2w24GtE2MsyYy7wr": "zumbis-personagens/bestiario.html",
+    "1N5SEWsaguU6pwm6PPHiKC": "zumbis-personagens/elenco.html",
+    "B3xvaw4FLSCCtvHEf5nHCx": "zumbis-personagens/personagens.html",
+    "AkFLNVrwUbtJjUVwMfKBuZ": "sobreviventes/os-vivos-do-vale.html",
+    "9djtWyfGQ5LrfwTRrL5XBd": "sobreviventes/retratos-do-vale.html",
+    "NNmzTbMKsE6nuThHKuXzWd": "armas-itens/arsenal.html",
+    "C96Cxhb4bTA9bbojV4ctKH": "armas-itens/galeria-3d-arsenal.html",
+    "NKmkGZ2Lvcd96mp6Nyksds": "armas-itens/itens-vale-cinzento.html",
+    "Xy9QydZTRyAfwxRMjzh1aT": "veiculos/garagem.html",
+    "3FqnqNJrEc4jLgAAvjGmnp": "veiculos/frota.html",
+    "XHSLUfNEdzAqGrqVQCWifG": "efeitos/laboratorio-explosoes.html",
+    "LhJANM9RPMxWKS1ZXCzQ56": "efeitos/oficina-vfx.html",
+    "XnjUUwx8fq5oQdDGvEq4Nv": "efeitos/padrao-fluidos.html",
+    "6wxuUFgg9EZxQCeAQwx4HN": "animais/bichos-do-vale.html",
+    "Bs3p84TFhG1A9YfdXSGZaQ": "vegetacao/viveiro.html",
+    "7UjDQiGv4m5E49dCa2kRmE": "arte/cena-de-arte.html"
+  }
+}
