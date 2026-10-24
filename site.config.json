@@ -152,6 +152,14 @@
             "Catálogo",
             "Testes"
           ]
+        },
+        {
+          "path": "kit/analise-sdks-genericos.html",
+          "title": "Análise: o que vira SDK",
+          "description": "O que no jogo e no kit é comum e pode virar SDK genérico e customizável, lacunas e ordem sugerida",
+          "tags": [
+            "Documento"
+          ]
         }
       ]
     },
