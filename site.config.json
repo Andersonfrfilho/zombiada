@@ -183,6 +183,16 @@
             "3D",
             "Animação"
           ]
+        },
+        {
+          "path": "mapa/plantas-das-cidades.html",
+          "title": "Plantas das Cidades",
+          "description": "Zoneamento das 5 cidades do Vale e dos 6 modelos de cidade do kit: centro, comércio, moradia, indústria e campo, com andares e uso",
+          "tags": [
+            "Mapa",
+            "Planta",
+            "Dados"
+          ]
         }
       ]
     },
@@ -455,6 +465,7 @@
     "XnjUUwx8fq5oQdDGvEq4Nv": "efeitos/padrao-fluidos.html",
     "6wxuUFgg9EZxQCeAQwx4HN": "animais/bichos-do-vale.html",
     "Bs3p84TFhG1A9YfdXSGZaQ": "vegetacao/viveiro.html",
-    "7UjDQiGv4m5E49dCa2kRmE": "arte/cena-de-arte.html"
+    "7UjDQiGv4m5E49dCa2kRmE": "arte/cena-de-arte.html",
+    "5avRat6cAw4LPEv3JaKhhS": "mapa/plantas-das-cidades.html"
   }
 }

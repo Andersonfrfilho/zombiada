@@ -1,0 +1,291 @@
+<title>Plantas das Cidades</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+:root{
+  --bg:#eef0ee; --grid:rgba(70,100,130,.10); --grid2:rgba(70,100,130,.20);
+  --paper:#f7f6f1; --ink:#1d2733; --ink2:#4d5a68; --line:#b9c2c9; --accent:#2f5d8c; --accent-ink:#fff;
+  --panel:#fbfaf6; --water:#5b8fc4; --hwy:#3a424b; --ave:#7b858f; --str:#a3acb4; --rail:#2a2f35;
+  --halo:rgba(247,246,241,.9); --focus:#c2570c; --fill-op:.62;
+  --head:"Barlow Condensed","Arial Narrow",system-ui,sans-serif; --body:system-ui,-apple-system,"Segoe UI",sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1a26; --grid:rgba(120,170,220,.08); --grid2:rgba(120,170,220,.16);
+  --paper:#13202e; --ink:#e3ebf3; --ink2:#9db0c3; --line:#2c4157; --accent:#7fb2e6; --accent-ink:#0c1722;
+  --panel:#172636; --water:#3f78b4; --hwy:#c9d3dd; --ave:#8fa0b1; --str:#5f7287; --rail:#d5dde5;
+  --halo:rgba(19,32,46,.9); --focus:#ffb066; --fill-op:.5; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1a26; --grid:rgba(120,170,220,.08); --grid2:rgba(120,170,220,.16);
+  --paper:#13202e; --ink:#e3ebf3; --ink2:#9db0c3; --line:#2c4157; --accent:#7fb2e6; --accent-ink:#0c1722;
+  --panel:#172636; --water:#3f78b4; --hwy:#c9d3dd; --ave:#8fa0b1; --str:#5f7287; --rail:#d5dde5;
+  --halo:rgba(19,32,46,.9); --focus:#ffb066; --fill-op:.5; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px);
+  background-size:20px 20px,20px 20px,100px 100px,100px 100px;
+  color:var(--ink);font:15px/1.5 var(--body);
+  padding-block:28px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1240px;margin:0 auto}
+h1,h2,h3{font-family:var(--head);font-weight:600;letter-spacing:.02em;margin:0;text-transform:uppercase}
+h1{font-size:clamp(34px,6vw,54px);line-height:1;border-bottom:3px double var(--ink);padding-bottom:10px}
+h2{font-size:22px;margin:34px 0 10px}
+h3{font-size:17px;margin:0 0 6px}
+.lead{max-width:78ch;color:var(--ink2);margin:14px 0 0}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tabs{margin-top:22px;display:grid;gap:12px}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.grp .gl{font-family:var(--head);text-transform:uppercase;letter-spacing:.05em;font-size:15px;color:var(--ink2);flex:0 0 100%}
+.tab{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line);padding:6px 12px;cursor:pointer;border-radius:2px}
+.tab:hover{border-color:var(--accent)}
+.tab[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:20px}
+@media (min-width:1000px){.stage{grid-template-columns:minmax(0,2.3fr) minmax(280px,1fr)}}
+.plan{background:var(--paper);border:1px solid var(--ink);padding:8px;box-shadow:4px 4px 0 var(--line)}
+.plan svg{display:block;width:100%;height:auto}
+.plan svg text{font-family:var(--body)}
+.d{cursor:pointer;stroke:var(--ink);stroke-opacity:.45;stroke-width:1;vector-effect:non-scaling-stroke;fill-opacity:var(--fill-op)}
+.d:hover,.d.sel{stroke-opacity:1;stroke-width:2.5;fill-opacity:.85}
+.d:focus-visible{outline:none;stroke:var(--focus);stroke-opacity:1;stroke-width:3}
+.lbl{fill:var(--ink);paint-order:stroke;stroke:var(--halo);stroke-linejoin:round;pointer-events:none;font-weight:600;text-anchor:middle}
+.side{display:grid;gap:14px;align-content:start}
+.card{background:var(--panel);border:1px solid var(--line);padding:14px 16px}
+.card p{margin:4px 0 0}
+.size{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink2)}
+.info{border-left:4px solid var(--accent)}
+.info .sw{display:inline-block;width:14px;height:14px;border:1px solid var(--ink);vertical-align:-2px;margin-right:6px}
+.info dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:10px 0 0;font-size:14px}
+.info dt{color:var(--ink2)}.info dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px}
+.hint{color:var(--ink2);font-size:14px}
+.tw{overflow-x:auto;border:1px solid var(--line);background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--head);text-transform:uppercase;letter-spacing:.05em;font-weight:600;font-size:15px;color:var(--ink2)}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px}
+tbody tr{cursor:pointer}tbody tr:hover,tbody tr.sel{background:var(--grid2)}
+tbody tr:focus-visible{outline-offset:-3px}
+.sw2{display:inline-block;width:16px;height:16px;border:1px solid var(--ink);vertical-align:-3px;margin-right:8px}
+.sky{background:var(--paper);border:1px solid var(--line);padding:10px 12px 6px}
+.sky svg{display:block;width:100%;height:auto}
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:10px;padding:0;margin:0;list-style:none}
+.legend li{background:var(--panel);border:1px solid var(--line);padding:10px 12px;display:grid;grid-template-columns:20px 1fr;gap:2px 10px;font-size:14px}
+.legend .sw2{margin:2px 0 0;width:20px;height:20px}
+.legend b{font-weight:600}.legend .f{font-family:var(--mono);font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.legend p{margin:2px 0 0;grid-column:2;color:var(--ink2)}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--line);color:var(--ink2);font-size:13px}
+.key{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--ink2);margin:8px 2px 0}
+</style>
+<div class="wrap">
+<header>
+  <h1>Plantas das Cidades</h1>
+  <p class="lead">A proposta é um plano de zoneamento para cada cidade: onde ficam o centro, o comércio, a moradia, a indústria e o campo. Santa Aurora passa a ser a cidade urbana, com um centro financeiro de arranha-céus de até 60 andares; Porto Turvo e Três Pontes são cidades de porte médio; Campo Largo e Vila do Corvo são cidades do interior. As plantas são dados: o mesmo JSON entra no SDK <span class="mono">@adatechnology/game-urban</span>, e o jogo acrescenta apenas os seus nomes e o bloqueio militar.</p>
+</header>
+<nav class="tabs" aria-label="Escolha da cidade">
+  <div class="grp" id="g-game"><span class="gl">Vale Cinzento (ZombiAdA)</span></div>
+  <div class="grp" id="g-tpl"><span class="gl">Modelos do kit (qualquer jogo)</span></div>
+</nav>
+<main>
+<div class="stage">
+  <div>
+    <div class="plan" id="plan"></div>
+    <div class="key" id="key"></div>
+  </div>
+  <div class="side">
+    <section class="card" aria-live="polite"><h3 id="cname"></h3><div class="size" id="csize"></div><p id="cdesc"></p></section>
+    <section class="card info" id="info" aria-live="polite"></section>
+  </div>
+</div>
+<h2>Bairros da cidade</h2>
+<div class="tw" tabindex="0" role="region" aria-label="Tabela de bairros"><table><thead><tr><th>Bairro</th><th>Tipo</th><th>Andares</th><th>Uso principal</th><th>Área</th></tr></thead><tbody id="tbody"></tbody></table></div>
+<h2>Silhueta: altura máxima por tipo</h2>
+<div class="sky" id="sky"></div>
+<h2>Legenda dos tipos de bairro</h2>
+<ul class="legend" id="legend"></ul>
+</main>
+<footer>Cópia offline: funciona sem internet.</footer>
+</div>
+<script>
+const DATA = {"version":1,"maxFloors":60,"kinds":[{"id":"downtown","color":"#3b4f7a","zone":"zt","pattern":"financial_district","floors":[20,60],"uses":{"commercial":0.7,"residential":0.3},"block":90,"text":{"pt-BR":{"name":"Centro financeiro","description":"Arranha-céus de escritório e torres residenciais, de 20 a 60 andares."},"en":{"name":"Downtown core","description":"Office and residential towers, 20 to 60 storeys."}}},{"id":"commercial_center","color":"#5b6fa3","zone":"zc","pattern":"downtown","floors":[4,15],"uses":{"commercial":0.6,"residential":0.4},"block":70,"text":{"pt-BR":{"name":"Centro comercial","description":"Loja no térreo e escritórios ou apartamentos em cima, de 4 a 15 andares."},"en":{"name":"Commercial centre","description":"Shops on the ground floor, offices or flats above, 4 to 15 storeys."}}},{"id":"residential_high","color":"#7a68a6","zone":"zt","pattern":"downtown","floors":[8,25],"uses":{"residential":0.9,"commercial":0.1},"block":80,"text":{"pt-BR":{"name":"Bairro de prédios","description":"Condomínios de prédios de 8 a 25 andares com área de lazer."},"en":{"name":"High-rise residential","description":"Apartment blocks, 8 to 25 storeys."}}},{"id":"mixed","color":"#9c7fb8","zone":"zr3_zm","pattern":"downtown","floors":[2,8],"uses":{"residential":0.6,"commercial":0.4},"block":60,"text":{"pt-BR":{"name":"Uso misto","description":"Sobrados, prédios baixos e comércio de rua, de 2 a 8 andares."},"en":{"name":"Mixed use","description":"Townhouses, low blocks and street shops, 2 to 8 storeys."}}},{"id":"residential_mid","color":"#d9a35b","zone":"zr2","pattern":"suburb","floors":[1,4],"uses":{"residential":0.95,"commercial":0.05},"block":60,"text":{"pt-BR":{"name":"Residencial médio","description":"Casas, sobrados e prédios pequenos de até 4 andares."},"en":{"name":"Mid-density residential","description":"Houses and small blocks up to 4 storeys."}}},{"id":"residential_low","color":"#e8c477","zone":"zr1","pattern":"suburb","floors":[1,2],"uses":{"residential":1},"block":70,"text":{"pt-BR":{"name":"Residencial de casas","description":"Casas térreas e sobrados com quintal e recuo."},"en":{"name":"Low-density residential","description":"Houses with yards and setbacks."}}},{"id":"residential_gated","color":"#c9d27a","zone":"zr_ap","pattern":"suburb","floors":[1,3],"uses":{"residential":1},"block":110,"text":{"pt-BR":{"name":"Condomínio fechado","description":"Casas grandes em lotes amplos, muro e portaria."},"en":{"name":"Gated community","description":"Large houses on big lots behind a wall and gate."}}},{"id":"residential_popular","color":"#d97a5b","zone":"zr2","pattern":"working_class","floors":[1,3],"uses":{"residential":0.9,"commercial":0.1},"block":45,"text":{"pt-BR":{"name":"Bairro popular","description":"Casas geminadas de laje, sem recuo, ruas estreitas."},"en":{"name":"Working-class housing","description":"Terraced self-built houses, narrow streets."}}},{"id":"historic","color":"#b5835a","zone":"zr3_zm","pattern":"historic_street","floors":[1,3],"uses":{"residential":0.6,"commercial":0.4},"block":50,"text":{"pt-BR":{"name":"Centro histórico","description":"Casario colonial colado, rua de pedra, igreja e praça."},"en":{"name":"Historic quarter","description":"Colonial row houses, cobbled streets, church and square."}}},{"id":"institutional","color":"#5aa3a0","zone":"zc","pattern":"downtown","floors":[2,8],"uses":{"institutional":1},"block":120,"text":{"pt-BR":{"name":"Institucional","description":"Hospital, escola, campus, prefeitura, delegacia e quartel de bombeiros."},"en":{"name":"Institutional","description":"Hospital, schools, campus, city hall, police and fire stations."}}},{"id":"industrial","color":"#7d7d74","zone":"zi","pattern":"industrial_port","floors":[1,1],"uses":{"industrial":1},"block":140,"text":{"pt-BR":{"name":"Distrito industrial","description":"Galpões de 8 a 12 m, pátios e chaminés."},"en":{"name":"Industrial district","description":"Sheds 8 to 12 m tall, yards and stacks."}}},{"id":"logistics","color":"#96968a","zone":"zi","pattern":"industrial_port","floors":[1,1],"uses":{"industrial":0.8,"commercial":0.2},"block":160,"text":{"pt-BR":{"name":"Distrito logístico","description":"Centros de distribuição, posto de caminhoneiro, pátio de carretas."},"en":{"name":"Logistics","description":"Distribution centres, truck stop, trailer yards."}}},{"id":"port","color":"#5f7f8f","zone":"zi","pattern":"industrial_port","floors":[1,1],"uses":{"industrial":1},"block":150,"text":{"pt-BR":{"name":"Porto","description":"Cais, guindastes, contêineres empilhados e armazéns."},"en":{"name":"Port","description":"Quays, cranes, stacked containers and warehouses."}}},{"id":"rail_yard","color":"#6e6158","zone":"zi","pattern":"railway_village","floors":[1,1],"uses":{"industrial":1},"block":150,"text":{"pt-BR":{"name":"Pátio ferroviário","description":"Linhas, rotunda, oficina e vagões parados."},"en":{"name":"Rail yard","description":"Tracks, roundhouse, workshop and parked wagons."}}},{"id":"company_housing","color":"#cfae86","zone":"zr1","pattern":"railway_village","floors":[1,1],"uses":{"residential":1},"block":50,"text":{"pt-BR":{"name":"Vila operária","description":"Casas iguais em fila, da ferrovia ou da fábrica."},"en":{"name":"Company housing","description":"Identical row houses of the railway or the mill."}}},{"id":"hillside_resort","color":"#a3b58a","zone":"zr1","pattern":"mountain_resort","floors":[1,2],"uses":{"residential":0.7,"commercial":0.3},"block":60,"text":{"pt-BR":{"name":"Serra e pousadas","description":"Chalés e pousadas na encosta, ruas em curva."},"en":{"name":"Hillside resort","description":"Chalets and inns on the slope."}}},{"id":"stilt","color":"#7fa3b5","zone":"zr1","pattern":"stilt_village","floors":[1,1],"uses":{"residential":1},"block":40,"text":{"pt-BR":{"name":"Palafitas","description":"Casas sobre estacas na beira da água, trapiches."},"en":{"name":"Stilt village","description":"Houses on stilts by the water, jetties."}}},{"id":"park","color":"#6f9a5e","zone":null,"pattern":null,"floors":[0,0],"uses":{},"block":0,"text":{"pt-BR":{"name":"Parque e praça","description":"Área verde, praça, campo de futebol."},"en":{"name":"Park","description":"Green space, square, football pitch."}}},{"id":"rural","color":"#a7b86d","zone":"za","pattern":"rural","floors":[1,2],"uses":{"residential":0.8,"agricultural":0.2},"block":250,"text":{"pt-BR":{"name":"Chácaras e sítios","description":"Sítios com casa sede, horta e pomar."},"en":{"name":"Smallholdings","description":"Smallholdings with a farmhouse, garden and orchard."}}},{"id":"farmland","color":"#c8c67e","zone":"za","pattern":"rural","floors":[0,1],"uses":{"agricultural":1},"block":400,"text":{"pt-BR":{"name":"Lavoura","description":"Plantação, silos e estradas de terra."},"en":{"name":"Farmland","description":"Crops, silos and dirt roads."}}},{"id":"airfield","color":"#b8b8a8","zone":"za","pattern":"rural","floors":[1,1],"uses":{"industrial":1},"block":300,"text":{"pt-BR":{"name":"Aeródromo","description":"Pista, hangares e torre."},"en":{"name":"Airfield","description":"Runway, hangars and tower."}}},{"id":"wild","color":"#4f7a4a","zone":null,"pattern":null,"floors":[0,0],"uses":{},"block":0,"text":{"pt-BR":{"name":"Mata e morro","description":"Mata, morro, área sem construção."},"en":{"name":"Woods and hills","description":"Woods and hills, unbuilt."}}}],"templates":[{"id":"metropolis","scale":"metropolis","size":[6000,6000],"text":{"pt-BR":{"name":"Metrópole","description":"Centro financeiro de arranha-céus cercado de comércio, bairros de prédios, casas, periferia e indústria na ferrovia."},"en":{"name":"Metropolis","description":"Tower downtown ringed by commerce, high-rise and low-rise neighbourhoods, outskirts and industry on the railway."}},"districts":[{"id":"outskirts","kind":"rural","rect":[-3000,-3000,3000,3000]},{"id":"suburbs_w","kind":"residential_low","rect":[-2600,-2600,-600,2600]},{"id":"suburbs_e","kind":"residential_mid","rect":[600,-2600,2600,1000]},{"id":"periphery","kind":"residential_popular","rect":[-3000,1200,-800,3000]},{"id":"gated","kind":"residential_gated","rect":[1400,-3000,3000,-1800]},{"id":"industry","kind":"industrial","rect":[600,1600,3000,3000]},{"id":"logistics","kind":"logistics","rect":[2200,400,3000,1600]},{"id":"mixed","kind":"mixed","rect":[-1600,-1600,1600,1400]},{"id":"high","kind":"residential_high","rect":[-1400,-1500,-300,-300]},{"id":"high2","kind":"residential_high","rect":[300,-1500,1400,-600]},{"id":"center","kind":"commercial_center","rect":[-900,-700,1100,800]},{"id":"downtown","kind":"downtown","rect":[-400,-400,600,400]},{"id":"hospital","kind":"institutional","rect":[-1600,500,-1000,1100]},{"id":"campus","kind":"institutional","rect":[1300,-500,2000,300]},{"id":"park","kind":"park","rect":[-300,500,500,1100]},{"id":"hills","kind":"wild","rect":[-3000,-3000,-1800,-1800]}],"lines":[{"id":"ring","kind":"avenue","width":30,"points":[[-1700,-1700],[1700,-1700],[1700,1500],[-1700,1500],[-1700,-1700]]},{"id":"main_ns","kind":"avenue","width":30,"points":[[100,-3000],[100,3000]]},{"id":"main_ew","kind":"avenue","width":30,"points":[[-3000,0],[3000,0]]},{"id":"rail","kind":"rail","width":12,"points":[[-3000,1500],[0,1500],[3000,1300]]},{"id":"highway","kind":"highway","width":24,"points":[[-3000,-2200],[3000,-2400]]}],"landmarks":[{"kind":"station","at":[0,1500]},{"kind":"hospital","at":[-1300,800]},{"kind":"stadium","at":[1700,-100]},{"kind":"cathedral","at":[100,100]},{"kind":"mall","at":[800,600]},{"kind":"police","at":[300,-300]},{"kind":"fire","at":[-500,600]},{"kind":"gas_station","at":[2400,-2300]}]},{"id":"regional_city","scale":"city","size":[4000,4000],"text":{"pt-BR":{"name":"Cidade média","description":"Centro comercial com poucos prédios altos, bairros de casas e um distrito industrial."},"en":{"name":"Regional city","description":"Commercial centre with a few tall buildings, house neighbourhoods and an industrial district."}},"districts":[{"id":"outskirts","kind":"rural","rect":[-2000,-2000,2000,2000]},{"id":"res_w","kind":"residential_low","rect":[-1800,-1600,-300,1600]},{"id":"res_e","kind":"residential_mid","rect":[300,-1600,1800,600]},{"id":"popular","kind":"residential_popular","rect":[-1800,800,-500,1800]},{"id":"industry","kind":"industrial","rect":[500,900,2000,2000]},{"id":"mixed","kind":"mixed","rect":[-800,-800,900,700]},{"id":"center","kind":"commercial_center","rect":[-400,-400,500,350]},{"id":"square","kind":"park","rect":[-100,-100,150,100]},{"id":"hospital","kind":"institutional","rect":[600,-900,1000,-500]}],"lines":[{"id":"main_ns","kind":"avenue","width":24,"points":[[0,-2000],[0,2000]]},{"id":"main_ew","kind":"avenue","width":24,"points":[[-2000,0],[2000,0]]},{"id":"highway","kind":"highway","width":24,"points":[[-2000,1600],[2000,1500]]}],"landmarks":[{"kind":"church","at":[0,0]},{"kind":"hospital","at":[800,-700]},{"kind":"school","at":[-600,300]},{"kind":"police","at":[200,-200]},{"kind":"market","at":[300,200]},{"kind":"gas_station","at":[1500,1550]}]},{"id":"port_city","scale":"city","size":[4000,3000],"text":{"pt-BR":{"name":"Cidade portuária","description":"Cais e armazéns na margem, centro histórico atrás do porto e bairros subindo o morro."},"en":{"name":"Port city","description":"Quays and warehouses on the shore, old town behind the port and neighbourhoods up the hill."}},"districts":[{"id":"outskirts","kind":"rural","rect":[-2000,-1500,2000,1500]},{"id":"hill","kind":"residential_low","rect":[500,-1500,2000,-200]},{"id":"res","kind":"residential_mid","rect":[-300,-500,1300,900]},{"id":"industry","kind":"industrial","rect":[800,500,2000,1500]},{"id":"port","kind":"port","rect":[-2000,-1300,-900,1100]},{"id":"old_town","kind":"historic","rect":[-900,-800,200,400]},{"id":"center","kind":"commercial_center","rect":[-500,-400,200,100]},{"id":"stilts","kind":"stilt","rect":[-2000,1000,-1200,1500]}],"lines":[{"id":"shore","kind":"river","width":60,"points":[[-2000,-1500],[-1950,0],[-1900,1500]]},{"id":"main","kind":"avenue","width":20,"points":[[-900,0],[2000,0]]},{"id":"rail","kind":"rail","width":12,"points":[[-1200,-1500],[-1000,-400]]}],"landmarks":[{"kind":"harbour_office","at":[-1200,0]},{"kind":"church","at":[-300,-200]},{"kind":"market","at":[-600,200]},{"kind":"lighthouse","at":[1600,-1300]},{"kind":"hospital","at":[700,200]}]},{"id":"rail_town","scale":"town","size":[3000,3000],"text":{"pt-BR":{"name":"Cidade ferroviária","description":"Cidade que cresceu em volta da estação: pátio, centro velho, vila da companhia."},"en":{"name":"Rail town","description":"A town grown around its station: rail yard, old centre, company village."}},"districts":[{"id":"outskirts","kind":"rural","rect":[-1500,-1500,1500,1500]},{"id":"res","kind":"residential_low","rect":[500,500,1500,1500]},{"id":"logistics","kind":"logistics","rect":[500,-700,1500,500]},{"id":"popular","kind":"residential_popular","rect":[-1500,600,-300,1500]},{"id":"company","kind":"company_housing","rect":[-1500,-800,-700,500]},{"id":"yard","kind":"rail_yard","rect":[-700,0,500,500]},{"id":"old_center","kind":"historic","rect":[-500,-700,500,0]}],"lines":[{"id":"rail","kind":"rail","width":12,"points":[[-1500,250],[1500,250]]},{"id":"highway","kind":"highway","width":24,"points":[[-1500,-100],[1500,-200]]}],"landmarks":[{"kind":"station","at":[0,100]},{"kind":"church","at":[0,-400]},{"kind":"gas_station","at":[1000,-150]}]},{"id":"country_town","scale":"town","size":[2400,2400],"text":{"pt-BR":{"name":"Cidade do interior","description":"Praça da matriz no meio, comércio térreo em volta, casas, cooperativa e sítios em volta."},"en":{"name":"Country town","description":"Main square with the church, ground-floor shops around, houses, a co-op and smallholdings."}},"districts":[{"id":"farms","kind":"farmland","rect":[-1200,-1200,1200,1200]},{"id":"chacaras","kind":"rural","rect":[-900,-900,900,900]},{"id":"houses","kind":"residential_low","rect":[-600,-600,600,500]},{"id":"company","kind":"company_housing","rect":[-700,350,-250,700]},{"id":"coop","kind":"farmland","rect":[350,500,900,900],"floors":[1,1],"uses":{"agricultural":0.5,"industrial":0.5}},{"id":"center","kind":"historic","rect":[-250,-250,250,250]},{"id":"square","kind":"park","rect":[-60,-60,60,60]}],"lines":[{"id":"main","kind":"street","width":12,"points":[[-1200,0],[1200,0]]},{"id":"road","kind":"street","width":8,"points":[[0,-1200],[0,1200]]}],"landmarks":[{"kind":"church","at":[0,-70]},{"kind":"market","at":[120,80]},{"kind":"school","at":[-300,-200]},{"kind":"gas_station","at":[700,0]},{"kind":"silo","at":[600,700]}]},{"id":"mountain_village","scale":"village","size":[1600,1200],"text":{"pt-BR":{"name":"Vila serrana","description":"Largo da igreja, rua das pousadas subindo a serra e chalés espalhados na encosta."},"en":{"name":"Mountain village","description":"Church square, a street of inns up the slope and chalets scattered on the hill."}},"districts":[{"id":"wild","kind":"wild","rect":[-800,-600,800,600]},{"id":"slope","kind":"rural","rect":[-700,-500,700,500]},{"id":"resort","kind":"hillside_resort","rect":[-400,-450,500,0]},{"id":"square","kind":"historic","rect":[-250,0,250,300]},{"id":"station","kind":"rail_yard","rect":[300,150,700,450]}],"lines":[{"id":"road","kind":"street","width":7,"points":[[-800,200],[0,150],[800,300]]}],"landmarks":[{"kind":"church","at":[0,150]},{"kind":"inn","at":[100,-200]},{"kind":"station","at":[500,300]}]}],"game":{"kinds":[{"id":"checkpoint","color":"#b04a4a","zone":null,"pattern":"military","floors":[1,1],"uses":{"military":1},"block":0,"text":{"pt-BR":{"name":"Bloqueio militar","description":"Contêineres, guarita e sacos de areia (só do ZombiAdA)."},"en":{"name":"Checkpoint","description":"Containers, guardhouse and sandbags (ZombiAdA only)."}}}],"cities":[{"id":"santa_aurora","scale":"metropolis","size":[8000,8000],"text":{"pt-BR":{"name":"Santa Aurora","description":"A cidade grande do vale. Proposta: o Centro ganha um centro financeiro de arranha-céus (até 60 andares) a leste da Ponte Velha, cercado de comércio e bairros de prédios."},"en":{"name":"Santa Aurora","description":"The valley's big city."}},"districts":[{"id":"sitios","kind":"rural","rect":[-4000,-4000,4000,4000],"name":"Sítios do Oeste e Várzea Leste"},{"id":"morro","kind":"wild","rect":[-3800,-3800,-2200,-2200],"name":"Morro do Cruzeiro"},{"id":"jardim","kind":"residential_low","rect":[1500,-3200,3800,-700],"name":"Jardim Aurora"},{"id":"condominio","kind":"residential_gated","rect":[2600,-3900,3900,-3200],"name":"Condomínio Alto da Represa"},{"id":"esperanca","kind":"residential_popular","rect":[-3800,600,-1700,3200],"name":"Vila Esperança"},{"id":"casas_sul","kind":"residential_mid","rect":[-1600,1300,1100,3000],"name":"Bairro São José"},{"id":"fabril","kind":"industrial","rect":[1300,1900,3900,3900],"name":"Distrito Fabril"},{"id":"logistica","kind":"logistics","rect":[2700,-600,3900,1800],"name":"Distrito Logístico da BR"},{"id":"misto","kind":"mixed","rect":[-1300,-2000,2600,1300],"name":"Anel do Centro"},{"id":"torres_norte","kind":"residential_high","rect":[300,-2000,1500,-1000],"name":"Parque das Torres"},{"id":"torres_leste","kind":"residential_high","rect":[1700,-900,2600,300],"name":"Bela Vista"},{"id":"centro","kind":"commercial_center","rect":[-900,-1100,1700,900],"name":"Centro"},{"id":"financeiro","kind":"downtown","rect":[-400,-700,1000,400],"name":"Centro Financeiro"},{"id":"historico","kind":"historic","rect":[-2200,-500,-1000,600],"name":"Ponte Velha"},{"id":"parque","kind":"park","rect":[-1500,-1300,-700,-500],"name":"Parque do Corvo"},{"id":"hospital","kind":"institutional","rect":[1100,900,1900,1500],"name":"Hospital Regional e Campus"},{"id":"bloqueio","kind":"checkpoint","rect":[100,-4000,700,-3500],"name":"Bloqueio Norte"}],"lines":[{"id":"turvo","kind":"river","width":90,"points":[[2800,-5000],[800,-2400],[-1600,0],[-3280,2400],[-2800,5200]]},{"id":"corvo","kind":"river","width":20,"points":[[-3200,-2000],[-1600,0]]},{"id":"br101","kind":"highway","width":24,"points":[[-4000,1100],[-2800,400],[3600,-1200],[4000,-1000]]},{"id":"br_norte","kind":"highway","width":20,"points":[[400,-4000],[400,-1200]]},{"id":"br_sul","kind":"highway","width":20,"points":[[400,2000],[1000,4000]]},{"id":"tronco","kind":"rail","width":12,"points":[[-1240,4000],[0,3200],[4000,2520]]},{"id":"ramal_porto","kind":"rail","width":12,"points":[[1600,2920],[1800,4000]]}],"landmarks":[{"kind":"station","at":[0,3200],"name":"Estação Central"},{"kind":"hospital","at":[1500,1200],"name":"Hospital Regional"},{"kind":"police","at":[600,-200],"name":"Delegacia"},{"kind":"fire","at":[-300,700],"name":"Bombeiros"},{"kind":"cathedral","at":[-1600,100],"name":"Matriz da Ponte Velha"},{"kind":"mall","at":[1300,600],"name":"Shopping Aurora"},{"kind":"stadium","at":[2100,-200],"name":"Estádio Municipal"},{"kind":"bridge","at":[-1600,0],"name":"Ponte Velha"},{"kind":"gas_station","at":[3000,-900],"name":"Posto da BR"}]},{"id":"porto_turvo","scale":"city","size":[6400,4000],"text":{"pt-BR":{"name":"Porto Turvo","description":"Cidade média do rio: cais e estaleiro, Cidade Baixa colonial, palafitas e o frigorífico. Centro comercial até 10 andares."},"en":{"name":"Porto Turvo","description":"River port town."}},"districts":[{"id":"sitios","kind":"rural","rect":[-3200,-2000,3200,2000],"name":"Arredores"},{"id":"farol","kind":"residential_low","rect":[1200,-2000,3200,-400],"name":"Alto do Farol"},{"id":"bairro","kind":"residential_mid","rect":[400,-400,2000,700],"name":"Bairro Novo"},{"id":"frigorifico","kind":"industrial","rect":[1200,700,3200,2000],"name":"Zona do Frigorífico"},{"id":"cais","kind":"port","rect":[-2700,-1400,-1300,1200],"name":"Cais e Estaleiro"},{"id":"cidade_baixa","kind":"historic","rect":[-1300,-1100,500,600],"name":"Cidade Baixa"},{"id":"centro","kind":"commercial_center","rect":[-700,-600,500,100],"name":"Centro do Porto","floors":[3,10]},{"id":"pescadores","kind":"stilt","rect":[-3200,900,-2100,2000],"name":"Vila dos Pescadores"}],"lines":[{"id":"turvo","kind":"river","width":110,"points":[[-2400,-2400],[-2300,-500],[-1900,1000],[-400,2400]]},{"id":"claro","kind":"river","width":40,"points":[[-200,-2400],[-2320,-2240]]},{"id":"br_sul","kind":"highway","width":20,"points":[[-400,-2000],[0,2000]]},{"id":"ramal","kind":"rail","width":12,"points":[[700,-2000],[800,-1600]]}],"landmarks":[{"kind":"harbour_office","at":[-1500,0],"name":"Capitania"},{"kind":"church","at":[-300,-300],"name":"Igreja do Rosário"},{"kind":"market","at":[-800,300],"name":"Mercado do Peixe"},{"kind":"lighthouse","at":[2400,-1600],"name":"Farol"},{"kind":"station","at":[800,-1600],"name":"Estação do Porto"},{"kind":"ferry","at":[-2300,-200],"name":"Balsa"}]},{"id":"tres_pontes","scale":"town","size":[4400,3600],"text":{"pt-BR":{"name":"Três Pontes","description":"Cidade ferroviária no entroncamento: pátio, rotunda, Centro Velho art déco, vila da companhia e o distrito logístico na BR."},"en":{"name":"Três Pontes","description":"Rail junction town."}},"districts":[{"id":"sitios","kind":"rural","rect":[-2200,-1800,2200,1800],"name":"Arredores"},{"id":"casas","kind":"residential_low","rect":[800,800,2200,1800],"name":"Jardim das Pontes"},{"id":"logistica","kind":"logistics","rect":[700,-800,2200,700],"name":"Distrito Logístico"},{"id":"beira","kind":"residential_popular","rect":[-2200,700,-400,1800],"name":"Beira-trilho"},{"id":"vila","kind":"company_housing","rect":[-2200,-1100,-1000,600],"name":"Vila Ferroviária"},{"id":"patio","kind":"rail_yard","rect":[-1400,0,600,700],"name":"Pátio Ferroviário"},{"id":"centro","kind":"historic","rect":[-700,-1000,700,0],"name":"Centro Velho da Estação","floors":[2,4],"uses":{"commercial":0.6,"residential":0.4}}],"lines":[{"id":"claro","kind":"river","width":40,"points":[[1000,-1000],[200,600],[-600,2200]]},{"id":"tronco","kind":"rail","width":12,"points":[[-2200,600],[-600,200],[2200,-1500]]},{"id":"serra","kind":"rail","width":12,"points":[[-600,200],[-1800,-1800]]},{"id":"br101","kind":"highway","width":24,"points":[[-2200,-300],[-200,-200],[2200,100]]}],"landmarks":[{"kind":"station","at":[-500,100],"name":"Estação"},{"kind":"roundhouse","at":[-1000,400],"name":"Rotunda"},{"kind":"bridge","at":[600,-300],"name":"Ponte de ferro"},{"kind":"gas_station","at":[1500,0],"name":"Posto do Caminhoneiro"},{"kind":"church","at":[0,-600],"name":"Igreja de São Cristóvão"}]},{"id":"campo_largo","scale":"town","size":[4400,3600],"text":{"pt-BR":{"name":"Campo Largo","description":"Cidade do interior: praça da matriz, comércio térreo, cooperativa com silos, aeroclube e chácaras."},"en":{"name":"Campo Largo","description":"Country town."}},"districts":[{"id":"lavoura","kind":"farmland","rect":[-2200,-1800,2200,1800],"name":"Lavouras"},{"id":"chacaras","kind":"rural","rect":[-1600,-1400,1600,1400],"name":"Chácaras"},{"id":"casas","kind":"residential_low","rect":[-900,-900,900,400],"name":"Bairro da Matriz"},{"id":"vila","kind":"company_housing","rect":[-1400,400,-500,1200],"name":"Vila Operária Rural"},{"id":"coop","kind":"farmland","rect":[700,500,2100,1500],"name":"Cooperativa","floors":[1,1],"uses":{"agricultural":0.5,"industrial":0.5}},{"id":"aeroclube","kind":"airfield","rect":[-2200,-1800,-800,-1000],"name":"Aeroclube"},{"id":"centro","kind":"historic","rect":[-450,-350,450,350],"name":"Centro"},{"id":"praca","kind":"park","rect":[-80,-80,80,80],"name":"Praça da Matriz"}],"lines":[{"id":"br101","kind":"highway","width":24,"points":[[-2200,-200],[0,0],[2200,100]]},{"id":"tronco","kind":"rail","width":12,"points":[[-2200,1000],[2200,1400]]}],"landmarks":[{"kind":"church","at":[0,-100],"name":"Matriz"},{"kind":"market","at":[200,150],"name":"Armazém"},{"kind":"silo","at":[1400,1000],"name":"Silos"},{"kind":"school","at":[-500,-300],"name":"Escola"},{"kind":"gas_station","at":[900,30],"name":"Posto"}]},{"id":"vila_do_corvo","scale":"village","size":[1600,1200],"text":{"pt-BR":{"name":"Vila do Corvo","description":"Vila serrana: Rua das Pousadas, Largo da Igreja, estação do teleférico e da ferrovia e a encosta."},"en":{"name":"Vila do Corvo","description":"Mountain village."}},"districts":[{"id":"mata","kind":"wild","rect":[-800,-600,800,600],"name":"Serra"},{"id":"encosta","kind":"rural","rect":[-700,-500,700,500],"name":"Encosta"},{"id":"pousadas","kind":"hillside_resort","rect":[-400,-450,500,0],"name":"Rua das Pousadas"},{"id":"largo","kind":"historic","rect":[-250,0,250,300],"name":"Largo da Igreja"},{"id":"estacao","kind":"rail_yard","rect":[300,150,700,450],"name":"Estação do Teleférico e da Ferrovia"}],"lines":[{"id":"estrada","kind":"street","width":7,"points":[[-800,200],[0,150],[800,300]]},{"id":"serra","kind":"rail","width":12,"points":[[800,350],[500,300]]}],"landmarks":[{"kind":"church","at":[0,150],"name":"Igreja de pedra"},{"kind":"inn","at":[100,-200],"name":"Pousada do Corvo"},{"kind":"station","at":[500,300],"name":"Estação"},{"kind":"cable_car","at":[600,200],"name":"Teleférico"}]}]}};
+(function(){
+var NS='http://www.w3.org/2000/svg', LANG='pt-BR';
+var USE={commercial:'Comercial',residential:'Moradia',industrial:'Indústria',institutional:'Institucional',agricultural:'Agrícola',military:'Militar'};
+var LM={station:'Estação',hospital:'Hospital',police:'Delegacia',fire:'Bombeiros',church:'Igreja',cathedral:'Catedral',mall:'Shopping',stadium:'Estádio',school:'Escola',market:'Mercado',gas_station:'Posto',bridge:'Ponte',harbour_office:'Capitania',lighthouse:'Farol',ferry:'Balsa',roundhouse:'Rotunda',silo:'Silos',inn:'Pousada',cable_car:'Teleférico'};
+var KINDS={}; DATA.kinds.concat(DATA.game.kinds||[]).forEach(function(k){KINDS[k.id]=k});
+var GAME=DATA.game.cities, TPL=DATA.templates, ALL=GAME.concat(TPL);
+var $=function(id){return document.getElementById(id)};
+function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function h(t,c,p){var e=document.createElement(t);if(c)e.className=c;if(p)p.appendChild(e);return e}
+function nf(x,d){return x.toLocaleString(LANG,{maximumFractionDigits:d==null?0:d,minimumFractionDigits:d==null?0:d})}
+function tx(o){return (o&&o.text&&(o.text[LANG]||o.text.en))||{name:o.id,description:''}}
+function kname(id){return tx(KINDS[id]).name}
+function eff(d){var k=KINDS[d.kind];return{floors:d.floors||k.floors,uses:d.uses||k.uses}}
+function dname(d){return d.name||kname(d.kind)}
+function floorsTxt(f){var a=f[0],b=f[1];if(b===0)return 'sem edificações';if(a===b)return a+(a===1?' andar':' andares');if(a===0)return 'até '+b+(b===1?' andar':' andares');return a+' a '+b+' andares'}
+function usesList(u){var ks=Object.keys(u).sort(function(a,b){return u[b]-u[a]});return ks.map(function(k){return {k:k,l:USE[k]||k,p:Math.round(u[k]*100)}})}
+function mainUse(u){var l=usesList(u);return l.length?l[0].l+' '+l[0].p+'%':'—'}
+function area(d){var r=d.rect;return Math.abs(r[2]-r[0])*Math.abs(r[3]-r[1])/1e6}
+function sizeTxt(c){return nf(c.size[0]/1000,1)+' × '+nf(c.size[1]/1000,1)+' km'}
+
+var cur=null, selId=null;
+
+function buildTabs(){
+  function mk(list,g){list.forEach(function(c){var b=h('button','tab',g);b.type='button';b.textContent=tx(c).name;b.dataset.id=c.id;b.setAttribute('aria-pressed','false');b.onclick=function(){location.hash=c.id}})}
+  mk(GAME,$('g-game'));mk(TPL,$('g-tpl'));
+}
+function byId(id){for(var i=0;i<ALL.length;i++)if(ALL[i].id===id)return ALL[i];return null}
+
+function niceBar(maxM){var c=[50,100,200,250,500,1000,2000,2500,5000,10000,20000],b=c[0];c.forEach(function(v){if(v<=maxM)b=v});return b}
+
+function drawPlan(){
+  var c=cur,box=$('plan');box.textContent='';
+  var W=c.size[0],D=c.size[1];
+  var px=Math.max(box.clientWidth-16,300);
+  var u=Math.max(W,D)/px; // metros por pixel
+  var pad=6*u, strip=54*u;
+  var vx=-W/2-pad, vy=-D/2-pad, vw=W+2*pad, vh=D+2*pad+strip;
+  var svg=el('svg',{viewBox:vx+' '+vy+' '+vw+' '+vh,role:'img','aria-label':'Planta de '+tx(c).name+', '+sizeTxt(c)});
+  box.appendChild(svg);
+  el('rect',{x:-W/2,y:-D/2,width:W,height:D,fill:'none',stroke:'var(--ink)','stroke-width':1.5*u},svg);
+  // distritos
+  var gd=el('g',{},svg), gl=el('g',{},svg);
+  c.districts.forEach(function(d){
+    var r=d.rect,x=Math.min(r[0],r[2]),y=Math.min(r[1],r[3]),w=Math.abs(r[2]-r[0]),hh=Math.abs(r[3]-r[1]);
+    var e=el('rect',{x:x,y:y,width:w,height:hh,fill:KINDS[d.kind].color,'class':'d',tabindex:0,'data-id':d.id,'aria-label':dname(d)+', '+kname(d.kind)},gd);
+    e.addEventListener('mouseenter',function(){select(d.id)});
+    e.addEventListener('focus',function(){select(d.id)});
+    e.addEventListener('click',function(){select(d.id)});
+  });
+  // linhas: rios, ferrovia, ruas, avenidas, rodovias
+  var order={river:0,street:1,avenue:2,highway:3,rail:4}, gline=el('g',{'pointer-events':'none','fill':'none','stroke-linejoin':'round','stroke-linecap':'round'},svg);
+  c.lines.slice().sort(function(a,b){return order[a.kind]-order[b.kind]}).forEach(function(l){
+    var pts=l.points.map(function(p){return p[0]+','+p[1]}).join(' ');
+    var wd=l.width||10;
+    if(l.kind==='river')el('polyline',{points:pts,stroke:'var(--water)','stroke-width':Math.max(wd,2*u),opacity:.9},gline);
+    else if(l.kind==='highway'){el('polyline',{points:pts,stroke:'var(--hwy)','stroke-width':Math.max(wd,4*u)},gline)}
+    else if(l.kind==='avenue')el('polyline',{points:pts,stroke:'var(--ave)','stroke-width':Math.max(wd,2.4*u)},gline);
+    else if(l.kind==='street')el('polyline',{points:pts,stroke:'var(--str)','stroke-width':Math.max(wd,1.1*u)},gline);
+    else if(l.kind==='rail'){
+      el('polyline',{points:pts,stroke:'var(--rail)','stroke-width':1.6*u},gline);
+      el('polyline',{points:pts,stroke:'var(--rail)','stroke-width':6*u,'stroke-linecap':'butt','stroke-dasharray':(1.4*u)+' '+(5*u)},gline);
+    }
+  });
+  // rótulos de bairros
+  var placed=[];
+  function inside(r,x,y){return x>=Math.min(r[0],r[2])&&x<=Math.max(r[0],r[2])&&y>=Math.min(r[1],r[3])&&y<=Math.max(r[1],r[3])}
+  for(var i=c.districts.length-1;i>=0;i--){
+    var d=c.districts[i],r=d.rect,w=Math.abs(r[2]-r[0]),hh=Math.abs(r[3]-r[1]),n=dname(d);
+    var fs=Math.min(w/(n.length*0.52),hh*0.3,16*u);
+    if(fs/u<8.5)continue;
+    var cx=(r[0]+r[2])/2,cy=(r[1]+r[3])/2,bw=n.length*fs*0.55,bh=fs*1.1,covered=false;
+    for(var j=i+1;j<c.districts.length;j++)if(inside(c.districts[j].rect,cx,cy)){covered=true;break}
+    if(covered)continue;
+    var bx=[cx-bw/2,cy-bh/2,cx+bw/2,cy+bh/2];
+    if(placed.some(function(p){return bx[0]<p[2]&&bx[2]>p[0]&&bx[1]<p[3]&&bx[3]>p[1]}))continue;
+    placed.push(bx);
+    var t=el('text',{x:cx,y:cy,'font-size':fs,'class':'lbl','stroke-width':fs*0.22,'dominant-baseline':'middle'},gl);t.textContent=n;
+  }
+  // marcos
+  var gm=el('g',{'pointer-events':'none'},svg);
+  c.landmarks.forEach(function(m){
+    el('circle',{cx:m.at[0],cy:m.at[1],r:4.2*u,fill:'var(--paper)',stroke:'var(--ink)','stroke-width':1.6*u},gm);
+    el('circle',{cx:m.at[0],cy:m.at[1],r:1.6*u,fill:'var(--ink)'},gm);
+    var t=el('text',{x:m.at[0]+7*u,y:m.at[1]+3.5*u,'font-size':10.5*u,'class':'lbl','stroke-width':3*u,fill:'var(--ink)'},gm);
+    t.style.textAnchor='start';t.setAttribute('font-weight',500);t.textContent=m.name||LM[m.kind]||m.kind;
+  });
+  // régua e norte
+  var sy=D/2+pad+26*u, bar=niceBar(W*0.3), x0=-W/2;
+  var gs=el('g',{'pointer-events':'none'},svg);
+  el('line',{x1:x0,y1:sy,x2:x0+bar,y2:sy,stroke:'var(--ink)','stroke-width':2*u},gs);
+  [0,1].forEach(function(i){el('line',{x1:x0+i*bar,y1:sy-5*u,x2:x0+i*bar,y2:sy+5*u,stroke:'var(--ink)','stroke-width':2*u},gs)});
+  el('line',{x1:x0+bar/2,y1:sy-3*u,x2:x0+bar/2,y2:sy+3*u,stroke:'var(--ink)','stroke-width':1.5*u},gs);
+  var st=el('text',{x:x0,y:sy-10*u,'font-size':12*u,fill:'var(--ink)'},gs);st.textContent=(bar>=1000?nf(bar/1000,bar%1000?1:0)+' km':bar+' m');
+  var nx=W/2-18*u, ny=D/2+pad+8*u;
+  el('path',{d:'M'+nx+','+ny+' l'+(-6*u)+','+(34*u)+' l'+(6*u)+','+(-8*u)+' l'+(6*u)+','+(8*u)+' z',fill:'var(--ink)'},gs);
+  var nt=el('text',{x:nx,y:ny+46*u,'font-size':13*u,'text-anchor':'middle',fill:'var(--ink)','font-weight':700},gs);nt.textContent='N';
+  var ut=el('text',{x:0,y:sy-10*u,'font-size':11*u,'text-anchor':'middle',fill:'var(--ink2)'},gs);ut.textContent=nf(W/1000,1)+' × '+nf(D/1000,1)+' km · norte para cima';
+  if(selId)mark();
+}
+
+function mark(){
+  document.querySelectorAll('.d').forEach(function(e){e.classList.toggle('sel',e.dataset.id===selId)});
+  document.querySelectorAll('#tbody tr').forEach(function(e){e.classList.toggle('sel',e.dataset.id===selId)});
+}
+function select(id){
+  selId=id;mark();
+  var d=cur.districts.filter(function(x){return x.id===id})[0];if(!d)return;
+  var k=KINDS[d.kind],e=eff(d),box=$('info');box.textContent='';
+  var t=h('h3','',box);var sw=h('span','sw',t);sw.style.background=k.color;t.appendChild(document.createTextNode(dname(d)));
+  h('div','hint',box).textContent=tx(k).name;
+  h('p','',box).textContent=tx(k).description;
+  var dl=h('dl','',box);
+  function row(a,b){h('dt','',dl).textContent=a;h('dd','',dl).textContent=b}
+  row('Andares',floorsTxt(e.floors));
+  var ul=usesList(e.uses);
+  row('Usos',ul.length?ul.map(function(x){return x.l+' '+x.p+'%'}).join(' · '):'sem uso construído');
+  row('Zona',k.zone||'—');
+  row('Área','≈ '+nf(area(d),area(d)<10?2:1)+' km²');
+}
+function buildTable(){
+  var tb=$('tbody');tb.textContent='';
+  cur.districts.slice().reverse().forEach(function(d){
+    var k=KINDS[d.kind],e=eff(d),tr=h('tr','',tb);tr.dataset.id=d.id;tr.tabIndex=0;
+    var c1=h('td','',tr);var s=h('span','sw2',c1);s.style.background=k.color;c1.appendChild(document.createTextNode(dname(d)));
+    h('td','',tr).textContent=tx(k).name;
+    h('td','n',tr).textContent=floorsTxt(e.floors);
+    h('td','',tr).textContent=mainUse(e.uses);
+    h('td','n',tr).textContent=nf(area(d),area(d)<10?2:1)+' km²';
+    tr.onmouseenter=tr.onfocus=tr.onclick=function(){select(d.id)};
+  });
+}
+function buildSky(){
+  var box=$('sky');box.textContent='';
+  var mx={},order=[];
+  cur.districts.forEach(function(d){var f=eff(d).floors[1];if(!(d.kind in mx)){mx[d.kind]=f;order.push(d.kind)}else mx[d.kind]=Math.max(mx[d.kind],f)});
+  order.sort(function(a,b){return mx[b]-mx[a]});
+  var M=DATA.maxFloors,FH=4,top=M*FH,H=top+80,bw=56,gap=16,n=order.length,W=n*(bw+gap)+gap+60;
+  var svg=el('svg',{viewBox:'0 0 '+W+' '+H,role:'img','aria-label':'Altura máxima por tipo de bairro, cada andar com 4 metros'},box);
+  var base=top+28;
+  [0,60,120,180,240].forEach(function(m){var y=base-m;el('line',{x1:44,x2:W,y1:y,y2:y,stroke:'var(--line)','stroke-width':1,'stroke-dasharray':m?'3 4':''},svg);
+    var t=el('text',{x:40,y:y+4,'text-anchor':'end','font-size':11,fill:'var(--ink2)','font-family':'ui-monospace,monospace'},svg);t.textContent=m+' m'});
+  order.forEach(function(id,i){
+    var f=mx[id],hh=f*FH,x=60+gap+i*(bw+gap);
+    el('rect',{x:x,y:base-Math.max(hh,1.5),width:bw,height:Math.max(hh,1.5),fill:KINDS[id].color,'fill-opacity':.8,stroke:'var(--ink)','stroke-opacity':.6},svg);
+    var t=el('text',{x:x+bw/2,y:base-Math.max(hh,1.5)-5,'text-anchor':'middle','font-size':12,fill:'var(--ink)','font-family':'ui-monospace,monospace'},svg);t.textContent=f+' and.';t.setAttribute('font-size',11);var t2=el('text',{x:x+bw/2,y:base-Math.max(hh,1.5)-17,'text-anchor':'middle','font-size':10,fill:'var(--ink2)','font-family':'ui-monospace,monospace'},svg);t2.textContent=(f*FH)+' m';
+    var l=el('text',{x:x+bw/2,y:base+14,'text-anchor':'middle','font-size':10.5,fill:'var(--ink)'},svg);
+    var words=kname(id).split(' '),ln=[''];words.forEach(function(w){if((ln[ln.length-1]+' '+w).length>12&&ln[ln.length-1])ln.push(w);else ln[ln.length-1]=(ln[ln.length-1]+' '+w).trim()});
+    ln.slice(0,3).forEach(function(s,j){var ts=el('tspan',{x:x+bw/2,dy:j?12:0},l);ts.textContent=s});
+  });
+  svg.setAttribute('viewBox','0 0 '+W+' '+(H+14));
+  svg.style.minWidth=Math.min(W,560)+'px';
+  box.style.overflowX='auto';
+}
+function buildLegend(){
+  var ul=$('legend');DATA.kinds.concat(DATA.game.kinds||[]).forEach(function(k){
+    var li=h('li','',ul),s=h('span','sw2',li);s.style.background=k.color;
+    var d=h('div','',li);d.innerHTML='<b></b> <span class="f"></span>';d.firstChild.textContent=tx(k).name;d.lastChild.textContent=floorsTxt(k.floors);
+    h('p','',li).textContent=tx(k).description;
+  });
+}
+function buildKey(){
+  var k=$('key');k.textContent='';
+  [['Rio','var(--water)'],['Rodovia','var(--hwy)'],['Avenida','var(--ave)'],['Rua','var(--str)'],['Ferrovia','var(--rail)']].forEach(function(a){
+    var s=h('span','',k);var i=h('span','',s);i.style.cssText='display:inline-block;width:18px;height:4px;margin-right:6px;vertical-align:middle;background:'+a[1];s.appendChild(document.createTextNode(a[0]))});
+  h('span','',k).textContent='Círculo: ponto de referência';
+}
+function open(id){
+  var c=byId(id)||GAME[0];cur=c;selId=null;
+  document.querySelectorAll('.tab').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.id===c.id?'true':'false')});
+  $('cname').textContent=tx(c).name;$('csize').textContent='Tamanho: '+sizeTxt(c)+(c.scale?' · escala '+c.scale:'');
+  $('cdesc').textContent=tx(c).description;
+  document.title='Plantas das Cidades';
+  buildTable();buildSky();drawPlan();
+  var big=c.districts.slice().sort(function(a,b){return area(b)-area(a)});
+  var ctr=c.districts.filter(function(d){return eff(d).floors[1]===Math.max.apply(null,c.districts.map(function(x){return eff(x).floors[1]}))})[0];
+  select((ctr||big[0]).id);
+}
+function fromHash(){open(decodeURIComponent(location.hash.replace(/^#/,'')))}
+buildTabs();buildLegend();buildKey();
+window.addEventListener('hashchange',fromHash);
+var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(cur)drawPlan()},150)});
+fromHash();
+})();
+</script>
