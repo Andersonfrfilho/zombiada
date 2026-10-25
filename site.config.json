@@ -152,6 +152,14 @@
             "Catálogo",
             "Testes"
           ]
+        },
+        {
+          "path": "kit/analise-sdks-genericos.html",
+          "title": "Análise: o que vira SDK",
+          "description": "O que já é SDK, o que o jogo ainda não usa do kit, lacunas, contrato de customização e ordem sugerida",
+          "tags": [
+            "Documento"
+          ]
         }
       ]
     },
