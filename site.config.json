@@ -156,7 +156,7 @@
         {
           "path": "kit/analise-sdks-genericos.html",
           "title": "Análise: o que vira SDK",
-          "description": "O que no jogo e no kit é comum e pode virar SDK genérico e customizável, lacunas e ordem sugerida",
+          "description": "O que já é SDK, o que o jogo ainda não usa do kit, lacunas, contrato de customização e ordem sugerida",
           "tags": [
             "Documento"
           ]
