@@ -60,6 +60,15 @@
           ]
         },
         {
+          "path": "sala-de-testes/sala-latas.html",
+          "title": "Sala de testes: latas (furo, amassado, vazamento)",
+          "description": "Atire nas latas de refrigerante, cerveja, feijão, sardinha e leite condensado: o furo fica preso na lata, ela amassa (pistola cerca de 1 cm, fuzil até 3 cm), o rótulo acompanha, é empurrada pelo tiro e vaza o conteúdo até o nível baixar do furo",
+          "tags": [
+            "3D",
+            "Testes"
+          ]
+        },
+        {
           "path": "sala-de-testes/area-casas.html",
           "title": "Sala de testes: casas e prédios",
           "description": "As casas do Casa3DSDK na sala de destruição, com 6 cenários: um pilar cai e a laje fica, dois pilares derrubam a laje e o telhado, parede de vedação, vidro a tiro, caixa d'água furada e botijão explodindo",
