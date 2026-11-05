@@ -1,0 +1,28 @@
+{
+  "modulo": "zumbis-personagens",
+  "total_sons": 22,
+  "sons": {
+    "gemidos/zumbi_gemido_re_1": "audio/gemidos/zumbi_gemido_re_1.wav",
+    "gemidos/zumbi_gemido_re_2": "audio/gemidos/zumbi_gemido_re_2.wav",
+    "gemidos/zumbi_gemido_vagar_1": "audio/gemidos/zumbi_gemido_vagar_1.wav",
+    "gemidos/zumbi_gemido_vagar_2": "audio/gemidos/zumbi_gemido_vagar_2.wav",
+    "gemidos/zumbi_gemido_vagar_3": "audio/gemidos/zumbi_gemido_vagar_3.wav",
+    "gemidos/zumbi_gemido_vagar_4": "audio/gemidos/zumbi_gemido_vagar_4.wav",
+    "alertas/zumbi_alerta_percepcao_1": "audio/alertas/zumbi_alerta_percepcao_1.wav",
+    "alertas/zumbi_alerta_percepcao_2": "audio/alertas/zumbi_alerta_percepcao_2.wav",
+    "alertas/zumbi_alerta_percepcao_3": "audio/alertas/zumbi_alerta_percepcao_3.wav",
+    "reacoes/sangue_esguicho_impacto": "audio/reacoes/sangue_esguicho_impacto.wav",
+    "reacoes/zumbi_dano_dor_1": "audio/reacoes/zumbi_dano_dor_1.wav",
+    "reacoes/zumbi_dano_dor_2": "audio/reacoes/zumbi_dano_dor_2.wav",
+    "reacoes/zumbi_passo_vidro_estilhaco": "audio/reacoes/zumbi_passo_vidro_estilhaco.wav",
+    "reacoes/zumbi_queda_corpo": "audio/reacoes/zumbi_queda_corpo.wav",
+    "ataques/zumbi_ataque_investida_1": "audio/ataques/zumbi_ataque_investida_1.wav",
+    "ataques/zumbi_ataque_investida_2": "audio/ataques/zumbi_ataque_investida_2.wav",
+    "ataques/zumbi_garra_acerto_1": "audio/ataques/zumbi_garra_acerto_1.wav",
+    "ataques/zumbi_garra_acerto_2": "audio/ataques/zumbi_garra_acerto_2.wav",
+    "ataques/zumbi_garra_acerto_3": "audio/ataques/zumbi_garra_acerto_3.wav",
+    "ataques/zumbi_garra_errou_1": "audio/ataques/zumbi_garra_errou_1.wav",
+    "ataques/zumbi_garra_errou_2": "audio/ataques/zumbi_garra_errou_2.wav",
+    "ataques/zumbi_mordida_visceral": "audio/ataques/zumbi_mordida_visceral.wav"
+  }
+}

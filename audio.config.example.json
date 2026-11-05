@@ -1,0 +1,17 @@
+{
+  "_comment": "Template de configuração de áudio local. Copie para audio.config.local.json para personalizar caminhos locais sem subir ao Git.",
+  "enabled": true,
+  "organization": "ada-technology",
+  "basePath": "./src",
+  "lazyLoading": true,
+  "maxConcurrentPreloads": 4,
+  "modules": {
+    "armas-itens": "./src/armas-itens/audio",
+    "zumbis-personagens": "./src/zumbis-personagens/audio",
+    "sobreviventes": "./src/sobreviventes/audio",
+    "efeitos": "./src/efeitos/audio",
+    "mapa": "./src/mapa/audio",
+    "veiculos": "./src/veiculos/audio",
+    "animais": "./src/animais/audio"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "modulo": "animais",
+  "total_sons": 9,
+  "sons": {
+    "caninos/cao_alerta_rosnado": "audio/caninos/cao_alerta_rosnado.wav",
+    "caninos/cao_gemido_dor": "audio/caninos/cao_gemido_dor.wav",
+    "caninos/cao_uivo_caca": "audio/caninos/cao_uivo_caca.wav",
+    "caninos/cao_zumbi_latido_ataque": "audio/caninos/cao_zumbi_latido_ataque.wav",
+    "caninos/cao_zumbi_mordida": "audio/caninos/cao_zumbi_mordida.wav",
+    "caninos/cao_zumbi_uivo_distante": "audio/caninos/cao_zumbi_uivo_distante.wav",
+    "insetos/inseto_esmagar": "audio/insetos/inseto_esmagar.wav",
+    "insetos/inseto_passadas_rastejo": "audio/insetos/inseto_passadas_rastejo.wav",
+    "aves/passaro_alerta_revoada": "audio/aves/passaro_alerta_revoada.wav"
+  }
+}

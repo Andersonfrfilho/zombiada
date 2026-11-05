@@ -1,0 +1,76 @@
+{
+  "sfx_base": {
+    "pistola": [
+      "../armas-itens/audio/disparos/tiro_glock_1.wav",
+      "../armas-itens/audio/disparos/tiro_usp_comum.wav"
+    ],
+    "escopeta": [
+      "../armas-itens/audio/disparos/tiro_escopeta_pump_m3.wav",
+      "../armas-itens/audio/disparos/tiro_escopeta_auto_xm1014.wav"
+    ],
+    "fuzil": [
+      "../armas-itens/audio/disparos/tiro_ak47_1.wav",
+      "../armas-itens/audio/disparos/tiro_m4a1_comum.wav"
+    ],
+    "rifle": [
+      "../armas-itens/audio/disparos/tiro_scout_sniper.wav",
+      "../armas-itens/audio/disparos/tiro_awp_sniper.wav"
+    ],
+    "impacto": [
+      "../efeitos/audio/ricochetes/ricochete_bala_metal_1.wav",
+      "../efeitos/audio/ricochetes/ricochete_bala_concreto_1.wav"
+    ],
+    "carne": [
+      "../sobreviventes/audio/impactos/impacto_bala_carne_1.wav",
+      "../sobreviventes/audio/impactos/impacto_bala_carne_2.wav"
+    ],
+    "passo": [
+      "../sobreviventes/audio/passos/passo_terra_1.wav",
+      "../sobreviventes/audio/passos/passo_terra_2.wav"
+    ],
+    "vidro": [
+      "../efeitos/audio/destruicao/quebra_vidro_estilhaco_1.wav",
+      "../efeitos/audio/destruicao/quebra_vidro_estilhaco_2.wav"
+    ],
+    "madeira": [
+      "../efeitos/audio/destruicao/quebra_madeira_caixote_1.wav",
+      "../efeitos/audio/destruicao/quebra_madeira_caixote_2.wav"
+    ],
+    "recarga": [
+      "../armas-itens/audio/recargas/recarga_ak47_pente_entra.wav",
+      "../armas-itens/audio/recargas/recarga_m4a1_pente_entra.wav"
+    ],
+    "vazio": [
+      "../armas-itens/audio/disparos/gatilho_vazio_pistola.wav",
+      "../armas-itens/audio/disparos/gatilho_vazio_fuzil.wav"
+    ],
+    "explosao": [
+      "../efeitos/audio/explosoes/explosao_pesada_1.wav",
+      "../efeitos/audio/explosoes/explosao_pesada_2.wav"
+    ]
+  },
+  "loops": {
+    "chuva": "../mapa/audio/clima/chuva_ambiente_loop.wav",
+    "vento": "../mapa/audio/clima/vento_rua_assobio_1.wav",
+    "rotor": "../veiculos/audio/aereos/helicoptero_rotor_loop_1.wav"
+  },
+  "zumbi": {
+    "gemido": [
+      "../zumbis-personagens/audio/gemidos/zumbi_gemido_vagar_1.wav",
+      "../zumbis-personagens/audio/gemidos/zumbi_gemido_vagar_2.wav",
+      "../zumbis-personagens/audio/gemidos/zumbi_gemido_vagar_3.wav"
+    ],
+    "alerta": [
+      "../zumbis-personagens/audio/alertas/zumbi_alerta_percepcao_1.wav",
+      "../zumbis-personagens/audio/alertas/zumbi_alerta_percepcao_2.wav"
+    ],
+    "ataque": [
+      "../zumbis-personagens/audio/ataques/zumbi_ataque_investida_1.wav",
+      "../zumbis-personagens/audio/ataques/zumbi_ataque_investida_2.wav"
+    ],
+    "garra": [
+      "../zumbis-personagens/audio/ataques/zumbi_garra_acerto_1.wav",
+      "../zumbis-personagens/audio/ataques/zumbi_garra_acerto_2.wav"
+    ]
+  }
+}

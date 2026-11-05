@@ -1,0 +1,21 @@
+{
+  "modulo": "veiculos",
+  "total_arquivos": 9,
+  "categorias": {
+    "manobras": [
+      "carro_burnout_fritar_pneu.wav",
+      "carro_cavalo_de_pau_freio_mao.wav",
+      "carro_derrapagem_drift_curto.wav",
+      "carro_pneu_cantando_curva.wav"
+    ],
+    "sirenes": [
+      "alarme_viatura_sirene.wav"
+    ],
+    "aereos": [
+      "aviao_jato_sobrevoo.wav",
+      "helicoptero_rotor_loop_1.wav",
+      "helicoptero_rotor_loop_2.wav",
+      "helicoptero_turbina_ap.wav"
+    ]
+  }
+}

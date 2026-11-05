@@ -1,3 +1,10 @@
 dist/
 node_modules/
 .omc/
+
+# Configurações de áudio locais (nunca sobem ao Git)
+*.audio.local.json
+audio.config.local.json
+audio.local.json
+audio-mapping.local.json
+

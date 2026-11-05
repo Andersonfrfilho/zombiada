@@ -1,0 +1,28 @@
+{
+  "modulo": "efeitos",
+  "total_sons": 22,
+  "sons": {
+    "eletricidade/choque_eletrico_curto_3": "audio/eletricidade/choque_eletrico_curto_3.wav",
+    "eletricidade/faisca_eletrica_curto_1": "audio/eletricidade/faisca_eletrica_curto_1.wav",
+    "eletricidade/faisca_eletrica_curto_2": "audio/eletricidade/faisca_eletrica_curto_2.wav",
+    "fogo/fogo_chamas_crepitando_1": "audio/fogo/fogo_chamas_crepitando_1.wav",
+    "fogo/fogo_chamas_crepitando_2": "audio/fogo/fogo_chamas_crepitando_2.wav",
+    "explosoes/explosao_pesada_1": "audio/explosoes/explosao_pesada_1.wav",
+    "explosoes/explosao_pesada_2": "audio/explosoes/explosao_pesada_2.wav",
+    "explosoes/explosao_pesada_3": "audio/explosoes/explosao_pesada_3.wav",
+    "destruicao/arraste_objeto_pesado_1": "audio/destruicao/arraste_objeto_pesado_1.wav",
+    "destruicao/arraste_objeto_pesado_2": "audio/destruicao/arraste_objeto_pesado_2.wav",
+    "destruicao/quebra_concreto_alvenaria_1": "audio/destruicao/quebra_concreto_alvenaria_1.wav",
+    "destruicao/quebra_concreto_alvenaria_2": "audio/destruicao/quebra_concreto_alvenaria_2.wav",
+    "destruicao/quebra_madeira_caixote_1": "audio/destruicao/quebra_madeira_caixote_1.wav",
+    "destruicao/quebra_madeira_caixote_2": "audio/destruicao/quebra_madeira_caixote_2.wav",
+    "destruicao/quebra_metal_amassamento_1": "audio/destruicao/quebra_metal_amassamento_1.wav",
+    "destruicao/quebra_metal_amassamento_2": "audio/destruicao/quebra_metal_amassamento_2.wav",
+    "destruicao/quebra_vidro_estilhaco_1": "audio/destruicao/quebra_vidro_estilhaco_1.wav",
+    "destruicao/quebra_vidro_estilhaco_2": "audio/destruicao/quebra_vidro_estilhaco_2.wav",
+    "ricochetes/ricochete_bala_concreto_1": "audio/ricochetes/ricochete_bala_concreto_1.wav",
+    "ricochetes/ricochete_bala_concreto_2": "audio/ricochetes/ricochete_bala_concreto_2.wav",
+    "ricochetes/ricochete_bala_metal_1": "audio/ricochetes/ricochete_bala_metal_1.wav",
+    "ricochetes/ricochete_bala_metal_2": "audio/ricochetes/ricochete_bala_metal_2.wav"
+  }
+}
