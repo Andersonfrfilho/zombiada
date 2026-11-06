@@ -1,0 +1,3618 @@
+[
+ {
+  "name": "molotov_chao",
+  "err": "",
+  "bad": [],
+  "voices": [
+   {
+    "t": 0.45,
+    "id": "molotov_break_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.702
+   },
+   {
+    "t": 0.476,
+    "id": "chip",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.223
+   },
+   {
+    "t": 0.698,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.449
+   },
+   {
+    "t": 0.719,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.321
+   },
+   {
+    "t": 1.003,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.347
+   },
+   {
+    "t": 1.443,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.347
+   },
+   {
+    "t": 1.763,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.538
+   },
+   {
+    "t": 1.78,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.347
+   },
+   {
+    "t": 2.077,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.466
+   },
+   {
+    "t": 2.209,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.347
+   },
+   {
+    "t": 2.303,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.25
+   },
+   {
+    "t": 2.502,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.335
+   },
+   {
+    "t": 2.521,
+    "id": "explosion_car",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.977
+   },
+   {
+    "t": 2.604,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.346
+   },
+   {
+    "t": 2.604,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.467
+   },
+   {
+    "t": 2.604,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.353
+   },
+   {
+    "t": 2.605,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.338
+   },
+   {
+    "t": 2.605,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.334
+   },
+   {
+    "t": 2.605,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.47
+   },
+   {
+    "t": 2.605,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.396
+   },
+   {
+    "t": 2.606,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.384
+   },
+   {
+    "t": 2.606,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.344
+   },
+   {
+    "t": 2.606,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.335
+   },
+   {
+    "t": 2.606,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.348
+   },
+   {
+    "t": 2.606,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.348
+   },
+   {
+    "t": 2.607,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.357
+   },
+   {
+    "t": 2.607,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.334
+   },
+   {
+    "t": 2.607,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.37
+   },
+   {
+    "t": 2.607,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.389
+   },
+   {
+    "t": 2.786,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.324
+   },
+   {
+    "t": 2.845,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 2.851,
+    "id": "footstep_concrete_walk",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.3
+   },
+   {
+    "t": 3.042,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.393
+   },
+   {
+    "t": 3.103,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.386
+   },
+   {
+    "t": 3.284,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 3.348,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.468
+   },
+   {
+    "t": 3.376,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.289
+   },
+   {
+    "t": 3.547,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 3.639,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.251
+   },
+   {
+    "t": 3.873,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.393
+   },
+   {
+    "t": 4.044,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.393
+   },
+   {
+    "t": 4.104,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.393
+   },
+   {
+    "t": 4.277,
+    "id": "hiss",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.375
+   },
+   {
+    "t": 4.29,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.28
+   },
+   {
+    "t": 4.466,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 4.521,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.392
+   },
+   {
+    "t": 4.687,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.386
+   },
+   {
+    "t": 4.871,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.35
+   },
+   {
+    "t": 5.007,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.253
+   },
+   {
+    "t": 5.13,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.337
+   },
+   {
+    "t": 5.271,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.294
+   },
+   {
+    "t": 5.373,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 5.521,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.337
+   },
+   {
+    "t": 5.643,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.35
+   },
+   {
+    "t": 5.758,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.253
+   },
+   {
+    "t": 5.888,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.323
+   },
+   {
+    "t": 5.938,
+    "id": "hiss",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.375
+   },
+   {
+    "t": 5.961,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.295
+   },
+   {
+    "t": 6.101,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.392
+   },
+   {
+    "t": 6.189,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.335
+   },
+   {
+    "t": 6.348,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.289
+   },
+   {
+    "t": 6.554,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.323
+   },
+   {
+    "t": 6.627,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 6.743,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.335
+   },
+   {
+    "t": 6.825,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 7.092,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.386
+   },
+   {
+    "t": 7.15,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.335
+   },
+   {
+    "t": 7.262,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 7.384,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.393
+   },
+   {
+    "t": 7.639,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.337
+   },
+   {
+    "t": 7.742,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.374
+   },
+   {
+    "t": 7.817,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.253
+   },
+   {
+    "t": 7.881,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 8.193,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.392
+   },
+   {
+    "t": 8.28,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.323
+   },
+   {
+    "t": 8.556,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.295
+   },
+   {
+    "t": 8.707,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.337
+   },
+   {
+    "t": 8.786,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.337
+   },
+   {
+    "t": 8.914,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.323
+   },
+   {
+    "t": 9.051,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.392
+   },
+   {
+    "t": 9.173,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.323
+   },
+   {
+    "t": 9.263,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.393
+   },
+   {
+    "t": 9.328,
+    "id": "hiss",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.375
+   },
+   {
+    "t": 9.459,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.242
+   },
+   {
+    "t": 9.608,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.295
+   },
+   {
+    "t": 9.732,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.337
+   },
+   {
+    "t": 9.808,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.35
+   },
+   {
+    "t": 9.892,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.323
+   },
+   {
+    "t": 10.075,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.337
+   },
+   {
+    "t": 10.144,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.337
+   },
+   {
+    "t": 10.286,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.335
+   },
+   {
+    "t": 10.339,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.294
+   },
+   {
+    "t": 10.47,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 10.549,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   }
+  ],
+  "loops": [
+   {
+    "id": "fire_loop_liquid",
+    "t": 0.453,
+    "sample": true,
+    "levels": [
+     [
+      0.453,
+      0.08
+     ],
+     [
+      0.554,
+      0.16
+     ],
+     [
+      0.698,
+      0.16
+     ],
+     [
+      0.698,
+      0.16
+     ],
+     [
+      1.763,
+      0.16
+     ],
+     [
+      2.077,
+      0.16
+     ],
+     [
+      2.214,
+      0.16
+     ],
+     [
+      2.595,
+      0.16
+     ],
+     [
+      2.595,
+      0.16
+     ],
+     [
+      2.595,
+      0.16
+     ],
+     [
+      2.595,
+      0.16
+     ],
+     [
+      2.595,
+      0.16
+     ],
+     [
+      10.549,
+      0.08
+     ]
+    ]
+   },
+   {
+    "id": "fire_loop_plastic",
+    "t": 0.698,
+    "sample": true,
+    "levels": [
+     [
+      0.698,
+      0.08
+     ],
+     [
+      0.698,
+      0.16
+     ],
+     [
+      1.763,
+      0.24
+     ],
+     [
+      2.077,
+      0.32
+     ],
+     [
+      2.214,
+      0.32
+     ],
+     [
+      2.595,
+      0.4
+     ],
+     [
+      2.595,
+      0.45
+     ],
+     [
+      2.595,
+      0.45
+     ],
+     [
+      2.595,
+      0.45
+     ],
+     [
+      2.595,
+      0.45
+     ],
+     [
+      10.549,
+      0.45
+     ]
+    ]
+   },
+   {
+    "id": "fire_loop",
+    "t": 2.214,
+    "sample": true,
+    "levels": [
+     [
+      2.214,
+      0.08
+     ],
+     [
+      2.595,
+      0.08
+     ],
+     [
+      2.595,
+      0.08
+     ],
+     [
+      2.595,
+      0.08
+     ],
+     [
+      2.595,
+      0.16
+     ],
+     [
+      2.595,
+      0.16
+     ],
+     [
+      10.549,
+      0.16
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "molotov_parede",
+  "err": "",
+  "bad": [],
+  "voices": [
+   {
+    "t": 0.75,
+    "id": "molotov_break_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.669
+   },
+   {
+    "t": 0.78,
+    "id": "chip",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.172
+   },
+   {
+    "t": 0.781,
+    "id": "chip",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.463
+   }
+  ],
+  "loops": [
+   {
+    "id": "fire_loop_liquid",
+    "t": 0.753,
+    "sample": true,
+    "levels": [
+     [
+      0.753,
+      0.08
+     ],
+     [
+      0.909,
+      0.16
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "molotov_sofa",
+  "err": "",
+  "bad": [],
+  "voices": [
+   {
+    "t": 0.169,
+    "id": "molotov_break_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.718
+   },
+   {
+    "t": 0.22,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.553
+   },
+   {
+    "t": 0.257,
+    "id": "chip",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.248
+   },
+   {
+    "t": 0.303,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.395
+   },
+   {
+    "t": 0.404,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.545
+   },
+   {
+    "t": 0.759,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.397
+   },
+   {
+    "t": 0.856,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.542
+   },
+   {
+    "t": 1.143,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.345
+   },
+   {
+    "t": 1.239,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.346
+   },
+   {
+    "t": 1.459,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.347
+   },
+   {
+    "t": 1.531,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.296
+   },
+   {
+    "t": 1.595,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.341
+   },
+   {
+    "t": 1.7,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 1.884,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.345
+   },
+   {
+    "t": 2.021,
+    "id": "explosion_car",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.99
+   },
+   {
+    "t": 2.102,
+    "id": "metal_blunt",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.971
+   },
+   {
+    "t": 2.105,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.341
+   },
+   {
+    "t": 2.134,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.374
+   },
+   {
+    "t": 2.134,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.491
+   },
+   {
+    "t": 2.134,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.383
+   },
+   {
+    "t": 2.134,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.364
+   },
+   {
+    "t": 2.134,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.36
+   },
+   {
+    "t": 2.134,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.396
+   },
+   {
+    "t": 2.135,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.493
+   },
+   {
+    "t": 2.135,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.398
+   },
+   {
+    "t": 2.135,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.363
+   },
+   {
+    "t": 2.135,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.366
+   },
+   {
+    "t": 2.135,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.379
+   },
+   {
+    "t": 2.135,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.378
+   },
+   {
+    "t": 2.135,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.38
+   },
+   {
+    "t": 2.136,
+    "id": "clang",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.36
+   },
+   {
+    "t": 2.136,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.397
+   },
+   {
+    "t": 2.136,
+    "id": "plastic_crack",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.392
+   },
+   {
+    "t": 2.136,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.901
+   },
+   {
+    "t": 2.136,
+    "id": "fabric_rip",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.739
+   },
+   {
+    "t": 2.265,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.276
+   },
+   {
+    "t": 2.315,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.395
+   },
+   {
+    "t": 2.373,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.336
+   },
+   {
+    "t": 2.378,
+    "id": "footstep_concrete_walk",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.3
+   },
+   {
+    "t": 2.648,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.34
+   },
+   {
+    "t": 2.838,
+    "id": "masonry_blunt",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.416
+   },
+   {
+    "t": 2.84,
+    "id": "wood_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.582
+   },
+   {
+    "t": 2.841,
+    "id": "wood_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.581
+   },
+   {
+    "t": 2.852,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.272
+   },
+   {
+    "t": 2.953,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.545
+   },
+   {
+    "t": 3.024,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.335
+   },
+   {
+    "t": 3.168,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.335
+   },
+   {
+    "t": 3.196,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.544
+   },
+   {
+    "t": 3.205,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.49
+   },
+   {
+    "t": 3.282,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.297
+   },
+   {
+    "t": 3.412,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 3.477,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.339
+   },
+   {
+    "t": 3.551,
+    "id": "gravel_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.914
+   },
+   {
+    "t": 3.579,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.419
+   },
+   {
+    "t": 3.579,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.675
+   },
+   {
+    "t": 3.579,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.366
+   },
+   {
+    "t": 3.625,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.407
+   },
+   {
+    "t": 3.625,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.387
+   },
+   {
+    "t": 3.731,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.344
+   },
+   {
+    "t": 3.882,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.258
+   },
+   {
+    "t": 3.951,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.344
+   },
+   {
+    "t": 4.014,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.251
+   },
+   {
+    "t": 4.05,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.239
+   },
+   {
+    "t": 4.05,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.264
+   },
+   {
+    "t": 4.188,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.369
+   },
+   {
+    "t": 4.199,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.539
+   },
+   {
+    "t": 4.367,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.398
+   },
+   {
+    "t": 4.423,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.3
+   },
+   {
+    "t": 4.54,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.366
+   },
+   {
+    "t": 4.632,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.345
+   },
+   {
+    "t": 4.693,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.547
+   },
+   {
+    "t": 4.745,
+    "id": "hiss",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.392
+   },
+   {
+    "t": 4.829,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.243
+   },
+   {
+    "t": 4.829,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.358
+   },
+   {
+    "t": 4.85,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 4.899,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.396
+   },
+   {
+    "t": 4.962,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.395
+   },
+   {
+    "t": 5.12,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.344
+   },
+   {
+    "t": 5.199,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.391
+   },
+   {
+    "t": 5.383,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.524
+   },
+   {
+    "t": 5.402,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.379
+   },
+   {
+    "t": 5.471,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.258
+   },
+   {
+    "t": 5.502,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.345
+   },
+   {
+    "t": 5.631,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.388
+   },
+   {
+    "t": 5.711,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.4
+   },
+   {
+    "t": 5.959,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.335
+   },
+   {
+    "t": 6.005,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.344
+   },
+   {
+    "t": 6.145,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.395
+   },
+   {
+    "t": 6.219,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.4
+   },
+   {
+    "t": 6.368,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.387
+   },
+   {
+    "t": 6.446,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.344
+   },
+   {
+    "t": 6.54,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.291
+   },
+   {
+    "t": 6.662,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.291
+   },
+   {
+    "t": 6.725,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.34
+   },
+   {
+    "t": 6.767,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.387
+   },
+   {
+    "t": 7.001,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.34
+   },
+   {
+    "t": 7.102,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.3
+   },
+   {
+    "t": 7.202,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 7.275,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.396
+   },
+   {
+    "t": 7.316,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.291
+   },
+   {
+    "t": 7.529,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 7.691,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 7.781,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.4
+   },
+   {
+    "t": 7.845,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.387
+   },
+   {
+    "t": 8.018,
+    "id": "hiss",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.392
+   },
+   {
+    "t": 8.038,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.29
+   },
+   {
+    "t": 8.165,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.29
+   },
+   {
+    "t": 8.3,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.291
+   },
+   {
+    "t": 8.357,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.374
+   },
+   {
+    "t": 8.495,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.385
+   },
+   {
+    "t": 8.633,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.345
+   },
+   {
+    "t": 8.701,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.399
+   },
+   {
+    "t": 8.81,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.259
+   },
+   {
+    "t": 8.975,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.344
+   },
+   {
+    "t": 9.077,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.298
+   },
+   {
+    "t": 9.13,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 9.228,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.346
+   },
+   {
+    "t": 9.452,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 9.511,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.391
+   },
+   {
+    "t": 9.591,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.388
+   },
+   {
+    "t": 9.719,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.391
+   },
+   {
+    "t": 9.994,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.386
+   },
+   {
+    "t": 10.023,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.344
+   },
+   {
+    "t": 10.053,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.296
+   },
+   {
+    "t": 10.226,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.386
+   },
+   {
+    "t": 10.302,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.344
+   },
+   {
+    "t": 10.496,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 10.618,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.389
+   },
+   {
+    "t": 10.677,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.344
+   },
+   {
+    "t": 10.783,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.366
+   },
+   {
+    "t": 10.944,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.335
+   },
+   {
+    "t": 11.051,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.4
+   },
+   {
+    "t": 11.117,
+    "id": "hiss",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.392
+   },
+   {
+    "t": 11.135,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.396
+   },
+   {
+    "t": 11.234,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.399
+   }
+  ],
+  "loops": [
+   {
+    "id": "fire_loop_liquid",
+    "t": 0.172,
+    "sample": true,
+    "levels": [
+     [
+      0.172,
+      0.08
+     ],
+     [
+      0.185,
+      0.16
+     ],
+     [
+      0.22,
+      0.16
+     ],
+     [
+      0.404,
+      0.16
+     ],
+     [
+      0.622,
+      0.16
+     ],
+     [
+      0.622,
+      0.16
+     ],
+     [
+      0.856,
+      0.16
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.909,
+      0.16
+     ],
+     [
+      0.997,
+      0.16
+     ],
+     [
+      0.997,
+      0.16
+     ],
+     [
+      0.997,
+      0.16
+     ],
+     [
+      0.997,
+      0.16
+     ],
+     [
+      0.998,
+      0.16
+     ],
+     [
+      1.111,
+      0.16
+     ],
+     [
+      1.111,
+      0.16
+     ],
+     [
+      1.111,
+      0.16
+     ],
+     [
+      1.215,
+      0.16
+     ],
+     [
+      1.215,
+      0.16
+     ],
+     [
+      1.25,
+      0.16
+     ],
+     [
+      1.42,
+      0.16
+     ],
+     [
+      1.752,
+      0.16
+     ],
+     [
+      2.123,
+      0.16
+     ],
+     [
+      2.953,
+      0.16
+     ],
+     [
+      2.953,
+      0.16
+     ],
+     [
+      3.196,
+      0.16
+     ],
+     [
+      3.439,
+      0.16
+     ],
+     [
+      3.834,
+      0.16
+     ],
+     [
+      4.199,
+      0.16
+     ],
+     [
+      4.693,
+      0.16
+     ],
+     [
+      4.926,
+      0.16
+     ],
+     [
+      5.383,
+      0.16
+     ],
+     [
+      10.754,
+      0.08
+     ]
+    ]
+   },
+   {
+    "id": "fire_loop_plastic",
+    "t": 0.22,
+    "sample": true,
+    "levels": [
+     [
+      0.22,
+      0.08
+     ],
+     [
+      0.404,
+      0.16
+     ],
+     [
+      0.622,
+      0.24
+     ],
+     [
+      0.622,
+      0.32
+     ],
+     [
+      0.856,
+      0.32
+     ],
+     [
+      0.857,
+      0.4
+     ],
+     [
+      0.857,
+      0.45
+     ],
+     [
+      0.857,
+      0.45
+     ],
+     [
+      0.857,
+      0.45
+     ],
+     [
+      0.857,
+      0.45
+     ],
+     [
+      0.857,
+      0.45
+     ],
+     [
+      0.857,
+      0.45
+     ],
+     [
+      0.857,
+      0.45
+     ],
+     [
+      0.857,
+      0.45
+     ],
+     [
+      0.909,
+      0.45
+     ],
+     [
+      0.997,
+      0.45
+     ],
+     [
+      0.997,
+      0.45
+     ],
+     [
+      0.997,
+      0.45
+     ],
+     [
+      0.997,
+      0.45
+     ],
+     [
+      0.998,
+      0.45
+     ],
+     [
+      1.111,
+      0.45
+     ],
+     [
+      1.111,
+      0.45
+     ],
+     [
+      1.111,
+      0.45
+     ],
+     [
+      1.215,
+      0.45
+     ],
+     [
+      1.215,
+      0.45
+     ],
+     [
+      1.25,
+      0.45
+     ],
+     [
+      1.42,
+      0.45
+     ],
+     [
+      1.752,
+      0.45
+     ],
+     [
+      2.123,
+      0.45
+     ],
+     [
+      2.953,
+      0.45
+     ],
+     [
+      2.953,
+      0.45
+     ],
+     [
+      3.196,
+      0.45
+     ],
+     [
+      3.439,
+      0.45
+     ],
+     [
+      3.834,
+      0.45
+     ],
+     [
+      4.199,
+      0.45
+     ],
+     [
+      4.693,
+      0.45
+     ],
+     [
+      4.926,
+      0.45
+     ],
+     [
+      5.383,
+      0.45
+     ],
+     [
+      10.754,
+      0.45
+     ]
+    ]
+   },
+   {
+    "id": "fire_loop",
+    "t": 0.857,
+    "sample": true,
+    "levels": [
+     [
+      0.857,
+      0.08
+     ],
+     [
+      0.857,
+      0.08
+     ],
+     [
+      0.857,
+      0.08
+     ],
+     [
+      0.857,
+      0.08
+     ],
+     [
+      0.857,
+      0.08
+     ],
+     [
+      0.857,
+      0.16
+     ],
+     [
+      0.857,
+      0.24
+     ],
+     [
+      0.857,
+      0.32
+     ],
+     [
+      0.857,
+      0.32
+     ],
+     [
+      0.857,
+      0.32
+     ],
+     [
+      0.909,
+      0.32
+     ],
+     [
+      0.997,
+      0.32
+     ],
+     [
+      0.997,
+      0.32
+     ],
+     [
+      0.997,
+      0.32
+     ],
+     [
+      0.998,
+      0.4
+     ],
+     [
+      0.998,
+      0.45
+     ],
+     [
+      1.111,
+      0.45
+     ],
+     [
+      1.111,
+      0.45
+     ],
+     [
+      1.111,
+      0.45
+     ],
+     [
+      1.215,
+      0.45
+     ],
+     [
+      1.215,
+      0.45
+     ],
+     [
+      1.25,
+      0.45
+     ],
+     [
+      1.42,
+      0.45
+     ],
+     [
+      1.752,
+      0.45
+     ],
+     [
+      2.123,
+      0.45
+     ],
+     [
+      2.953,
+      0.45
+     ],
+     [
+      2.953,
+      0.45
+     ],
+     [
+      3.196,
+      0.45
+     ],
+     [
+      3.439,
+      0.45
+     ],
+     [
+      3.834,
+      0.45
+     ],
+     [
+      4.199,
+      0.45
+     ],
+     [
+      4.693,
+      0.45
+     ],
+     [
+      4.926,
+      0.45
+     ],
+     [
+      5.383,
+      0.45
+     ],
+     [
+      10.754,
+      0.45
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "lixeira_plastico",
+  "err": "",
+  "bad": [],
+  "voices": [
+   {
+    "t": 0.025,
+    "id": "fire_ignite",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.281
+   },
+   {
+    "t": 0.094,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 0.168,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 0.233,
+    "id": "hiss",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.228
+   },
+   {
+    "t": 0.44,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 0.523,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 0.723,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 0.774,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 0.956,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 0.989,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 1.267,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 1.527,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 1.59,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.157
+   },
+   {
+    "t": 1.705,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 1.751,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 1.996,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 2.078,
+    "id": "hiss",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.228
+   },
+   {
+    "t": 2.179,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 2.239,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 2.42,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.151
+   },
+   {
+    "t": 2.58,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 2.661,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 2.918,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 3.043,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 3.239,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.151
+   },
+   {
+    "t": 3.288,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 3.341,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 3.463,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 3.606,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 3.683,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 3.772,
+    "id": "hiss",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.228
+   },
+   {
+    "t": 3.774,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.284
+   },
+   {
+    "t": 3.788,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 3.893,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 3.982,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.151
+   },
+   {
+    "t": 4.176,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 4.321,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 4.527,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 4.598,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 4.659,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 4.865,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 5.005,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 5.102,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 5.204,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 5.34,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 5.451,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 5.49,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 5.537,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 5.912,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 6.061,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 6.122,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 6.253,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 6.343,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 6.479,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 6.576,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 6.623,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 6.691,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 6.842,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.157
+   },
+   {
+    "t": 7.005,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.151
+   },
+   {
+    "t": 7.039,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 7.157,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 7.406,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 7.576,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 7.657,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 7.778,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 7.872,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.157
+   },
+   {
+    "t": 8.091,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 8.156,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 8.357,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 8.511,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 8.642,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 8.671,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 8.796,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 8.923,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 9.007,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.21
+   },
+   {
+    "t": 9.119,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 9.32,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.151
+   },
+   {
+    "t": 9.512,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 9.622,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 9.742,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 9.826,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.201
+   },
+   {
+    "t": 10.047,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   },
+   {
+    "t": 10.277,
+    "id": "fire_crackle",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.205
+   },
+   {
+    "t": 10.414,
+    "id": "fire_pop",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.154
+   }
+  ],
+  "loops": [
+   {
+    "id": "fire_loop_plastic",
+    "t": 0.026,
+    "sample": true,
+    "levels": [
+     [
+      0.026,
+      0.08
+     ],
+     [
+      0.026,
+      0.16
+     ],
+     [
+      0.026,
+      0.24
+     ],
+     [
+      0.026,
+      0.32
+     ],
+     [
+      0.026,
+      0.4
+     ],
+     [
+      0.026,
+      0.45
+     ],
+     [
+      0.026,
+      0.45
+     ],
+     [
+      0.026,
+      0.45
+     ],
+     [
+      0.027,
+      0.45
+     ],
+     [
+      0.027,
+      0.45
+     ],
+     [
+      0.027,
+      0.45
+     ],
+     [
+      0.027,
+      0.45
+     ],
+     [
+      0.027,
+      0.45
+     ],
+     [
+      0.027,
+      0.45
+     ],
+     [
+      0.027,
+      0.45
+     ],
+     [
+      0.027,
+      0.45
+     ],
+     [
+      0.027,
+      0.45
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "granada_frag",
+  "err": "",
+  "bad": [],
+  "voices": [
+   {
+    "t": 4.329,
+    "id": "explosion_grenade",
+    "kind": "sample",
+    "bank": "destruction-samples",
+    "level": 0.885
+   },
+   {
+    "t": 4.432,
+    "id": "wood_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.484
+   },
+   {
+    "t": 4.442,
+    "id": "chip",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.173
+   },
+   {
+    "t": 4.543,
+    "id": "wood_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.492
+   },
+   {
+    "t": 4.544,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.545,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.546,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.547,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.556,
+    "id": "chip",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.256
+   },
+   {
+    "t": 4.556,
+    "id": "chip",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.256
+   },
+   {
+    "t": 4.599,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.6,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.601,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.602,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.603,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.606,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.666,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.667,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.668,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.67,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.67,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.681,
+    "id": "thud",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.735
+   },
+   {
+    "t": 4.681,
+    "id": "fabric_rip",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.536
+   },
+   {
+    "t": 4.732,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.732,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.733,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.735,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.736,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.738,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.747,
+    "id": "thunk",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.456
+   },
+   {
+    "t": 4.747,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.604
+   },
+   {
+    "t": 4.747,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.61
+   },
+   {
+    "t": 4.747,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.614
+   },
+   {
+    "t": 4.747,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.635
+   },
+   {
+    "t": 4.748,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.64
+   },
+   {
+    "t": 4.748,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.656
+   },
+   {
+    "t": 4.748,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.661
+   },
+   {
+    "t": 4.748,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.667
+   },
+   {
+    "t": 4.748,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.671
+   },
+   {
+    "t": 4.748,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.675
+   },
+   {
+    "t": 4.772,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.773,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.774,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.774,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.775,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.775,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.773
+   },
+   {
+    "t": 4.776,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.776,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.776,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.777,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.777,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.822
+   },
+   {
+    "t": 4.786,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.691
+   },
+   {
+    "t": 4.786,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.634
+   },
+   {
+    "t": 4.786,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.639
+   },
+   {
+    "t": 4.787,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.65
+   },
+   {
+    "t": 5.48,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.29
+   },
+   {
+    "t": 5.481,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.305
+   },
+   {
+    "t": 5.483,
+    "id": "metal_blunt",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.32
+   },
+   {
+    "t": 5.491,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.466
+   },
+   {
+    "t": 5.491,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.466
+   },
+   {
+    "t": 5.493,
+    "id": "metal_blunt",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.291
+   },
+   {
+    "t": 5.515,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.305
+   },
+   {
+    "t": 5.526,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.466
+   },
+   {
+    "t": 5.58,
+    "id": "mdf_puff",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.469
+   },
+   {
+    "t": 5.58,
+    "id": "mdf_puff",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.382
+   },
+   {
+    "t": 5.58,
+    "id": "mdf_puff",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.382
+   },
+   {
+    "t": 5.612,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.541
+   },
+   {
+    "t": 5.619,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.319
+   },
+   {
+    "t": 5.629,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.466
+   },
+   {
+    "t": 5.681,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.31
+   },
+   {
+    "t": 5.686,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.3
+   },
+   {
+    "t": 5.706,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.473
+   },
+   {
+    "t": 5.706,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.465
+   },
+   {
+    "t": 5.737,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.328
+   },
+   {
+    "t": 5.742,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.377
+   },
+   {
+    "t": 5.751,
+    "id": "paper_tear",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.98
+   },
+   {
+    "t": 5.751,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.458
+   },
+   {
+    "t": 5.751,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.465
+   },
+   {
+    "t": 5.751,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.468
+   },
+   {
+    "t": 5.76,
+    "id": "paper_hit",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.419
+   },
+   {
+    "t": 5.79,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.394
+   },
+   {
+    "t": 5.804,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.469
+   },
+   {
+    "t": 5.862,
+    "id": "mdf_puff",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.459
+   },
+   {
+    "t": 5.862,
+    "id": "mdf_crumble",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.747
+   },
+   {
+    "t": 5.902,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.463
+   },
+   {
+    "t": 5.902,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.466
+   },
+   {
+    "t": 5.902,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.468
+   },
+   {
+    "t": 6.211,
+    "id": "ceramic_hit",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.469
+   },
+   {
+    "t": 6.273,
+    "id": "metal_blunt",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.295
+   },
+   {
+    "t": 6.425,
+    "id": "metal_blunt",
+    "kind": "sample",
+    "bank": "kit_samples",
+    "level": 0.298
+   },
+   {
+    "t": 6.532,
+    "id": "mdf_puff",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.493
+   },
+   {
+    "t": 6.532,
+    "id": "mdf_puff",
+    "kind": "recipe",
+    "bank": "destruction_three",
+    "level": 0.349
+   }
+  ],
+  "loops": []
+ }
+]
