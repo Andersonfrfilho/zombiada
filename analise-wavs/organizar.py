@@ -35,7 +35,7 @@ EXTRAS: list[tuple[str, str]] = [
 
 # id → (pasta do kit, nome do item e da ação em português)
 NAMES: dict[str, tuple[str, str]] = {
-    'revolver_44_50ae': ('armas', 'deagle_tiro'), 'antimateriel_50bmg': ('armas', 'fuzil_50_tiro'), 'bullet_flyby': ('armas', 'bala_passando'),
+    'revolver_44_50ae': ('armas', 'deagle_tiro'), 'antimateriel_50bmg': ('armas', 'fuzil_50_tiro'), 'bullet_whiz': ('armas', 'bala_passando'),
     'bolt_pull_heavy': ('armas', 'ferrolho_puxar_pesado'), 'bolt_pull_medium': ('armas', 'ferrolho_puxar_medio'),
     'charging_handle_pull_medium': ('armas', 'alavanca_de_manejo_puxar'), 'slide_release_light': ('armas', 'ferrolho_soltar_leve'),
     'mag_out_light': ('armas', 'carregador_tirar_leve'), 'mag_out_medium': ('armas', 'carregador_tirar_medio'), 'mag_out_heavy': ('armas', 'carregador_tirar_pesado'),
